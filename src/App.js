@@ -5,7 +5,7 @@ import Visualization from "./Visualization";
 class App extends Component {
     render() {
         return (
-            <Visualization width="932" height="932"/>
+            <Visualization width="500" height="500"/>
         );
     }
 }

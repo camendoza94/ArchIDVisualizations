@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import * as d3 from "d3";
-import root from './flare.json';
+import root from './architecture2.json';
 
 class Visualization extends Component {
     componentDidMount() {
@@ -32,19 +32,24 @@ class Visualization extends Component {
             });
         node.append("title")
             .text(function (d) {
-                return d.data.name + "\n" + format(d.value);
+                return d.data.name;
             });
         node.append("circle")
             .attr("r", function (d) {
                 return d.r;
             });
+
         node.filter(function (d) {
             return !d.children;
+        }).style("fill", function (d) {
+            return d.data.color;
         }).append("text")
             .attr("dy", "0.3em")
+            .attr("font-size", "smaller")
             .text(function (d) {
                 return d.data.name.substring(0, d.r / 3);
-            });
+            })
+            .style("fill", "black");
     }
 
     render() {
