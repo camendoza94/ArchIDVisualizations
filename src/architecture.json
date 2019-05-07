@@ -1,21 +1,254 @@
 {
-	"name": "architecture",
- 	"children": 
- 	[
- 		{
-			"name": "services",
-			"pattern": ["/**/co/edu/uniandes/csw/*/resources/*.java", "/**/co/edu/uniandes/csw/*/dtos/*.java"],
-			"size": 2
-		},
-		{
-			"name": "logic",
-			"pattern": ["/**/co/edu/uniandes/csw/*/ejbs/*.java"],
-			"size": 2
-		},
-		{
-			"name": "persistence",
-			"pattern": ["/**/co/edu/uniandes/csw/*/entities/*.java", "/**/co/edu/uniandes/csw/*/persistence/*.java"],
-			"size": 2
-		}
-	]
+  "name": "architecture",
+  "children": [
+    {
+      "name": "services",
+      "pattern": [
+        "/**/co/edu/uniandes/csw/*/resources/*.java",
+        "/**/co/edu/uniandes/csw/*/dtos/*.java"
+      ],
+      "size": 30,
+      "children": [
+        {
+          "name": "ArticuloResource.java",
+          "size": 2,
+          "color": "#cca92a"
+        },
+        {
+          "name": "CalificacionResource.java",
+          "size": 3,
+          "color": "#d66228"
+        },
+        {
+          "name": "EventoResource.java",
+          "size": 2,
+          "color": "#cca92a"
+        },
+        {
+          "name": "MascotaEnAdopcionResource.java",
+          "size": 5,
+          "color": "#a0001d"
+        },
+        {
+          "name": "MascotaExtraviadaResource.java",
+          "size": 1,
+          "color": "#ede0da"
+        },
+        {
+          "name": "MascotaResource.java",
+          "size": 3,
+          "color": "#d66228"
+        },
+        {
+          "name": "RecompensaResource.java",
+          "size": 2,
+          "color": "#cca92a"
+        },
+        {
+          "name": "RestConfig.java",
+          "size": 1,
+          "color": "#ede0da"
+        },
+        {
+          "name": "UsuarioResource.java",
+          "size": 3,
+          "color": "#d66228"
+        },
+        {
+          "name": "ArticuloDTO.java",
+          "size": 1,
+          "color": "#ede0da"
+        },
+        {
+          "name": "CalificacionDTO.java",
+          "size": 1,
+          "color": "#ede0da"
+        },
+        {
+          "name": "CascaraDTO.java",
+          "size": 3,
+          "color": "#d66228"
+        },
+        {
+          "name": "EventoDTO.java",
+          "size": 1,
+          "color": "#ede0da"
+        },
+        {
+          "name": "MascotaDTO.java",
+          "size": 1,
+          "color": "#ede0da"
+        },
+        {
+          "name": "MascotaEnAdopcionDTO.java",
+          "size": 2,
+          "color": "#cca92a"
+        },
+        {
+          "name": "MascotaExtraviadaDTO.java",
+          "size": 1,
+          "color": "#ede0da"
+        },
+        {
+          "name": "RecompensaDTO.java",
+          "size": 1,
+          "color": "#ede0da"
+        },
+        {
+          "name": "UsuarioDTO.java",
+          "size": 2,
+          "color": "#cca92a"
+        }
+      ]
+    },
+    {
+      "name": "logic",
+      "pattern": [
+        "/**/co/edu/uniandes/csw/*/ejb/*.java"
+      ],
+      "size": 30,
+      "children": [
+        {
+          "name": "CalificacionLogic.java",
+          "size": 1,
+          "color": "#ede0da"
+        },
+        {
+          "name": "CascaraLogic.java",
+          "size": 1,
+          "color": "#ede0da"
+        },
+        {
+          "name": "MascotaEnAdopcionLogic.java",
+          "size": 1,
+          "color": "#ede0da"
+        },
+        {
+          "name": "MascotaExtraviadaLogic.java",
+          "size": 1,
+          "color": "#ede0da"
+        },
+        {
+          "name": "MascotaLogic.java",
+          "size": 1,
+          "color": "#ede0da"
+        },
+        {
+          "name": "RecompensaLogic.java",
+          "size": 1,
+          "color": "#ede0da"
+        }
+      ]
+    },
+    {
+      "name": "persistence",
+      "pattern": [
+        "/**/co/edu/uniandes/csw/*/entities/*.java",
+        "/**/co/edu/uniandes/csw/*/persistence/*.java"
+      ],
+      "size": 30,
+      "children": [
+        {
+          "name": "ArticuloEntity.java",
+          "size": 1,
+          "color": "#ede0da"
+        },
+        {
+          "name": "BaseEntity.java",
+          "size": 1,
+          "color": "#ede0da"
+        },
+        {
+          "name": "CalificacionEntity.java",
+          "size": 1,
+          "color": "#ede0da"
+        },
+        {
+          "name": "EventoEntity.java",
+          "size": 1,
+          "color": "#ede0da"
+        },
+        {
+          "name": "MascotaEnAdopcionEntity.java",
+          "size": 1,
+          "color": "#ede0da"
+        },
+        {
+          "name": "MascotaEntity.java",
+          "size": 1,
+          "color": "#ede0da"
+        },
+        {
+          "name": "MascotaExtraviadaEntity.java",
+          "size": 1,
+          "color": "#ede0da"
+        },
+        {
+          "name": "PostuladoEntity.java",
+          "size": 1,
+          "color": "#ede0da"
+        },
+        {
+          "name": "RecompensaEntity.java",
+          "size": 1,
+          "color": "#ede0da"
+        },
+        {
+          "name": "UsuarioEntity.java",
+          "size": 1,
+          "color": "#ede0da"
+        },
+        {
+          "name": "ArticuloPersistence.java",
+          "size": 1,
+          "color": "#ede0da"
+        },
+        {
+          "name": "CalificacionPersistence.java",
+          "size": 1,
+          "color": "#ede0da"
+        },
+        {
+          "name": "CascaraPersistence.java",
+          "size": 1,
+          "color": "#ede0da"
+        },
+        {
+          "name": "EventoPersistence.java",
+          "size": 1,
+          "color": "#ede0da"
+        },
+        {
+          "name": "MascotaEnAdopcionPersistence.java",
+          "size": 1,
+          "color": "#ede0da"
+        },
+        {
+          "name": "MascotaExtraviadaPersistence.java",
+          "size": 1,
+          "color": "#ede0da"
+        },
+        {
+          "name": "MascotaPersistence.java",
+          "size": 1,
+          "color": "#ede0da"
+        },
+        {
+          "name": "PostuladoPersistence.java",
+          "size": 1,
+          "color": "#ede0da"
+        },
+        {
+          "name": "RecompensaPersistence.java",
+          "size": 1,
+          "color": "#ede0da"
+        },
+        {
+          "name": "UsuarioPersistence.java",
+          "size": 1,
+          "color": "#ede0da"
+        }
+      ]
+    }
+  ]
 }

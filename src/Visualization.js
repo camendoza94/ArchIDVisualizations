@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
 import * as d3 from "d3";
-import root from './architecture2.json';
 
 class Visualization extends Component {
     componentDidMount() {
@@ -10,11 +9,10 @@ class Visualization extends Component {
                 .attr('width', width)
                 .attr('height', height),
             diameter = +svg.attr("width"),
-            g = svg.append("g").attr("transform", "translate(2,2)"),
-            format = d3.format(",d");
+            g = svg.append("g").attr("transform", "translate(2,2)");
         const pack = d3.pack()
             .size([diameter - 4, diameter - 4]);
-        const root2 = d3.hierarchy(root)
+        const root2 = d3.hierarchy(this.props.projectData.value)
             .sum(function (d) {
                 return d.size;
             })
