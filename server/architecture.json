@@ -5,19 +5,19 @@
  		{
 			"name": "services",
 			"pattern": ["/**/co/edu/uniandes/csw/*/resources/*.java", "/**/co/edu/uniandes/csw/*/dtos/*.java"],
-			"size": 2,
+			"size": 30,
 			"children": []
 		},
 		{
 			"name": "logic",
 			"pattern": ["/**/co/edu/uniandes/csw/*/ejb/*.java"],
-			"size": 2,
+			"size": 30,
 			"children": []
 		},
 		{
 			"name": "persistence",
 			"pattern": ["/**/co/edu/uniandes/csw/*/entities/*.java", "/**/co/edu/uniandes/csw/*/persistence/*.java"],
-			"size": 2,
+			"size": 30,
 			"children": []
 		}
 	]
