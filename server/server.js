@@ -23,10 +23,12 @@ function getPath(s) {
 
 const getFiles = async (src) => {
     let currentData = data.find(project => project.name === require('path').basename(process.cwd())).data[0];
+    architecture.name = require('path').basename(process.cwd());
     architecture.children.forEach((child) => {
         mod = child;
         child.pattern.forEach((pattern) => {
             let res = glob.sync(src + pattern);
+            //TODO change size to authors changed lines.
             let newRes = res.map(file => {
                 let found = currentData.files.find(f => f.name === getPath(file));
                 let sum = found ? found.issues.reduce((a, b) => a + b, 0) : 0;
@@ -35,6 +37,14 @@ const getFiles = async (src) => {
                     size: sum + 1,
                     color: colors[sum % 5]
                 }
+            });
+            let max = Math.max(...newRes.map(file => file.size));
+            let div = (max * 1.0) / 5;
+            newRes.forEach((res) => {
+                if (res.size === 1)
+                    res.color = colors[0];
+                else
+                    res.color = colors[Math.ceil(res.size / div) - 1]
             });
             architecture.children.find(child => child.name === mod.name).children.push(...newRes);
         });

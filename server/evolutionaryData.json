@@ -1,0 +1,1423 @@
+{
+	"repository": "s4_Mascotas_Front_201910",
+	"report_date": "2019/05/13",
+	"changes": {
+		"message": "The following historical commit information, by author, was found",
+		"authors": [
+		{
+			"name": "Daniela Gonzalez",
+			"email": "d.gonzalezc1@uniandes.edu.co",
+			"gravatar": "https://www.gravatar.com/avatar/10af6d4fde6621d14601a1acd5835c37?default=identicon",
+			"commits": 10,
+			"insertions": 1472,
+			"deletions": 66,
+			"percentage_of_changes": 22.63
+		},{
+			"name": "Natalia Sanabria Forero",
+			"email": "n.sanabria@uniandes.edu.co",
+			"gravatar": "https://www.gravatar.com/avatar/e382bba7db438ad6edf1fe1368607a9e?default=identicon",
+			"commits": 51,
+			"insertions": 1466,
+			"deletions": 301,
+			"percentage_of_changes": 26.00
+		},{
+			"name": "Santiago Lemus",
+			"email": "santiago29lg@gmail.com",
+			"gravatar": "https://www.gravatar.com/avatar/67f84366d6c8426cd705b1256d95ca6a?default=identicon",
+			"commits": 4,
+			"insertions": 83,
+			"deletions": 9,
+			"percentage_of_changes": 1.35
+		},{
+			"name": "Sebastián Lemus",
+			"email": "s.lemus@uniandes.edu.co",
+			"gravatar": "https://www.gravatar.com/avatar/2a9570f4cb2770b7c05c968346f5c104?default=identicon",
+			"commits": 16,
+			"insertions": 1478,
+			"deletions": 76,
+			"percentage_of_changes": 22.87
+		},{
+			"name": "maortiz1",
+			"email": "ma.ortiz1@uniandes.edu.co",
+			"gravatar": "https://www.gravatar.com/avatar/9ff4ed54b53f96675742a861da259545?default=identicon",
+			"commits": 5,
+			"insertions": 491,
+			"deletions": 21,
+			"percentage_of_changes": 7.53
+		},{
+			"name": "n.sanabria",
+			"email": "n.sanabria@uniandes.edu.co",
+			"gravatar": "https://www.gravatar.com/avatar/e382bba7db438ad6edf1fe1368607a9e?default=identicon",
+			"commits": 5,
+			"insertions": 54,
+			"deletions": 54,
+			"percentage_of_changes": 1.59
+		},{
+			"name": "s.lemus",
+			"email": "s.lemus@uniandes.edu.co",
+			"gravatar": "https://www.gravatar.com/avatar/2a9570f4cb2770b7c05c968346f5c104?default=identicon",
+			"commits": 5,
+			"insertions": 25,
+			"deletions": 13,
+			"percentage_of_changes": 0.56
+		},{
+			"name": "sergio",
+			"email": "s.canales@uniandes.edu.co",
+			"gravatar": "https://www.gravatar.com/avatar/860332e5d01a77908570cfccf3152b0d?default=identicon",
+			"commits": 11,
+			"insertions": 1053,
+			"deletions": 133,
+			"percentage_of_changes": 17.45
+		}]
+	},
+	"blame": {
+		"message": "Below are the number of rows from each author that have survived and are still intact in the current revision",
+		"authors": [
+		{
+			"name": "AndresVaron",
+			"email": "af.varon@uniandes.edu.co",
+			"gravatar": "https://www.gravatar.com/avatar/4c9b0314ed79587771fc59150561dca9?default=identicon",
+			"rows": 842,
+			"stability": 96.0,
+			"age": 0.0,
+			"percentage_in_comments": 0.83
+		},{
+			"name": "Daniela Gonzalez",
+			"email": "d.gonzalezc1@uniandes.edu.co",
+			"gravatar": "https://www.gravatar.com/avatar/10af6d4fde6621d14601a1acd5835c37?default=identicon",
+			"rows": 1409,
+			"stability": 95.7,
+			"age": 0.2,
+			"percentage_in_comments": 0.57
+		},{
+			"name": "Natalia Sanabria Forero",
+			"email": "n.sanabria@uniandes.edu.co",
+			"gravatar": "https://www.gravatar.com/avatar/e382bba7db438ad6edf1fe1368607a9e?default=identicon",
+			"rows": 1213,
+			"stability": 82.7,
+			"age": 0.5,
+			"percentage_in_comments": 0.00
+		},{
+			"name": "SEBASTIAN RODRIGUEZ BELTRAN",
+			"email": "s.rodriguezb1@sis.virtual.uniandes.edu.co",
+			"gravatar": "https://www.gravatar.com/avatar/dac9cb16fa6ea4c67597cc69420db971?default=identicon",
+			"rows": 6,
+			"stability": 60.0,
+			"age": 3.4,
+			"percentage_in_comments": 0.00
+		},{
+			"name": "Santiago Lemus",
+			"email": "santiago29lg@gmail.com",
+			"gravatar": "https://www.gravatar.com/avatar/67f84366d6c8426cd705b1256d95ca6a?default=identicon",
+			"rows": 26,
+			"stability": 31.3,
+			"age": 0.1,
+			"percentage_in_comments": 0.00
+		},{
+			"name": "Sebastián Lemus",
+			"email": "s.lemus@uniandes.edu.co",
+			"gravatar": "https://www.gravatar.com/avatar/2a9570f4cb2770b7c05c968346f5c104?default=identicon",
+			"rows": 1302,
+			"stability": 88.1,
+			"age": 1.2,
+			"percentage_in_comments": 21.43
+		},{
+			"name": "maortiz1",
+			"email": "ma.ortiz1@uniandes.edu.co",
+			"gravatar": "https://www.gravatar.com/avatar/9ff4ed54b53f96675742a861da259545?default=identicon",
+			"rows": 478,
+			"stability": 97.4,
+			"age": 0.2,
+			"percentage_in_comments": 0.00
+		},{
+			"name": "s.lemus",
+			"email": "s.lemus@uniandes.edu.co",
+			"gravatar": "https://www.gravatar.com/avatar/2a9570f4cb2770b7c05c968346f5c104?default=identicon",
+			"rows": 58,
+			"stability": 232.0,
+			"age": 0.1,
+			"percentage_in_comments": 0.00
+		},{
+			"name": "sergio",
+			"email": "s.canales@uniandes.edu.co",
+			"gravatar": "https://www.gravatar.com/avatar/860332e5d01a77908570cfccf3152b0d?default=identicon",
+			"rows": 922,
+			"stability": 87.6,
+			"age": 0.3,
+			"percentage_in_comments": 0.98
+		}]
+	},
+	"timeline": {
+		"message": "The following history timeline has been gathered from the repository",
+		"period_length": "week",
+		"periods": [
+		{
+			"name": "25/03 - 31/03",
+			"authors": [
+			{
+				"name": "Sebastián Lemus",
+				"email": "s.lemus@uniandes.edu.co",
+				"gravatar": "https://www.gravatar.com/avatar/2a9570f4cb2770b7c05c968346f5c104?default=identicon",
+				"work": "dels:5.43,adds:94.57"
+			}],
+			"modified_rows": 626
+		},{
+			"name": "01/04 - 07/04",
+			"authors": [
+			{
+				"name": "Natalia Sanabria Forero",
+				"email": "n.sanabria@uniandes.edu.co",
+				"gravatar": "https://www.gravatar.com/avatar/e382bba7db438ad6edf1fe1368607a9e?default=identicon",
+				"work": "dels:8.86,adds:61.35"
+			},{
+				"name": "sergio",
+				"email": "s.canales@uniandes.edu.co",
+				"gravatar": "https://www.gravatar.com/avatar/860332e5d01a77908570cfccf3152b0d?default=identicon",
+				"work": "dels:0.44,adds:29.35"
+			}],
+			"modified_rows": 903
+		},{
+			"name": "08/04 - 14/04",
+			"authors": [
+			{
+				"name": "Daniela Gonzalez",
+				"email": "d.gonzalezc1@uniandes.edu.co",
+				"gravatar": "https://www.gravatar.com/avatar/10af6d4fde6621d14601a1acd5835c37?default=identicon",
+				"work": "dels:1.25,adds:27.95"
+			},{
+				"name": "Natalia Sanabria Forero",
+				"email": "n.sanabria@uniandes.edu.co",
+				"gravatar": "https://www.gravatar.com/avatar/e382bba7db438ad6edf1fe1368607a9e?default=identicon",
+				"work": "dels:4.2,adds:17.32"
+			},{
+				"name": "Santiago Lemus",
+				"email": "santiago29lg@gmail.com",
+				"gravatar": "https://www.gravatar.com/avatar/67f84366d6c8426cd705b1256d95ca6a?default=identicon",
+				"work": "dels:0.17,adds:1.58"
+			},{
+				"name": "Sebastián Lemus",
+				"email": "s.lemus@uniandes.edu.co",
+				"gravatar": "https://www.gravatar.com/avatar/2a9570f4cb2770b7c05c968346f5c104?default=identicon",
+				"work": "dels:0.8,adds:16.82"
+			},{
+				"name": "maortiz1",
+				"email": "ma.ortiz1@uniandes.edu.co",
+				"gravatar": "https://www.gravatar.com/avatar/9ff4ed54b53f96675742a861da259545?default=identicon",
+				"work": "dels:0.4,adds:9.32"
+			},{
+				"name": "n.sanabria",
+				"email": "n.sanabria@uniandes.edu.co",
+				"gravatar": "https://www.gravatar.com/avatar/e382bba7db438ad6edf1fe1368607a9e?default=identicon",
+				"work": "dels:1.03,adds:1.03"
+			},{
+				"name": "s.lemus",
+				"email": "s.lemus@uniandes.edu.co",
+				"gravatar": "https://www.gravatar.com/avatar/2a9570f4cb2770b7c05c968346f5c104?default=identicon",
+				"work": "dels:0.25,adds:0.47"
+			},{
+				"name": "sergio",
+				"email": "s.canales@uniandes.edu.co",
+				"gravatar": "https://www.gravatar.com/avatar/860332e5d01a77908570cfccf3152b0d?default=identicon",
+				"work": "dels:2.45,adds:14.96"
+			}],
+			"modified_rows": 5266
+		}]
+	},
+	"responsibilities": {
+		"message": "The following responsibilities, by author, were found in the current revision of the repository",
+		"files": [
+		{
+			"file": "src/app/app.component.spec.ts",
+			"authors": [
+			{
+				"name": "Natalia Sanabria Forero",
+				"email": "n.sanabria@uniandes.edu.co",
+				"rows": 1
+			}]
+		},{
+			"file": "src/app/app.component.html",
+			"authors": [
+			{
+				"name": "Daniela Gonzalez",
+				"email": "d.gonzalezc1@uniandes.edu.co",
+				"rows": 7
+			},{
+				"name": "Natalia Sanabria Forero",
+				"email": "n.sanabria@uniandes.edu.co",
+				"rows": 19
+			},{
+				"name": "maortiz1",
+				"email": "ma.ortiz1@uniandes.edu.co",
+				"rows": 3
+			}]
+		},{
+			"file": "src/app/app-routing/app-routing.module.ts",
+			"authors": [
+			{
+				"name": "Daniela Gonzalez",
+				"email": "d.gonzalezc1@uniandes.edu.co",
+				"rows": 50
+			},{
+				"name": "Natalia Sanabria Forero",
+				"email": "n.sanabria@uniandes.edu.co",
+				"rows": 49
+			},{
+				"name": "Sebastián Lemus",
+				"email": "s.lemus@uniandes.edu.co",
+				"rows": 39
+			},{
+				"name": "maortiz1",
+				"email": "ma.ortiz1@uniandes.edu.co",
+				"rows": 25
+			},{
+				"name": "s.lemus",
+				"email": "s.lemus@uniandes.edu.co",
+				"rows": 5
+			},{
+				"name": "sergio",
+				"email": "s.canales@uniandes.edu.co",
+				"rows": 41
+			}]
+		},{
+			"file": "src/app/app.component.ts",
+			"authors": [
+			{
+				"name": "Natalia Sanabria Forero",
+				"email": "n.sanabria@uniandes.edu.co",
+				"rows": 1
+			}]
+		},{
+			"file": "src/app/articulo/articulo-detail/articulo-detail.component.html",
+			"authors": [
+			{
+				"name": "Daniela Gonzalez",
+				"email": "d.gonzalezc1@uniandes.edu.co",
+				"rows": 20
+			}]
+		},{
+			"file": "src/app/articulo/articulo-detail/articulo-detail.component.spec.ts",
+			"authors": [
+			{
+				"name": "Daniela Gonzalez",
+				"email": "d.gonzalezc1@uniandes.edu.co",
+				"rows": 25
+			}]
+		},{
+			"file": "src/app/articulo/articulo-detail/articulo-detail.component.ts",
+			"authors": [
+			{
+				"name": "Daniela Gonzalez",
+				"email": "d.gonzalezc1@uniandes.edu.co",
+				"rows": 46
+			}]
+		},{
+			"file": "src/app/articulo/articulo.module.ts",
+			"authors": [
+			{
+				"name": "Daniela Gonzalez",
+				"email": "d.gonzalezc1@uniandes.edu.co",
+				"rows": 37
+			}]
+		},{
+			"file": "src/app/app.module.ts",
+			"authors": [
+			{
+				"name": "Daniela Gonzalez",
+				"email": "d.gonzalezc1@uniandes.edu.co",
+				"rows": 4
+			},{
+				"name": "Natalia Sanabria Forero",
+				"email": "n.sanabria@uniandes.edu.co",
+				"rows": 8
+			},{
+				"name": "Sebastián Lemus",
+				"email": "s.lemus@uniandes.edu.co",
+				"rows": 6
+			},{
+				"name": "maortiz1",
+				"email": "ma.ortiz1@uniandes.edu.co",
+				"rows": 2
+			},{
+				"name": "sergio",
+				"email": "s.canales@uniandes.edu.co",
+				"rows": 5
+			}]
+		},{
+			"file": "src/app/articulo/articulo.module.spec.ts",
+			"authors": [
+			{
+				"name": "Daniela Gonzalez",
+				"email": "d.gonzalezc1@uniandes.edu.co",
+				"rows": 13
+			}]
+		},{
+			"file": "src/app/articulo/articulo.service.ts",
+			"authors": [
+			{
+				"name": "Daniela Gonzalez",
+				"email": "d.gonzalezc1@uniandes.edu.co",
+				"rows": 61
+			}]
+		},{
+			"file": "src/app/articulo/articulo.ts",
+			"authors": [
+			{
+				"name": "Daniela Gonzalez",
+				"email": "d.gonzalezc1@uniandes.edu.co",
+				"rows": 34
+			}]
+		},{
+			"file": "src/app/articulo/crear-articulo/crear-articulo.component.html",
+			"authors": [
+			{
+				"name": "Daniela Gonzalez",
+				"email": "d.gonzalezc1@uniandes.edu.co",
+				"rows": 50
+			}]
+		},{
+			"file": "src/app/articulo/crear-articulo/crear-articulo.component.ts",
+			"authors": [
+			{
+				"name": "Daniela Gonzalez",
+				"email": "d.gonzalezc1@uniandes.edu.co",
+				"rows": 77
+			}]
+		},{
+			"file": "src/app/articulo/editar-articulo/editar-articulo.component.spec.ts",
+			"authors": [
+			{
+				"name": "Daniela Gonzalez",
+				"email": "d.gonzalezc1@uniandes.edu.co",
+				"rows": 25
+			}]
+		},{
+			"file": "src/app/articulo/editar-articulo/editar-articulo.component.html",
+			"authors": [
+			{
+				"name": "Daniela Gonzalez",
+				"email": "d.gonzalezc1@uniandes.edu.co",
+				"rows": 33
+			}]
+		},{
+			"file": "src/app/articulo/crear-articulo/crear-articulo.component.spec.ts",
+			"authors": [
+			{
+				"name": "Daniela Gonzalez",
+				"email": "d.gonzalezc1@uniandes.edu.co",
+				"rows": 25
+			}]
+		},{
+			"file": "src/app/articulo/listar-articulo/listar-articulo.component.spec.ts",
+			"authors": [
+			{
+				"name": "Daniela Gonzalez",
+				"email": "d.gonzalezc1@uniandes.edu.co",
+				"rows": 25
+			}]
+		},{
+			"file": "src/app/articulo/listar-articulo/listar-articulo.component.html",
+			"authors": [
+			{
+				"name": "Daniela Gonzalez",
+				"email": "d.gonzalezc1@uniandes.edu.co",
+				"rows": 28
+			}]
+		},{
+			"file": "src/app/articulo/editar-articulo/editar-articulo.component.ts",
+			"authors": [
+			{
+				"name": "Daniela Gonzalez",
+				"email": "d.gonzalezc1@uniandes.edu.co",
+				"rows": 108
+			}]
+		},{
+			"file": "src/app/articulo/listar-articulo/listar-articulo.component.ts",
+			"authors": [
+			{
+				"name": "Daniela Gonzalez",
+				"email": "d.gonzalezc1@uniandes.edu.co",
+				"rows": 36
+			}]
+		},{
+			"file": "src/app/auth/auth-login/auth-login.component.html",
+			"authors": [
+			{
+				"name": "Natalia Sanabria Forero",
+				"email": "n.sanabria@uniandes.edu.co",
+				"rows": 2
+			}]
+		},{
+			"file": "src/app/auth/auth-sign-up/auth-sign-up.component.html",
+			"authors": [
+			{
+				"name": "Natalia Sanabria Forero",
+				"email": "n.sanabria@uniandes.edu.co",
+				"rows": 2
+			},{
+				"name": "maortiz1",
+				"email": "ma.ortiz1@uniandes.edu.co",
+				"rows": 1
+			}]
+		},{
+			"file": "src/app/calificacion/calificacion-create/calificacion-create.component.spec.ts",
+			"authors": [
+			{
+				"name": "sergio",
+				"email": "s.canales@uniandes.edu.co",
+				"rows": 25
+			}]
+		},{
+			"file": "src/app/calificacion/calificacion-create/calificacion-create.component.html",
+			"authors": [
+			{
+				"name": "sergio",
+				"email": "s.canales@uniandes.edu.co",
+				"rows": 33
+			}]
+		},{
+			"file": "src/app/calificacion/calificacion-create/calificacion-create.component.ts",
+			"authors": [
+			{
+				"name": "sergio",
+				"email": "s.canales@uniandes.edu.co",
+				"rows": 65
+			}]
+		},{
+			"file": "src/app/calificacion/calificacion-detail/calificacion-detail.component.html",
+			"authors": [
+			{
+				"name": "sergio",
+				"email": "s.canales@uniandes.edu.co",
+				"rows": 41
+			}]
+		},{
+			"file": "src/app/calificacion/calificacion.module.spec.ts",
+			"authors": [
+			{
+				"name": "sergio",
+				"email": "s.canales@uniandes.edu.co",
+				"rows": 13
+			}]
+		},{
+			"file": "src/app/calificacion/calificacion-detail/calificacion-detail.component.ts",
+			"authors": [
+			{
+				"name": "sergio",
+				"email": "s.canales@uniandes.edu.co",
+				"rows": 51
+			}]
+		},{
+			"file": "src/app/calificacion/calificacion-detail/calificacion-detail.component.spec.ts",
+			"authors": [
+			{
+				"name": "sergio",
+				"email": "s.canales@uniandes.edu.co",
+				"rows": 25
+			}]
+		},{
+			"file": "src/app/calificacion/calificacion.service.spec.ts",
+			"authors": [
+			{
+				"name": "sergio",
+				"email": "s.canales@uniandes.edu.co",
+				"rows": 12
+			}]
+		},{
+			"file": "src/app/evento/crear-evento/crear-evento.component.html",
+			"authors": [
+			{
+				"name": "Daniela Gonzalez",
+				"email": "d.gonzalezc1@uniandes.edu.co",
+				"rows": 58
+			}]
+		},{
+			"file": "src/app/calificacion/calificacion.module.ts",
+			"authors": [
+			{
+				"name": "sergio",
+				"email": "s.canales@uniandes.edu.co",
+				"rows": 21
+			}]
+		},{
+			"file": "src/app/calificacion/calificacion.service.ts",
+			"authors": [
+			{
+				"name": "sergio",
+				"email": "s.canales@uniandes.edu.co",
+				"rows": 37
+			}]
+		},{
+			"file": "src/app/calificacion/calificacion.ts",
+			"authors": [
+			{
+				"name": "sergio",
+				"email": "s.canales@uniandes.edu.co",
+				"rows": 10
+			}]
+		},{
+			"file": "src/app/evento/crear-evento/crear-evento.component.spec.ts",
+			"authors": [
+			{
+				"name": "Daniela Gonzalez",
+				"email": "d.gonzalezc1@uniandes.edu.co",
+				"rows": 25
+			}]
+		},{
+			"file": "src/app/evento/editar-evento/editar-evento.component.html",
+			"authors": [
+			{
+				"name": "Daniela Gonzalez",
+				"email": "d.gonzalezc1@uniandes.edu.co",
+				"rows": 52
+			}]
+		},{
+			"file": "src/app/evento/crear-evento/crear-evento.component.ts",
+			"authors": [
+			{
+				"name": "Daniela Gonzalez",
+				"email": "d.gonzalezc1@uniandes.edu.co",
+				"rows": 120
+			}]
+		},{
+			"file": "src/app/evento/editar-evento/editar-evento.component.spec.ts",
+			"authors": [
+			{
+				"name": "Daniela Gonzalez",
+				"email": "d.gonzalezc1@uniandes.edu.co",
+				"rows": 25
+			}]
+		},{
+			"file": "src/app/evento/evento-detail/evento-detail.component.html",
+			"authors": [
+			{
+				"name": "Daniela Gonzalez",
+				"email": "d.gonzalezc1@uniandes.edu.co",
+				"rows": 14
+			}]
+		},{
+			"file": "src/app/evento/evento-detail/evento-detail.component.spec.ts",
+			"authors": [
+			{
+				"name": "Daniela Gonzalez",
+				"email": "d.gonzalezc1@uniandes.edu.co",
+				"rows": 25
+			}]
+		},{
+			"file": "src/app/evento/evento.module.spec.ts",
+			"authors": [
+			{
+				"name": "Daniela Gonzalez",
+				"email": "d.gonzalezc1@uniandes.edu.co",
+				"rows": 13
+			}]
+		},{
+			"file": "src/app/evento/evento.module.ts",
+			"authors": [
+			{
+				"name": "Daniela Gonzalez",
+				"email": "d.gonzalezc1@uniandes.edu.co",
+				"rows": 22
+			}]
+		},{
+			"file": "src/app/evento/evento-detail/evento-detail.component.ts",
+			"authors": [
+			{
+				"name": "Daniela Gonzalez",
+				"email": "d.gonzalezc1@uniandes.edu.co",
+				"rows": 45
+			}]
+		},{
+			"file": "src/app/evento/editar-evento/editar-evento.component.ts",
+			"authors": [
+			{
+				"name": "Daniela Gonzalez",
+				"email": "d.gonzalezc1@uniandes.edu.co",
+				"rows": 131
+			}]
+		},{
+			"file": "src/app/evento/evento.ts",
+			"authors": [
+			{
+				"name": "Daniela Gonzalez",
+				"email": "d.gonzalezc1@uniandes.edu.co",
+				"rows": 40
+			}]
+		},{
+			"file": "src/app/evento/evento.service.ts",
+			"authors": [
+			{
+				"name": "Daniela Gonzalez",
+				"email": "d.gonzalezc1@uniandes.edu.co",
+				"rows": 61
+			}]
+		},{
+			"file": "src/app/evento/listar-evento/listar-evento.component.html",
+			"authors": [
+			{
+				"name": "Daniela Gonzalez",
+				"email": "d.gonzalezc1@uniandes.edu.co",
+				"rows": 12
+			},{
+				"name": "Natalia Sanabria Forero",
+				"email": "n.sanabria@uniandes.edu.co",
+				"rows": 1
+			}]
+		},{
+			"file": "src/app/evento/listar-evento/listar-evento.component.spec.ts",
+			"authors": [
+			{
+				"name": "Daniela Gonzalez",
+				"email": "d.gonzalezc1@uniandes.edu.co",
+				"rows": 25
+			}]
+		},{
+			"file": "src/app/evento/listar-evento/listar-evento.component.ts",
+			"authors": [
+			{
+				"name": "Daniela Gonzalez",
+				"email": "d.gonzalezc1@uniandes.edu.co",
+				"rows": 37
+			}]
+		},{
+			"file": "src/app/home/home.component.html",
+			"authors": [
+			{
+				"name": "Natalia Sanabria Forero",
+				"email": "n.sanabria@uniandes.edu.co",
+				"rows": 38
+			},{
+				"name": "sergio",
+				"email": "s.canales@uniandes.edu.co",
+				"rows": 10
+			}]
+		},{
+			"file": "src/app/home/home.component.ts",
+			"authors": [
+			{
+				"name": "Natalia Sanabria Forero",
+				"email": "n.sanabria@uniandes.edu.co",
+				"rows": 18
+			}]
+		},{
+			"file": "src/app/home/home.component.spec.ts",
+			"authors": [
+			{
+				"name": "Natalia Sanabria Forero",
+				"email": "n.sanabria@uniandes.edu.co",
+				"rows": 25
+			}]
+		},{
+			"file": "src/app/mascota-adopcion/mascota-adopcion-create/mascota-adopcion-create.component.spec.ts",
+			"authors": [
+			{
+				"name": "sergio",
+				"email": "s.canales@uniandes.edu.co",
+				"rows": 25
+			}]
+		},{
+			"file": "src/app/mascota-adopcion/mascota-adopcion-create/mascota-adopcion-create.component.html",
+			"authors": [
+			{
+				"name": "sergio",
+				"email": "s.canales@uniandes.edu.co",
+				"rows": 39
+			}]
+		},{
+			"file": "src/app/mascota-adopcion/mascota-adopcion-create/mascota-adopcion-create.component.ts",
+			"authors": [
+			{
+				"name": "sergio",
+				"email": "s.canales@uniandes.edu.co",
+				"rows": 58
+			}]
+		},{
+			"file": "src/app/mascota-adopcion/mascota-adopcion-detail/mascota-adopcion-detail.component.html",
+			"authors": [
+			{
+				"name": "sergio",
+				"email": "s.canales@uniandes.edu.co",
+				"rows": 68
+			}]
+		},{
+			"file": "src/app/mascota-adopcion/mascota-adopcion-detail/mascota-adopcion-detail.component.spec.ts",
+			"authors": [
+			{
+				"name": "sergio",
+				"email": "s.canales@uniandes.edu.co",
+				"rows": 25
+			}]
+		},{
+			"file": "src/app/mascota-adopcion/mascota-adopcion-detail/mascota-adopcion-detail.component.ts",
+			"authors": [
+			{
+				"name": "sergio",
+				"email": "s.canales@uniandes.edu.co",
+				"rows": 47
+			}]
+		},{
+			"file": "src/app/mascota-adopcion/mascota-adopcion-list/mascota-adopcion-list.component.spec.ts",
+			"authors": [
+			{
+				"name": "sergio",
+				"email": "s.canales@uniandes.edu.co",
+				"rows": 25
+			}]
+		},{
+			"file": "src/app/mascota-adopcion/mascota-adopcion-service.service.spec.ts",
+			"authors": [
+			{
+				"name": "sergio",
+				"email": "s.canales@uniandes.edu.co",
+				"rows": 12
+			}]
+		},{
+			"file": "src/app/mascota-adopcion/mascota-adopcion-list/mascota-adopcion-list.component.ts",
+			"authors": [
+			{
+				"name": "sergio",
+				"email": "s.canales@uniandes.edu.co",
+				"rows": 44
+			}]
+		},{
+			"file": "src/app/mascota-adopcion/mascota-adopcion-list/mascota-adopcion-list.component.html",
+			"authors": [
+			{
+				"name": "sergio",
+				"email": "s.canales@uniandes.edu.co",
+				"rows": 51
+			}]
+		},{
+			"file": "src/app/mascota-adopcion/mascota-adopcion.module.spec.ts",
+			"authors": [
+			{
+				"name": "sergio",
+				"email": "s.canales@uniandes.edu.co",
+				"rows": 13
+			}]
+		},{
+			"file": "src/app/mascota-adopcion/mascota-adopcion-service.service.ts",
+			"authors": [
+			{
+				"name": "sergio",
+				"email": "s.canales@uniandes.edu.co",
+				"rows": 50
+			}]
+		},{
+			"file": "src/app/mascota-adopcion/mascota-adopcion.module.ts",
+			"authors": [
+			{
+				"name": "sergio",
+				"email": "s.canales@uniandes.edu.co",
+				"rows": 23
+			}]
+		},{
+			"file": "src/app/mascota-adopcion/mascota-adopcion.ts",
+			"authors": [
+			{
+				"name": "sergio",
+				"email": "s.canales@uniandes.edu.co",
+				"rows": 44
+			}]
+		},{
+			"file": "src/app/mascota-adopcion/mascota-en-adopcion-detail.ts",
+			"authors": [
+			{
+				"name": "sergio",
+				"email": "s.canales@uniandes.edu.co",
+				"rows": 9
+			}]
+		},{
+			"file": "src/app/mascota-encontrada/mascota-encontrada-create/mascota-encontrada-create.component.html",
+			"authors": [
+			{
+				"name": "Natalia Sanabria Forero",
+				"email": "n.sanabria@uniandes.edu.co",
+				"rows": 269
+			}]
+		},{
+			"file": "src/app/mascota-encontrada/mascota-encontrada-list/mascota-encontrada-list.component.html",
+			"authors": [
+			{
+				"name": "Natalia Sanabria Forero",
+				"email": "n.sanabria@uniandes.edu.co",
+				"rows": 1
+			}]
+		},{
+			"file": "src/app/mascota-encontrada/mascota-encontrada-detail/mascota-encontrada-detail.component.html",
+			"authors": [
+			{
+				"name": "Natalia Sanabria Forero",
+				"email": "n.sanabria@uniandes.edu.co",
+				"rows": 1
+			}]
+		},{
+			"file": "src/app/mascota-encontrada/mascota-encontrada-list/mascota-encontrada-list.component.ts",
+			"authors": [
+			{
+				"name": "Natalia Sanabria Forero",
+				"email": "n.sanabria@uniandes.edu.co",
+				"rows": 17
+			}]
+		},{
+			"file": "src/app/mascota-encontrada/mascota-encontrada-detail/mascota-encontrada-detail.component.ts",
+			"authors": [
+			{
+				"name": "Natalia Sanabria Forero",
+				"email": "n.sanabria@uniandes.edu.co",
+				"rows": 32
+			}]
+		},{
+			"file": "src/app/mascota-encontrada/mascota-encontrada-create/mascota-encontrada-create.component.ts",
+			"authors": [
+			{
+				"name": "Natalia Sanabria Forero",
+				"email": "n.sanabria@uniandes.edu.co",
+				"rows": 65
+			}]
+		},{
+			"file": "src/app/mascota-encontrada/mascota-encontrada.module.ts",
+			"authors": [
+			{
+				"name": "Natalia Sanabria Forero",
+				"email": "n.sanabria@uniandes.edu.co",
+				"rows": 17
+			}]
+		},{
+			"file": "src/app/mascota-encontrada/mascota-encontrada.service.ts",
+			"authors": [
+			{
+				"name": "Natalia Sanabria Forero",
+				"email": "n.sanabria@uniandes.edu.co",
+				"rows": 35
+			}]
+		},{
+			"file": "src/app/mascota-extraviada/mascota-extraviada-detail/mascota-extraviada-detail.component.spec.ts",
+			"authors": [
+			{
+				"name": "Sebastián Lemus",
+				"email": "s.lemus@uniandes.edu.co",
+				"rows": 25
+			}]
+		},{
+			"file": "src/app/mascota-extraviada/mascota-extraviada-detail/mascota-extraviada-detail.component.ts",
+			"authors": [
+			{
+				"name": "Sebastián Lemus",
+				"email": "s.lemus@uniandes.edu.co",
+				"rows": 46
+			}]
+		},{
+			"file": "src/app/mascota-extraviada/mascota-extraviada-create/mascota-extraviada-create.component.html",
+			"authors": [
+			{
+				"name": "Sebastián Lemus",
+				"email": "s.lemus@uniandes.edu.co",
+				"rows": 313
+			},{
+				"name": "maortiz1",
+				"email": "ma.ortiz1@uniandes.edu.co",
+				"rows": 1
+			}]
+		},{
+			"file": "src/app/mascota-extraviada/mascota-extraviada-edit/mascota-extraviada-edit.component.html",
+			"authors": [
+			{
+				"name": "Sebastián Lemus",
+				"email": "s.lemus@uniandes.edu.co",
+				"rows": 3
+			}]
+		},{
+			"file": "src/app/mascota-extraviada/mascota-extraviada-detail/mascota-extraviada-detail.component.html",
+			"authors": [
+			{
+				"name": "Santiago Lemus",
+				"email": "santiago29lg@gmail.com",
+				"rows": 10
+			},{
+				"name": "Sebastián Lemus",
+				"email": "s.lemus@uniandes.edu.co",
+				"rows": 6
+			}]
+		},{
+			"file": "src/app/mascota-encontrada/mascota-encontrada.ts",
+			"authors": [
+			{
+				"name": "Natalia Sanabria Forero",
+				"email": "n.sanabria@uniandes.edu.co",
+				"rows": 13
+			}]
+		},{
+			"file": "src/app/mascota-extraviada/mascota-extraviada-create/mascota-extraviada-create.component.ts",
+			"authors": [
+			{
+				"name": "Sebastián Lemus",
+				"email": "s.lemus@uniandes.edu.co",
+				"rows": 73
+			}]
+		},{
+			"file": "src/app/mascota-extraviada/mascota-extraviada-create/mascota-extraviada-create.component.spec.ts",
+			"authors": [
+			{
+				"name": "Sebastián Lemus",
+				"email": "s.lemus@uniandes.edu.co",
+				"rows": 25
+			}]
+		},{
+			"file": "src/app/mascota-extraviada/mascota-extraviada-edit/mascota-extraviada-edit.component.spec.ts",
+			"authors": [
+			{
+				"name": "Sebastián Lemus",
+				"email": "s.lemus@uniandes.edu.co",
+				"rows": 25
+			}]
+		},{
+			"file": "src/app/mascota-extraviada/mascota-extraviada-edit/mascota-extraviada-edit.component.ts",
+			"authors": [
+			{
+				"name": "Sebastián Lemus",
+				"email": "s.lemus@uniandes.edu.co",
+				"rows": 64
+			}]
+		},{
+			"file": "src/app/mascota-extraviada/mascota-extraviada-list/mascota-extraviada-list.component.spec.ts",
+			"authors": [
+			{
+				"name": "Sebastián Lemus",
+				"email": "s.lemus@uniandes.edu.co",
+				"rows": 25
+			}]
+		},{
+			"file": "src/app/mascota-extraviada/mascota-extraviada.module.spec.ts",
+			"authors": [
+			{
+				"name": "Sebastián Lemus",
+				"email": "s.lemus@uniandes.edu.co",
+				"rows": 13
+			}]
+		},{
+			"file": "src/app/mascota-extraviada/mascota-extraviada-list/mascota-extraviada-list.component.html",
+			"authors": [
+			{
+				"name": "Natalia Sanabria Forero",
+				"email": "n.sanabria@uniandes.edu.co",
+				"rows": 13
+			},{
+				"name": "Sebastián Lemus",
+				"email": "s.lemus@uniandes.edu.co",
+				"rows": 2
+			},{
+				"name": "s.lemus",
+				"email": "s.lemus@uniandes.edu.co",
+				"rows": 4
+			}]
+		},{
+			"file": "src/app/mascota-extraviada/mascota-extraviada.service.spec.ts",
+			"authors": [
+			{
+				"name": "Sebastián Lemus",
+				"email": "s.lemus@uniandes.edu.co",
+				"rows": 12
+			}]
+		},{
+			"file": "src/app/mascota-extraviada/mascota-extraviada-list/mascota-extraviada-list.component.ts",
+			"authors": [
+			{
+				"name": "Sebastián Lemus",
+				"email": "s.lemus@uniandes.edu.co",
+				"rows": 37
+			}]
+		},{
+			"file": "src/app/mascota-extraviada/mascota-extraviada.module.ts",
+			"authors": [
+			{
+				"name": "Sebastián Lemus",
+				"email": "s.lemus@uniandes.edu.co",
+				"rows": 18
+			},{
+				"name": "s.lemus",
+				"email": "s.lemus@uniandes.edu.co",
+				"rows": 2
+			}]
+		},{
+			"file": "src/app/mascota-extraviada/mascota-extraviada.ts",
+			"authors": [
+			{
+				"name": "Santiago Lemus",
+				"email": "santiago29lg@gmail.com",
+				"rows": 7
+			},{
+				"name": "Sebastián Lemus",
+				"email": "s.lemus@uniandes.edu.co",
+				"rows": 37
+			}]
+		},{
+			"file": "src/app/mascota-extraviada/mascota-extraviada.service.ts",
+			"authors": [
+			{
+				"name": "Sebastián Lemus",
+				"email": "s.lemus@uniandes.edu.co",
+				"rows": 65
+			}]
+		},{
+			"file": "src/app/mascota/mascota-create/mascota-create.component.html",
+			"authors": [
+			{
+				"name": "Natalia Sanabria Forero",
+				"email": "n.sanabria@uniandes.edu.co",
+				"rows": 66
+			}]
+		},{
+			"file": "src/app/mascota/mascota-detail/mascota-detail.component.html",
+			"authors": [
+			{
+				"name": "Natalia Sanabria Forero",
+				"email": "n.sanabria@uniandes.edu.co",
+				"rows": 59
+			}]
+		},{
+			"file": "src/app/mascota/mascota-create/mascota-create.component.ts",
+			"authors": [
+			{
+				"name": "Natalia Sanabria Forero",
+				"email": "n.sanabria@uniandes.edu.co",
+				"rows": 90
+			}]
+		},{
+			"file": "src/app/mascota/mascota.module.ts",
+			"authors": [
+			{
+				"name": "Natalia Sanabria Forero",
+				"email": "n.sanabria@uniandes.edu.co",
+				"rows": 26
+			}]
+		},{
+			"file": "src/app/mascota/mascota-detail/mascota-detail.component.ts",
+			"authors": [
+			{
+				"name": "Natalia Sanabria Forero",
+				"email": "n.sanabria@uniandes.edu.co",
+				"rows": 71
+			}]
+		},{
+			"file": "src/app/mascota/mascota-detail/mascota-detail.component.spec.ts",
+			"authors": [
+			{
+				"name": "Natalia Sanabria Forero",
+				"email": "n.sanabria@uniandes.edu.co",
+				"rows": 24
+			}]
+		},{
+			"file": "src/app/mascota/mascota.service.ts",
+			"authors": [
+			{
+				"name": "Natalia Sanabria Forero",
+				"email": "n.sanabria@uniandes.edu.co",
+				"rows": 62
+			}]
+		},{
+			"file": "src/app/mascota/mascota-list/mascota-list.component.html",
+			"authors": [
+			{
+				"name": "Natalia Sanabria Forero",
+				"email": "n.sanabria@uniandes.edu.co",
+				"rows": 55
+			}]
+		},{
+			"file": "src/app/mascota/mascota-list/mascota-list.component.ts",
+			"authors": [
+			{
+				"name": "Natalia Sanabria Forero",
+				"email": "n.sanabria@uniandes.edu.co",
+				"rows": 88
+			}]
+		},{
+			"file": "src/app/recompensa/recompensa-create/recompensa-create.component.html",
+			"authors": [
+			{
+				"name": "s.lemus",
+				"email": "s.lemus@uniandes.edu.co",
+				"rows": 38
+			}]
+		},{
+			"file": "src/app/mascota/mascota.ts",
+			"authors": [
+			{
+				"name": "Natalia Sanabria Forero",
+				"email": "n.sanabria@uniandes.edu.co",
+				"rows": 44
+			}]
+		},{
+			"file": "src/app/recompensa/recompensa-detail/recompensa-detail.component.html",
+			"authors": [
+			{
+				"name": "Sebastián Lemus",
+				"email": "s.lemus@uniandes.edu.co",
+				"rows": 6
+			},{
+				"name": "s.lemus",
+				"email": "s.lemus@uniandes.edu.co",
+				"rows": 5
+			}]
+		},{
+			"file": "src/app/recompensa/recompensa-create/recompensa-create.component.spec.ts",
+			"authors": [
+			{
+				"name": "Sebastián Lemus",
+				"email": "s.lemus@uniandes.edu.co",
+				"rows": 25
+			}]
+		},{
+			"file": "src/app/recompensa/recompensa-create/recompensa-create.component.ts",
+			"authors": [
+			{
+				"name": "Santiago Lemus",
+				"email": "santiago29lg@gmail.com",
+				"rows": 2
+			},{
+				"name": "Sebastián Lemus",
+				"email": "s.lemus@uniandes.edu.co",
+				"rows": 67
+			}]
+		},{
+			"file": "src/app/recompensa/recompensa-edit/recompensa-edit.component.html",
+			"authors": [
+			{
+				"name": "Sebastián Lemus",
+				"email": "s.lemus@uniandes.edu.co",
+				"rows": 3
+			}]
+		},{
+			"file": "src/app/recompensa/recompensa-detail/recompensa-detail.component.spec.ts",
+			"authors": [
+			{
+				"name": "Sebastián Lemus",
+				"email": "s.lemus@uniandes.edu.co",
+				"rows": 25
+			}]
+		},{
+			"file": "src/app/recompensa/recompensa-edit/recompensa-edit.component.spec.ts",
+			"authors": [
+			{
+				"name": "Sebastián Lemus",
+				"email": "s.lemus@uniandes.edu.co",
+				"rows": 25
+			}]
+		},{
+			"file": "src/app/recompensa/recompensa-edit/recompensa-edit.component.ts",
+			"authors": [
+			{
+				"name": "Sebastián Lemus",
+				"email": "s.lemus@uniandes.edu.co",
+				"rows": 62
+			}]
+		},{
+			"file": "src/app/recompensa/recompensa-detail/recompensa-detail.component.ts",
+			"authors": [
+			{
+				"name": "Sebastián Lemus",
+				"email": "s.lemus@uniandes.edu.co",
+				"rows": 44
+			}]
+		},{
+			"file": "src/app/recompensa/recompensa-list/recompensa-list.component.html",
+			"authors": [
+			{
+				"name": "Sebastián Lemus",
+				"email": "s.lemus@uniandes.edu.co",
+				"rows": 6
+			},{
+				"name": "s.lemus",
+				"email": "s.lemus@uniandes.edu.co",
+				"rows": 1
+			}]
+		},{
+			"file": "src/app/recompensa/recompensa-list/recompensa-list.component.ts",
+			"authors": [
+			{
+				"name": "Sebastián Lemus",
+				"email": "s.lemus@uniandes.edu.co",
+				"rows": 36
+			}]
+		},{
+			"file": "src/app/recompensa/recompensa-list/recompensa-list.component.spec.ts",
+			"authors": [
+			{
+				"name": "Sebastián Lemus",
+				"email": "s.lemus@uniandes.edu.co",
+				"rows": 25
+			}]
+		},{
+			"file": "src/app/recompensa/recompensa.module.spec.ts",
+			"authors": [
+			{
+				"name": "Sebastián Lemus",
+				"email": "s.lemus@uniandes.edu.co",
+				"rows": 13
+			}]
+		},{
+			"file": "src/app/recompensa/recompensa.service.spec.ts",
+			"authors": [
+			{
+				"name": "Sebastián Lemus",
+				"email": "s.lemus@uniandes.edu.co",
+				"rows": 12
+			}]
+		},{
+			"file": "src/app/recompensa/recompensa.module.ts",
+			"authors": [
+			{
+				"name": "Sebastián Lemus",
+				"email": "s.lemus@uniandes.edu.co",
+				"rows": 16
+			},{
+				"name": "s.lemus",
+				"email": "s.lemus@uniandes.edu.co",
+				"rows": 3
+			}]
+		},{
+			"file": "src/app/recompensa/recompensa.service.ts",
+			"authors": [
+			{
+				"name": "Santiago Lemus",
+				"email": "santiago29lg@gmail.com",
+				"rows": 1
+			},{
+				"name": "Sebastián Lemus",
+				"email": "s.lemus@uniandes.edu.co",
+				"rows": 64
+			}]
+		},{
+			"file": "src/app/usuario/crear-usuario/crear-usuario.component.html",
+			"authors": [
+			{
+				"name": "maortiz1",
+				"email": "ma.ortiz1@uniandes.edu.co",
+				"rows": 60
+			}]
+		},{
+			"file": "src/app/recompensa/recompensa.ts",
+			"authors": [
+			{
+				"name": "Santiago Lemus",
+				"email": "santiago29lg@gmail.com",
+				"rows": 6
+			},{
+				"name": "Sebastián Lemus",
+				"email": "s.lemus@uniandes.edu.co",
+				"rows": 39
+			}]
+		},{
+			"file": "src/app/usuario/crear-usuario/crear-usuario.component.spec.ts",
+			"authors": [
+			{
+				"name": "maortiz1",
+				"email": "ma.ortiz1@uniandes.edu.co",
+				"rows": 25
+			}]
+		},{
+			"file": "src/app/usuario/crear-usuario/crear-usuario.component.ts",
+			"authors": [
+			{
+				"name": "maortiz1",
+				"email": "ma.ortiz1@uniandes.edu.co",
+				"rows": 57
+			}]
+		},{
+			"file": "src/app/usuario/usuario-detalle/usuario-detalle.component.html",
+			"authors": [
+			{
+				"name": "maortiz1",
+				"email": "ma.ortiz1@uniandes.edu.co",
+				"rows": 15
+			}]
+		},{
+			"file": "src/app/usuario/usuario-detalle/usuario-detalle.component.spec.ts",
+			"authors": [
+			{
+				"name": "maortiz1",
+				"email": "ma.ortiz1@uniandes.edu.co",
+				"rows": 25
+			}]
+		},{
+			"file": "src/app/usuario/usuario-detalle/usuario-detalle.component.ts",
+			"authors": [
+			{
+				"name": "maortiz1",
+				"email": "ma.ortiz1@uniandes.edu.co",
+				"rows": 36
+			}]
+		},{
+			"file": "src/app/usuario/usuario-lista/usuario-lista.component.html",
+			"authors": [
+			{
+				"name": "maortiz1",
+				"email": "ma.ortiz1@uniandes.edu.co",
+				"rows": 11
+			}]
+		},{
+			"file": "src/app/usuario/usuario.module.spec.ts",
+			"authors": [
+			{
+				"name": "maortiz1",
+				"email": "ma.ortiz1@uniandes.edu.co",
+				"rows": 13
+			}]
+		},{
+			"file": "src/app/usuario/usuario-lista/usuario-lista.component.ts",
+			"authors": [
+			{
+				"name": "maortiz1",
+				"email": "ma.ortiz1@uniandes.edu.co",
+				"rows": 38
+			}]
+		},{
+			"file": "src/app/usuario/usuario-lista/usuario-lista.component.spec.ts",
+			"authors": [
+			{
+				"name": "maortiz1",
+				"email": "ma.ortiz1@uniandes.edu.co",
+				"rows": 25
+			}]
+		},{
+			"file": "src/app/usuario/usuario.service.spec.ts",
+			"authors": [
+			{
+				"name": "maortiz1",
+				"email": "ma.ortiz1@uniandes.edu.co",
+				"rows": 12
+			}]
+		},{
+			"file": "src/app/usuario/usuario.module.ts",
+			"authors": [
+			{
+				"name": "maortiz1",
+				"email": "ma.ortiz1@uniandes.edu.co",
+				"rows": 25
+			}]
+		},{
+			"file": "src/app/usuario/usuario.service.ts",
+			"authors": [
+			{
+				"name": "maortiz1",
+				"email": "ma.ortiz1@uniandes.edu.co",
+				"rows": 53
+			}]
+		},{
+			"file": "src/app/usuario/usuario.ts",
+			"authors": [
+			{
+				"name": "maortiz1",
+				"email": "ma.ortiz1@uniandes.edu.co",
+				"rows": 51
+			}]
+		},{
+			"file": "src/index.html",
+			"authors": [
+			{
+				"name": "Natalia Sanabria Forero",
+				"email": "n.sanabria@uniandes.edu.co",
+				"rows": 1
+			}]
+		}]
+	}
+}
