@@ -40,7 +40,7 @@ class Visualization extends Component {
         node.filter(function (d) {
             return !d.children;
         }).style("fill", function (d) {
-            return d.data.color;
+            return d.data.color || "red";
         }).append("text")
             .attr("dy", "0.3em")
             .attr("font-size", "smaller")
