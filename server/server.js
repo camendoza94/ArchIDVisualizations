@@ -28,14 +28,15 @@ const getFiles = async (src) => {
         mod = child;
         child.pattern.forEach((pattern) => {
             let res = glob.sync(src + pattern);
-            //TODO change size to authors changed lines.
             let newRes = res.map(file => {
                 let found = currentData.files.find(f => f.name === getPath(file));
                 let sum = found ? found.issues.reduce((a, b) => a + b, 0) : 0;
+                let authors = found ? found.authors: [];
                 return {
                     name: file.split("/")[file.split("/").length - 1],
                     size: sum + 1,
-                    color: colors[sum % 5]
+                    color: colors[sum % 5],
+                    children: authors
                 }
             });
             let max = Math.max(...newRes.map(file => file.size));

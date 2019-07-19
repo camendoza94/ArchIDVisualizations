@@ -1,14 +1,18 @@
 const axios = require('axios');
-const eData = require('./evolutionaryData');
-
+const fs = require('fs');
 
 let data = {};
+let currentData ={};
 
-const addSocial = () => {
-    let currentData = data.find(project => project.name === require('path').basename(process.cwd())).data[0];
-    currentData.files.forEach(file => {
-        let currentFile = eData.responsibilities.files.find(file => file.file === file.name);
-        file.authors = currentFile.authors;
+const addSocial =  async () => {
+    currentData = data.find(project => project.name === require('path').basename(process.cwd())).data[0];
+    currentData.files.forEach(f => {
+        let eData = JSON.parse(fs.readFileSync('./inspector.json', 'utf8'));
+        let currentFile = eData.responsibilities.files.find(file => {
+            return file.file.substring(file.file.indexOf("co/edu/")) === f.name
+        });
+        if(currentFile)
+            f.authors = currentFile.authors;
     })
 };
 
@@ -16,7 +20,8 @@ const getFiles = () => {
     axios.get("https://archtoringbd.herokuapp.com/files").then(async (response) => {
         data = response.data;
         await addSocial();
-        axios.put(`https://archtoringbd.herokuapp.com/files/${require('path').basename(process.cwd())}`, data).then((response) => {
+        fs.writeFileSync('./request.json', JSON.stringify(currentData));
+        axios.put(`https://archtoringbd.herokuapp.com/files/${require('path').basename(process.cwd())}`, currentData).then((response) => {
             console.log(response);
         })
     })
