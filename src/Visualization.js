@@ -6,20 +6,22 @@ class Visualization extends Component {
 
     constructor(props) {
         super(props);
+        this.max = 0;
         this.partition = data => d3.partition()
-            .size([2500, 900])
+            .size([500, 900])
             .padding(1)
             (d3.hierarchy(data)
-                .sum(d => d.size)
-                .sort((a, b) => b.size - a.size));
-
-        this.color = d3.scaleOrdinal(d3.quantize(d3.interpolateRainbow, this.props.projectData.value.children.length + 1));
+                .sum(d => d.rows)
+                .sort((a, b) => b.rows - a.rows || b.value - a.value));
+        this.color = d3.scaleOrdinal()
+            .domain(new Array(this.max))
+            .range(["#00FF00", "#7FFF00", "#FFFF00", "#FF7F00", "#FF0000"]);
     }
 
     componentDidMount() {
+        this.max = Math.max(...[].concat.apply([], this.props.projectData.value.children.map(l => l.children)).map(f => f.size));
         const width = this.props.width || 900,
-            height = this.props.height || 2500;
-        console.log(this.props.projectData.value);
+            height = this.props.height || 500;
         const root = this.partition(this.props.projectData.value);
 
         const svg = d3.select(this.svg)
@@ -34,13 +36,11 @@ class Visualization extends Component {
 
         cell.append("rect")
             .attr("width", d => d.y1 - d.y0)
-            .attr("height", d => {
-                return d.depth === 3 ? (d.parent.x1- d.parent.x0)/5: d.x1 - d.x0})
+            .attr("height", d => d.x1 - d.x0)
             .attr("fill-opacity", 0.6)
             .attr("fill", d => {
-                if (!d.depth) return "#ccc";
-                while (d.depth > 1) d = d.parent;
-                return this.color(d.data.name);
+                if (!d.depth || !d.data.size) return "#ccc";
+                return this.color(d.data.size - 1);
             });
 
         const text = cell.filter(d => (d.x1 - d.x0) > 10).append("text")
@@ -52,10 +52,10 @@ class Visualization extends Component {
 
         text.append("tspan")
             .attr("fill-opacity", 0.7)
-            .text(d => ` ${d.value}`);
+            .text(d => ` ${d.data.size || ''}`);
 
         cell.append("title")
-            .text(d => `${d.ancestors().map(d => d.data.name).reverse().join("/")}\n${d.value}`);
+            .text(d => `${d.ancestors().map(d => d.data.name).reverse().join("/")}\nRow mods: ${d.value}`);
 
         return svg.node();
     }
