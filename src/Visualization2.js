@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import * as d3 from "d3";
 
 
-class Visualization extends Component {
+class Visualization2 extends Component {
 
     constructor(props) {
         super(props);
@@ -11,8 +11,8 @@ class Visualization extends Component {
             .size([900, 900])
             .padding(1)
             (d3.hierarchy(data)
-                .sum(d => d.rows)
-                .sort((a, b) => b.rows - a.rows || b.value - a.value));
+                .sum(d => d.mods)
+                .sort((a, b) => b.mods - a.mods || b.value - a.value));
         this.color = d3.scaleOrdinal()
             .domain([1, this.max])
             .range(["#00FF00", "#7FFF00", "#FFFF00", "#FF7F00", "#FF0000"]);
@@ -22,8 +22,40 @@ class Visualization extends Component {
         this.max = Math.max(...[].concat.apply([], this.props.projectData.value.children.map(l => l.children)).map(f => f.size));
         const width = this.props.width || 900,
             height = this.props.height || 900;
+        let unnestedData = [];
+        for (let layer of this.props.projectData.value.children) {
+            for (let file of layer.children) {
+                if (file.children)
+                    for (let author of file.children) {
+                        unnestedData.push({
+                            layer: layer.name,
+                            file: file.name,
+                            issues: author.size,
+                            mods: author.rows,
+                            name: author.name
+                        })
+                    }
+            }
+        }
+        let nestedData = d3.nest()
+            .key(d => d.name)
+            .key(d => d.layer)
+            .key(d => d.file)
+            .rollup((leaves) => {
+                return {"issues": d3.sum(leaves, d => d.issues), "mods": d3.sum(leaves, d => d.mods)}
+            })
+            .entries(unnestedData);
+        nestedData = nestedData.map(nested => ({
+            name: nested.key,
+            children: nested.values.map(o => ({
+                name: o.key,
+                children: o.values.map(f => ({name: f.key, size: f.value.issues, mods: f.value.mods}))
+            }))
+        }));
+        nestedData = {name: this.props.projectData.value.name, children: nestedData};
+        console.log(nestedData);
         //TODO Add zoomable
-        const root = this.partition(this.props.projectData.value);
+        const root = this.partition(nestedData);
         this.wScale = d3.scaleLinear()
             .domain([0, d3.max(root.descendants(), d => d.data.size)])
             .range([0, root.y1 - root.y0]);
@@ -41,9 +73,7 @@ class Visualization extends Component {
             .attr("width", d => d.y1 - d.y0)
             .attr("height", d => d.x1 - d.x0)
             .attr("fill", "#eeee")
-            .attr("stroke", d => {
-                return "#ccc";
-            });
+            .attr("stroke", "#ccc");
 
         cell.append("rect")
             .attr("width", d => this.wScale(d.data.size))
@@ -67,6 +97,7 @@ class Visualization extends Component {
 
         cell.append("title")
             .text(d => `${d.ancestors().map(d => d.data.name).reverse().join("/")}\nRow mods: ${d.value}`);
+        console.log(root.descendants());
         return svg.node();
     }
 
@@ -81,4 +112,4 @@ class Visualization extends Component {
     }
 }
 
-export default Visualization;
+export default Visualization2;

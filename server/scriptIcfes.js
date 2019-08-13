@@ -1,10 +1,9 @@
 const glob = require('glob');
-const initial = require('./architecture');
+const initial = require('./archIcfes');
 const axios = require('axios');
 
 let architecture = JSON.parse(JSON.stringify(initial));
 let modules = {name: "icfes", children:[]};
-let data = {};
 
 function getModuleAndFeature(s) {
     let parts = s.split("/");
@@ -63,7 +62,6 @@ const getFiles = async (src) => {
 
 const getIssues = () => {
     axios.get("https://archtoringbd.herokuapp.com/files").then(async (response) => {
-        data = response.data;
         await getFiles('./');
         axios.put(`https://archtoringbd.herokuapp.com/architecture/${require('path').basename(process.cwd())}Dependencies`, modules).then((response) => {
             console.log(response);
