@@ -102,8 +102,6 @@ class Visualization extends Component {
         }
 
         function zoom(d) {
-            const focus0 = focus;
-
             focus = d;
 
             const transition = svg.transition()

@@ -7,24 +7,23 @@ class Visualization2 extends Component {
     constructor(props) {
         super(props);
         this.max = 0;
-        this.partition = data => d3.partition()
-            .size([900, 900])
-            .padding(1)
+        this.pack = data => d3.pack()
+            .size([932, 932])
+            .padding(3)
             (d3.hierarchy(data)
-                .sum(d => d.mods)
-                .sort((a, b) => b.mods - a.mods || b.value - a.value));
+                .sum(d => d.value)
+                .sort((a, b) => b.rows - a.rows || b.value - a.value));
         this.color = d3.scaleOrdinal()
             .domain([1, this.max])
             .range(["#00FF00", "#7FFF00", "#FFFF00", "#FF7F00", "#FF0000"]);
     }
 
     componentDidMount() {
-        this.max = Math.max(...[].concat.apply([], this.props.projectData.value.children.map(l => l.children)).map(f => f.size));
-        const width = this.props.width || 900,
-            height = this.props.height || 900;
+        this.max = 0;
         let unnestedData = [];
         for (let layer of this.props.projectData.value.children) {
             for (let file of layer.children) {
+                this.max = file.size > this.max ? file.size : this.max;
                 if (file.children)
                     for (let author of file.children) {
                         unnestedData.push({
@@ -49,55 +48,86 @@ class Visualization2 extends Component {
             name: nested.key,
             children: nested.values.map(o => ({
                 name: o.key,
-                children: o.values.map(f => ({name: f.key, size: f.value.issues, mods: f.value.mods}))
+                children: o.values.map(f => ({name: f.key, value: f.value.issues, mods: f.value.mods}))
             }))
         }));
         nestedData = {name: this.props.projectData.value.name, children: nestedData};
         console.log(nestedData);
-        //TODO Add zoomable
-        const root = this.partition(nestedData);
-        this.wScale = d3.scaleLinear()
-            .domain([0, d3.max(root.descendants(), d => d.data.size)])
-            .range([0, root.y1 - root.y0]);
+        const root = this.pack(nestedData);
+        let focus = root;
+        let view;
+        const width = this.props.width || 932,
+            height = this.props.height || 932;
+
         const svg = d3.select(this.svg)
-            .attr("viewBox", [0, 0, width, height])
-            .style("font", "10px sans-serif");
+            .attr("viewBox", `-${width / 2} -${height / 2} ${width} ${height}`)
+            .style("display", "block")
+            .style("margin", "0 -14px")
+            .style("background", "#eeeeee")
+            .style("cursor", "pointer")
+            .on("click", () => zoom(root));
 
-        const cell = svg
-            .selectAll("g")
+        const node = svg.append("g")
+            .selectAll("circle")
+            .data(root.descendants().slice(1))
+            .join("circle")
+            .attr("fill", d => (!d.depth || !d.data.value) ? "#6e6e6e" : this.color(d.data.value))
+            .attr("pointer-events", d => !d.children ? "none" : null)
+            .on("mouseover", function () {
+                d3.select(this).attr("stroke", "#000");
+            })
+            .on("mouseout", function () {
+                d3.select(this).attr("stroke", null);
+            })
+            .on("click", d => focus !== d && (zoom(d), d3.event.stopPropagation()));
+
+        const label = svg.append("g")
+            .style("font", "10px sans-serif")
+            .attr("pointer-events", "none")
+            .attr("text-anchor", "middle")
+            .selectAll("text")
             .data(root.descendants())
-            .join("g")
-            .attr("transform", d => `translate(${d.y0},${d.x0})`);
-
-        cell.append("rect")
-            .attr("width", d => d.y1 - d.y0)
-            .attr("height", d => d.x1 - d.x0)
-            .attr("fill", "#eeee")
-            .attr("stroke", "#ccc");
-
-        cell.append("rect")
-            .attr("width", d => this.wScale(d.data.size))
-            .attr("height", d => d.x1 - d.x0)
-            .attr("fill-opacity", 0.6)
-            .attr("fill", d => {
-                if (!d.depth || !d.data.size) return "#6e6e6e";
-                return this.color(d.data.size - 1);
-            });
-
-        const text = cell.filter(d => (d.x1 - d.x0) > 10).append("text")
-            .attr("x", d => (d.y1 - d.y0) / 2)
-            .attr("y", d => (d.x1 - d.x0) / 2);
-
-        text.append("tspan")
+            .join("text")
+            .style("fill-opacity", d => d.parent === root ? 1 : 0)
+            .style("display", d => d.parent === root ? "inline" : "none")
             .text(d => d.data.name);
 
-        text.append("tspan")
-            .attr("fill-opacity", 0.7)
-            .text(d => ` ${d.data.size || ''}`);
+        zoomTo([root.x, root.y, root.r * 2]);
 
-        cell.append("title")
-            .text(d => `${d.ancestors().map(d => d.data.name).reverse().join("/")}\nRow mods: ${d.value}`);
-        console.log(root.descendants());
+        function zoomTo(v) {
+            const k = width / v[2];
+
+            view = v;
+
+            label.attr("transform", d => `translate(${(d.x - v[0]) * k},${(d.y - v[1]) * k})`);
+            node.attr("transform", d => `translate(${(d.x - v[0]) * k},${(d.y - v[1]) * k})`);
+            node.attr("r", d => d.r * k);
+        }
+
+        function zoom(d) {
+            focus = d;
+
+            const transition = svg.transition()
+                .duration(d3.event.altKey ? 7500 : 750)
+                .tween("zoom", d => {
+                    const i = d3.interpolateZoom(view, [focus.x, focus.y, focus.r * 2]);
+                    return t => zoomTo(i(t));
+                });
+
+            label
+                .filter(function (d) {
+                    return d.parent === focus || this.style.display === "inline";
+                })
+                .transition(transition)
+                .style("fill-opacity", d => d.parent === focus ? 1 : 0)
+                .on("start", function (d) {
+                    if (d.parent === focus) this.style.display = "inline";
+                })
+                .on("end", function (d) {
+                    if (d.parent !== focus) this.style.display = "none";
+                });
+        }
+
         return svg.node();
     }
 
