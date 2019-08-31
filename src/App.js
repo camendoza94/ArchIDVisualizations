@@ -37,7 +37,7 @@ class App extends Component {
                     options={options}
                     defaultValue={options[0]}
                 /> : ''}
-                {currentProject ? <Visualization key={currentProject.label} projectData={currentProject} width="1300" height="600"/> : ''}
+                {currentProject ? <Visualization key={currentProject.label} projectData={currentProject} width="932" height="932"/> : ''}
             </div>
         );
     }

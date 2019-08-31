@@ -7,11 +7,11 @@ class Visualization extends Component {
     constructor(props) {
         super(props);
         this.max = 0;
-        this.partition = data => d3.partition()
-            .size([600, 1300])
-            .padding(1)
+        this.pack = data => d3.pack()
+            .size([932, 932])
+            .padding(3)
             (d3.hierarchy(data)
-                .sum(d => d.rows)
+                .sum(d => d.value)
                 .sort((a, b) => b.rows - a.rows || b.value - a.value));
         this.color = d3.scaleOrdinal()
             .domain([1, this.max])
@@ -19,89 +19,112 @@ class Visualization extends Component {
     }
 
     componentDidMount() {
-        this.max = Math.max(...[].concat.apply([], this.props.projectData.value.children.map(l => l.children)).map(f => f.size));
-        const width = this.props.width || 1300,
-            height = this.props.height || 600;
+        this.max = 0;
+        let unnestedData = [];
+        for (let layer of this.props.projectData.value.children) {
+            for (let file of layer.children) {
+                this.max = file.size > this.max ? file.size : this.max;
+                unnestedData.push({
+                    layer: layer.name,
+                    issues: file.size,
+                    mods: file.children ? file.children.map(a => a.rows).reduce((a, b) => a + b, 0) : 0,
+                    name: file.name
+                })
 
-        const root = this.partition(this.props.projectData.value);
+            }
+        }
+        let nestedData = d3.nest()
+            .key(d => d.layer)
+            .key(d => d.name)
+            .rollup((leaves) => {
+                return {"issues": d3.sum(leaves, d => d.issues), "mods": d3.sum(leaves, d => d.mods)}
+            })
+            .entries(unnestedData);
+        nestedData = nestedData.map(nested => ({
+            name: nested.key,
+            children: nested.values.map(o => ({
+                name: o.key,
+                value: o.value.issues,
+                mods: o.value.mods
+            }))
+        }));
+        nestedData = {name: this.props.projectData.value.name, children: nestedData};
 
-        this.wScale = d3.scaleLinear()
-            .domain([0, d3.max(root.descendants(), d => d.data.size)])
-            .range([0, root.y1 - root.y0]);
-
+        const root = this.pack(nestedData);
         let focus = root;
+        let view;
+        const width = this.props.width || 932,
+            height = this.props.height || 932;
 
         const svg = d3.select(this.svg)
-            .attr("viewBox", [0, 0, width, height])
-            .style("font", "10px sans-serif");
-
-        const cell = svg
-            .selectAll("g")
-            .data(root.descendants())
-            .join("g")
-            .attr("transform", d => `translate(${d.y0},${d.x0})`);
-
-        const rectbg = cell.append("rect")
-            .attr("width", d => d.y1 - d.y0)
-            .attr("height", d => rectHeight(d))
-            .attr("fill", "#eeee")
-            .attr("stroke", "#ccc")
+            .attr("viewBox", `-${width / 2} -${height / 2} ${width} ${height}`)
+            .style("display", "block")
+            .style("margin", "0 -14px")
+            .style("background", "#eeeeee")
             .style("cursor", "pointer")
-            .on("click", clicked);
+            .on("click", () => zoom(root));
 
-        const rect = cell.append("rect")
-            .attr("width", d => this.wScale(d.data.size))
-            .attr("height", d => rectHeight(d))
-            .attr("fill-opacity", 0.6)
-            .attr("fill", d => {
-                if (!d.depth || !d.data.size) return "#6e6e6e";
-                return this.color(d.data.size - 1);
+        const node = svg.append("g")
+            .selectAll("circle")
+            .data(root.descendants().slice(1))
+            .join("circle")
+            .attr("fill", d => (!d.depth || !d.data.value) ? "#6e6e6e" : this.color(d.data.value))
+            .attr("pointer-events", d => !d.children ? "none" : null)
+            .on("mouseover", function () {
+                d3.select(this).attr("stroke", "#000");
             })
-            .style("cursor", "pointer")
-            .on("click", clicked);
+            .on("mouseout", function () {
+                d3.select(this).attr("stroke", null);
+            })
+            .on("click", d => focus !== d && (zoom(d), d3.event.stopPropagation()));
 
-        const text = cell.filter(d => (d.x1 - d.x0) > 10).append("text")
-            .style("user-select", "none")
+        const label = svg.append("g")
+            .style("font", "10px sans-serif")
             .attr("pointer-events", "none")
-            .attr("x", d => (d.y1 - d.y0) / 2)
-            .attr("y", d => (d.x1 - d.x0) / 2)
-            .attr("fill-opacity", d => +labelVisible(d));
-
-        text.append("tspan")
+            .attr("text-anchor", "middle")
+            .selectAll("text")
+            .data(root.descendants())
+            .join("text")
+            .style("fill-opacity", d => d.parent === root ? 1 : 0)
+            .style("display", d => d.parent === root ? "inline" : "none")
             .text(d => d.data.name);
 
-        const tspan = text.append("tspan")
-            .attr("fill-opacity", d => labelVisible(d) * 0.7)
-            .text(d => ` ${d.data.size || ''}`);
+        zoomTo([root.x, root.y, root.r * 2]);
 
-        cell.append("title")
-            .text(d => `${d.ancestors().map(d => d.data.name).reverse().join("/")}\nRow mods: ${d.value}`);
+        function zoomTo(v) {
+            const k = width / v[2];
 
-        function clicked(p) {
-            focus = focus === p ? p = p.parent : p;
+            view = v;
 
-            root.each(d => d.target = {
-                x0: (d.x0 - p.x0) / (p.x1 - p.x0) * height,
-                x1: (d.x1 - p.x0) / (p.x1 - p.x0) * height,
-                y0: d.y0 - p.y0,
-                y1: d.y1 - p.y0
-            });
-
-            const t = cell.transition().duration(750)
-                .attr("transform", d => `translate(${d.target.y0},${d.target.x0})`);
-
-            rect.transition(t).attr("height", d => rectHeight(d.target));
-            rectbg.transition(t).attr("height", d => rectHeight(d.target));
-            text.transition(t).attr("fill-opacity", d => +labelVisible(d.target));
-            tspan.transition(t).attr("fill-opacity", d => labelVisible(d.target) * 0.7);
+            label.attr("transform", d => `translate(${(d.x - v[0]) * k},${(d.y - v[1]) * k})`);
+            node.attr("transform", d => `translate(${(d.x - v[0]) * k},${(d.y - v[1]) * k})`);
+            node.attr("r", d => d.r * k);
         }
 
-        function rectHeight(d) {
-            return d.x1 - d.x0 - Math.min(1, (d.x1 - d.x0) / 2);
-        }
+        function zoom(d) {
+            const focus0 = focus;
 
-        function labelVisible(d) {
-            return d.y1 <= width && d.y0 >= 0 && d.x1 - d.x0 > 16;
+            focus = d;
+
+            const transition = svg.transition()
+                .duration(d3.event.altKey ? 7500 : 750)
+                .tween("zoom", d => {
+                    const i = d3.interpolateZoom(view, [focus.x, focus.y, focus.r * 2]);
+                    return t => zoomTo(i(t));
+                });
+
+            label
+                .filter(function (d) {
+                    return d.parent === focus || this.style.display === "inline";
+                })
+                .transition(transition)
+                .style("fill-opacity", d => d.parent === focus ? 1 : 0)
+                .on("start", function (d) {
+                    if (d.parent === focus) this.style.display = "inline";
+                })
+                .on("end", function (d) {
+                    if (d.parent !== focus) this.style.display = "none";
+                });
         }
 
         return svg.node();
@@ -109,10 +132,10 @@ class Visualization extends Component {
 
     render() {
         return (
-            <svg width="1300px" height="600px"
-                 ref={(svg) => {
-                     this.svg = svg;
-                 }}>
+            <svg
+                ref={(svg) => {
+                    this.svg = svg;
+                }}>
             </svg>
         )
     }
