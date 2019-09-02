@@ -8,7 +8,7 @@ import Select from 'react-select';
 class App extends Component {
     constructor(props) {
         super(props);
-        this.state = {};
+        this.state = {vizType: 0};
         this.handleChange = this.handleChange.bind(this);
     }
 
@@ -27,7 +27,7 @@ class App extends Component {
     }
 
     render() {
-        const {currentProject, options} = this.state;
+        const {currentProject, options, vizType} = this.state;
         return (
             <div>
                 {options ?
@@ -37,7 +37,7 @@ class App extends Component {
                     options={options}
                     defaultValue={options[0]}
                 /> : ''}
-                {currentProject ? <Visualization key={currentProject.label} projectData={currentProject} width="932" height="932"/> : ''}
+                {currentProject ? <Visualization key={currentProject.label} vizType={vizType} projectData={currentProject} width="932" height="932"/> : ''}
             </div>
         );
     }

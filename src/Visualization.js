@@ -21,35 +21,68 @@ class Visualization extends Component {
     componentDidMount() {
         this.max = 0;
         let unnestedData = [];
-        for (let layer of this.props.projectData.value.children) {
-            for (let file of layer.children) {
-                this.max = file.size > this.max ? file.size : this.max;
-                unnestedData.push({
-                    layer: layer.name,
-                    issues: file.size,
-                    mods: file.children ? file.children.map(a => a.rows).reduce((a, b) => a + b, 0) : 0,
-                    name: file.name
-                })
+        let nestedData = [];
+        if (this.props.vizType === 0) {
+            for (let layer of this.props.projectData.value.children) {
+                for (let file of layer.children) {
+                    this.max = file.size > this.max ? file.size : this.max;
+                    unnestedData.push({
+                        layer: layer.name,
+                        issues: file.size,
+                        mods: file.children ? file.children.map(a => a.rows).reduce((a, b) => a + b, 0) : 0,
+                        name: file.name
+                    })
 
+                }
             }
+            nestedData = d3.nest()
+                .key(d => d.layer)
+                .key(d => d.name)
+                .rollup((leaves) => {
+                    return {"issues": d3.sum(leaves, d => d.issues), "mods": d3.sum(leaves, d => d.mods)}
+                })
+                .entries(unnestedData);
+            nestedData = nestedData.map(nested => ({
+                name: nested.key,
+                children: nested.values.map(o => ({
+                    name: o.key,
+                    value: o.value.issues,
+                    mods: o.value.mods
+                }))
+            }));
+        } else {
+            for (let layer of this.props.projectData.value.children) {
+                for (let file of layer.children) {
+                    this.max = file.size > this.max ? file.size : this.max;
+                    if (file.children)
+                        for (let author of file.children) {
+                            unnestedData.push({
+                                layer: layer.name,
+                                file: file.name,
+                                issues: author.size,
+                                mods: author.rows,
+                                name: author.name
+                            })
+                        }
+                }
+            }
+            nestedData = d3.nest()
+                .key(d => d.name)
+                .key(d => d.layer)
+                .key(d => d.file)
+                .rollup((leaves) => {
+                    return {"issues": d3.sum(leaves, d => d.issues), "mods": d3.sum(leaves, d => d.mods)}
+                })
+                .entries(unnestedData);
+            nestedData = nestedData.map(nested => ({
+                name: nested.key,
+                children: nested.values.map(o => ({
+                    name: o.key,
+                    children: o.values.map(f => ({name: f.key, value: f.value.issues, mods: f.value.mods}))
+                }))
+            }));
         }
-        let nestedData = d3.nest()
-            .key(d => d.layer)
-            .key(d => d.name)
-            .rollup((leaves) => {
-                return {"issues": d3.sum(leaves, d => d.issues), "mods": d3.sum(leaves, d => d.mods)}
-            })
-            .entries(unnestedData);
-        nestedData = nestedData.map(nested => ({
-            name: nested.key,
-            children: nested.values.map(o => ({
-                name: o.key,
-                value: o.value.issues,
-                mods: o.value.mods
-            }))
-        }));
         nestedData = {name: this.props.projectData.value.name, children: nestedData};
-
         const root = this.pack(nestedData);
         let focus = root;
         let view;
