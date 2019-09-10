@@ -40,14 +40,6 @@ circle {
 .leaf circle {
   fill-opacity: 1;
 }
-text {
-  font: 10px sans-serif;
-  text-anchor: middle;
-}
-.label {
-  font: 10px sans-serif;
-  text-anchor: middle;
-}
 .node {
   fill: #ddd;
   stroke: #fff;

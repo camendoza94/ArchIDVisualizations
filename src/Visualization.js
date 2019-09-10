@@ -1,173 +1,169 @@
 import React, {Component} from 'react';
 import * as d3 from "d3";
-
+import Select from "react-select";
+import Slider from 'rc-slider';
+const Range = Slider.Range;
 
 class Visualization extends Component {
 
     constructor(props) {
         super(props);
+        this.state = {};
         this.max = 0;
-        this.pack = data => d3.pack()
-            .size([932, 932])
-            .padding(3)
-            (d3.hierarchy(data)
-                .sum(d => d.value)
-                .sort((a, b) => b.rows - a.rows || b.value - a.value));
-        this.color = d3.scaleOrdinal()
-            .domain([1, this.max])
-            .range(["#00FF00", "#7FFF00", "#FFFF00", "#FF7F00", "#FF0000"]);
+        this.handleChange = this.handleChange.bind(this);
     }
 
     componentDidMount() {
         this.max = 0;
         let unnestedData = [];
-        let nestedData = [];
-        if (this.props.vizType === 0) {
-            for (let layer of this.props.projectData.value.children) {
-                for (let file of layer.children) {
-                    this.max = file.size > this.max ? file.size : this.max;
-                    unnestedData.push({
-                        layer: layer.name,
-                        issues: file.size,
-                        mods: file.children ? file.children.map(a => a.rows).reduce((a, b) => a + b, 0) : 0,
-                        name: file.name
-                    })
+        for (let layer of this.props.projectData.value.children) {
+            for (let file of layer.children) {
+                this.max = file.size > this.max ? file.size : this.max;
+                unnestedData.push({
+                    layer: layer.name,
+                    issues: file.size,
+                    mods: file.children ? file.children.map(a => a.rows).reduce((a, b) => a + b, 0) : 0,
+                    name: file.name
+                })
 
-                }
             }
-            nestedData = d3.nest()
-                .key(d => d.layer)
-                .key(d => d.name)
-                .rollup((leaves) => {
-                    return {"issues": d3.sum(leaves, d => d.issues), "mods": d3.sum(leaves, d => d.mods)}
-                })
-                .entries(unnestedData);
-            nestedData = nestedData.map(nested => ({
-                name: nested.key,
-                children: nested.values.map(o => ({
-                    name: o.key,
-                    value: o.value.issues,
-                    mods: o.value.mods
-                }))
-            }));
-        } else {
-            for (let layer of this.props.projectData.value.children) {
-                for (let file of layer.children) {
-                    this.max = file.size > this.max ? file.size : this.max;
-                    if (file.children)
-                        for (let author of file.children) {
-                            unnestedData.push({
-                                layer: layer.name,
-                                file: file.name,
-                                issues: author.size,
-                                mods: author.rows,
-                                name: author.name
-                            })
-                        }
-                }
+        }
+        const options = d3.keys(unnestedData[0]).map(key => {
+                return {value: key, label: key}
             }
-            nestedData = d3.nest()
-                .key(d => d.name)
-                .key(d => d.layer)
-                .key(d => d.file)
-                .rollup((leaves) => {
-                    return {"issues": d3.sum(leaves, d => d.issues), "mods": d3.sum(leaves, d => d.mods)}
-                })
-                .entries(unnestedData);
-            nestedData = nestedData.map(nested => ({
-                name: nested.key,
-                children: nested.values.map(o => ({
-                    name: o.key,
-                    children: o.values.map(f => ({name: f.key, value: f.value.issues, mods: f.value.mods}))
-                }))
-            }));
-        }
-        nestedData = {name: this.props.projectData.value.name, children: nestedData};
-        const root = this.pack(nestedData);
-        let focus = root;
-        let view;
-        const width = this.props.width || 932,
-            height = this.props.height || 932;
+        );
+        this.setState({options, currentKey: options[0], data: unnestedData}, this.createSVG);
+    }
 
-        const svg = d3.select(this.svg)
-            .attr("viewBox", `-${width / 2} -${height / 2} ${width} ${height}`)
-            .style("display", "block")
-            .style("margin", "0 -14px")
-            .style("background", "#eeeeee")
-            .style("cursor", "pointer")
-            .on("click", () => zoom(root));
+    createSVG() {
+        const height = 550;
+        const width = 1000;
+        let columns = d3.keys(this.state.data[0]).filter(d => d !== this.state.currentKey.label && !isNaN(this.state.data[0][d])).slice(0, 2); // TODO Max Number of Columns
+        let coefficients = [100, 50, 100]; //TODO sliders
+        let scales = columns.map((col, i) =>
+            d3.scaleLinear()
+                .domain([0, d3.max(this.state.data, e => e[col])])
+                .range([0, coefficients[i]]));
 
-        const node = svg.append("g")
-            .selectAll("circle")
-            .data(root.descendants().slice(1))
-            .join("circle")
-            .attr("fill", d => (!d.depth || !d.data.value) ? "#6e6e6e" : this.color(d.data.value))
-            .attr("pointer-events", d => !d.children ? "none" : null)
-            .on("mouseover", function () {
-                d3.select(this).attr("stroke", "#000");
-            })
-            .on("mouseout", function () {
-                d3.select(this).attr("stroke", null);
-            })
-            .on("click", d => focus !== d && (zoom(d), d3.event.stopPropagation()));
+        let adjustedData = this.state.data.map((d) => {
+            const ret = {};
+            ret[this.state.currentKey.label] = d[this.state.currentKey.label];
+            ret._total = 0;
+            columns
+                .forEach((col, i) => {
+                    ret[col] = scales[i](d[col]);
+                    ret._total += ret[col];
+                }); // adjust the values by the coefficient
 
-        const label = svg.append("g")
-            .style("font", "10px sans-serif")
-            .attr("pointer-events", "none")
-            .attr("text-anchor", "middle")
-            .selectAll("text")
-            .data(root.descendants())
-            .join("text")
-            .style("fill-opacity", d => d.parent === root ? 1 : 0)
-            .style("display", d => d.parent === root ? "inline" : "none")
-            .text(d => d.data.name);
+            return ret;
+        }).sort((a, b) => d3.descending(a._total, b._total)).slice(0, 30); //TODO Max number of rows
 
-        zoomTo([root.x, root.y, root.r * 2]);
+        let stackedData = d3.stack()
+            .keys(columns)
+            (adjustedData);
+        console.log(adjustedData);
+        console.log(stackedData);
+        const svg = d3.select(this.svg);
+        svg.selectAll("*").remove();
+        svg.attr("width", width)
+            .attr("height", height);
+        const margin = {top: 20, right: 60, bottom: 30, left: 200};
+        const iwidth = width - margin.left - margin.right;
+        const iheight = height - margin.top - margin.bottom;
+        const g = svg.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-        function zoomTo(v) {
-            const k = width / v[2];
+        let y = d3.scaleBand()
+            .rangeRound([0, iheight])
+            .padding(0.1);
 
-            view = v;
+        let x = d3.scaleLinear()
+            .rangeRound([0, iwidth]);
 
-            label.attr("transform", d => `translate(${(d.x - v[0]) * k},${(d.y - v[1]) * k})`);
-            node.attr("transform", d => `translate(${(d.x - v[0]) * k},${(d.y - v[1]) * k})`);
-            node.attr("r", d => d.r * k);
-        }
+        let z = d3.scaleOrdinal(d3.schemeDark2);
 
-        function zoom(d) {
-            focus = d;
+        x.domain([0, columns.length * 100]);
+        y.domain(adjustedData.map(d => d[this.state.currentKey.label]));
+        z.domain([0, columns.length]);
 
-            const transition = svg.transition()
-                .duration(d3.event.altKey ? 7500 : 750)
-                .tween("zoom", d => {
-                    const i = d3.interpolateZoom(view, [focus.x, focus.y, focus.r * 2]);
-                    return t => zoomTo(i(t));
-                });
+        g.append("g")
+            .selectAll("g")
+            .data(stackedData)
+            .join("g")
+            .attr("fill", d => z(d.key))
+            .attr("stroke", "white")
+            .selectAll("rect")
+            .data(d => d)
+            .join(enter => enter.append("rect")
+                    .attr("x", d => x(d[0]))
+                    .attr("width", (d) => x(d[1]) - x(d[0]))
+                    .attr("y", (d) => y(d.data[this.state.currentKey.label]))
+                    .attr("height", y.bandwidth()),
+                update => update
+                    .transition().duration(1500)
+                    .attr("x", d => x(d[0]))
+                    .attr("width", (d) => x(d[1]) - x(d[0]))
+                    .attr("y", (d) => y(d.data.name))
+            );
 
-            label
-                .filter(function (d) {
-                    return d.parent === focus || this.style.display === "inline";
-                })
-                .transition(transition)
-                .style("fill-opacity", d => d.parent === focus ? 1 : 0)
-                .on("start", function (d) {
-                    if (d.parent === focus) this.style.display = "inline";
-                })
-                .on("end", function (d) {
-                    if (d.parent !== focus) this.style.display = "none";
-                });
-        }
+        g.append("g")
+            .attr("class", "axis")
+            .call(d3.axisLeft(y).ticks(null, "s"))
+            .call(axis => axis.selectAll("text").style("font-size", `${iheight / adjustedData.length * 0.7}pt`))
+            .append("text")
+            .attr("x", 2)
+            .attr("y", iheight)
+            .attr("dy", "0.32em")
+            .attr("fill", "#000")
+            .attr("font-weight", "bold")
+            .attr("text-anchor", "start")
+            .text("Combined index");
 
+        let legend = g.append("g")
+            .attr("font-family", "sans-serif")
+            .attr("font-size", 10)
+            .attr("text-anchor", "end")
+            .selectAll("g")
+            .data(columns)
+            .join("g")
+            .attr("transform", function (d, i) {
+                return "translate(-50," + i * 20 + ")";
+            });
+
+        legend.append("rect")
+            .attr("x", iwidth - 19)
+            .attr("width", 19)
+            .attr("height", 19)
+            .attr("fill", z);
+
+        legend.append("text")
+            .attr("x", iwidth - 24)
+            .attr("y", 9.5)
+            .attr("dy", "0.32em")
+            .text(d => d);
         return svg.node();
     }
 
+    handleChange(currentKey) {
+        this.setState({currentKey}, this.createSVG)
+    }
+
     render() {
+        const {currentKey, options} = this.state;
         return (
-            <svg
-                ref={(svg) => {
-                    this.svg = svg;
-                }}>
-            </svg>
+            <div>
+                {options ?
+                    <Select
+                        value={currentKey}
+                        onChange={this.handleChange}
+                        options={options}
+                        defaultValue={options[0]}
+                    /> : ''}
+                <svg
+                    ref={(svg) => {
+                        this.svg = svg;
+                    }}>
+                </svg>
+            </div>
         )
     }
 }
