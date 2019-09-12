@@ -14,9 +14,6 @@ class Visualization extends Component {
         this.max = 0;
         this.handleChange = this.handleChange.bind(this);
         this.handleSlider = this.handleSlider.bind(this);
-        this.handleSlider2 = this.handleSlider2.bind(this);
-        this.handleSlider3 = this.handleSlider3.bind(this);
-        this.handleSlider4 = this.handleSlider4.bind(this);
     }
 
     componentDidMount() {
@@ -58,7 +55,7 @@ class Visualization extends Component {
             ret._total = 0;
             columns
                 .forEach((col, i) => {
-                    ret[col] = scales[i](d[col]);
+                    ret[col] = scales[i](d[col] || 0);
                     ret._total += ret[col];
                 }); // adjust the values by the coefficient
 
@@ -152,27 +149,9 @@ class Visualization extends Component {
         this.setState({currentKey}, this.createSVG)
     }
 
-    handleSlider(newCoefficient) {
+    handleSlider(newCoefficient, id) {
         let newCoefficients = this.state.coefficients;
-        newCoefficients[0] = newCoefficient;
-        this.setState({coefficients: newCoefficients}, this.createSVG)
-    }
-
-    handleSlider2(newCoefficient) {
-        let newCoefficients = this.state.coefficients;
-        newCoefficients[1] = newCoefficient;
-        this.setState({coefficients: newCoefficients}, this.createSVG)
-    }
-
-    handleSlider3(newCoefficient) {
-        let newCoefficients = this.state.coefficients;
-        newCoefficients[2] = newCoefficient;
-        this.setState({coefficients: newCoefficients}, this.createSVG)
-    }
-
-    handleSlider4(newCoefficient) {
-        let newCoefficients = this.state.coefficients;
-        newCoefficients[3] = newCoefficient;
+        newCoefficients[id] = newCoefficient;
         this.setState({coefficients: newCoefficients}, this.createSVG)
     }
 
@@ -196,28 +175,28 @@ class Visualization extends Component {
                             style = {style}
                             max={100}
                             defaultValue={100}
-                            onChange={this.handleSlider}
+                            onChange={(e) => this.handleSlider(e, 0)}
                         />
                         <p>Modifications</p>
                         <SliderWithTooltip
                             style = {style}
                             max={100}
                             defaultValue={100}
-                            onChange={this.handleSlider2}
+                            onChange={(e) => this.handleSlider(e, 1)}
                         />
                         <p>Dependencies Out</p>
                         <SliderWithTooltip
                             style = {style}
                             max={100}
                             defaultValue={100}
-                            onChange={this.handleSlider3}
+                            onChange={(e) => this.handleSlider(e, 2)}
                         />
                         <p>Dependencies In</p>
                         <SliderWithTooltip
                             style = {style}
                             max={100}
                             defaultValue={100}
-                            onChange={this.handleSlider4}
+                            onChange={(e) => this.handleSlider(e, 3)}
                         />
                     </div> : ''}
                 <svg
