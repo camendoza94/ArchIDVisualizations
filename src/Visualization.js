@@ -1,16 +1,22 @@
 import React, {Component} from 'react';
 import * as d3 from "d3";
 import Select from "react-select";
-import Slider from 'rc-slider';
-const Range = Slider.Range;
+import Slider, {createSliderWithTooltip} from 'rc-slider';
+import './rc-slider.css';
+
+const SliderWithTooltip = createSliderWithTooltip(Slider);
 
 class Visualization extends Component {
 
     constructor(props) {
         super(props);
-        this.state = {};
+        this.state = {coefficients: [100, 100, 100, 100]};
         this.max = 0;
         this.handleChange = this.handleChange.bind(this);
+        this.handleSlider = this.handleSlider.bind(this);
+        this.handleSlider2 = this.handleSlider2.bind(this);
+        this.handleSlider3 = this.handleSlider3.bind(this);
+        this.handleSlider4 = this.handleSlider4.bind(this);
     }
 
     componentDidMount() {
@@ -23,6 +29,8 @@ class Visualization extends Component {
                     layer: layer.name,
                     issues: file.size,
                     mods: file.children ? file.children.map(a => a.rows).reduce((a, b) => a + b, 0) : 0,
+                    inDeps: file.inDeps,
+                    outDeps: file.outDeps,
                     name: file.name
                 })
 
@@ -38,12 +46,11 @@ class Visualization extends Component {
     createSVG() {
         const height = 550;
         const width = 1000;
-        let columns = d3.keys(this.state.data[0]).filter(d => d !== this.state.currentKey.label && !isNaN(this.state.data[0][d])).slice(0, 2); // TODO Max Number of Columns
-        let coefficients = [100, 50, 100]; //TODO sliders
+        let columns = d3.keys(this.state.data[0]).filter(d => d !== this.state.currentKey.label && !isNaN(this.state.data[0][d])).slice(0, 4); // TODO Max Number of Columns
         let scales = columns.map((col, i) =>
             d3.scaleLinear()
                 .domain([0, d3.max(this.state.data, e => e[col])])
-                .range([0, coefficients[i]]));
+                .range([0, this.state.coefficients[i]]));
 
         let adjustedData = this.state.data.map((d) => {
             const ret = {};
@@ -61,8 +68,6 @@ class Visualization extends Component {
         let stackedData = d3.stack()
             .keys(columns)
             (adjustedData);
-        console.log(adjustedData);
-        console.log(stackedData);
         const svg = d3.select(this.svg);
         svg.selectAll("*").remove();
         svg.attr("width", width)
@@ -108,7 +113,7 @@ class Visualization extends Component {
         g.append("g")
             .attr("class", "axis")
             .call(d3.axisLeft(y).ticks(null, "s"))
-            .call(axis => axis.selectAll("text").style("font-size", `${iheight / adjustedData.length * 0.7}pt`))
+            .call(axis => axis.selectAll("text").style("font-size", `${iheight / adjustedData.length * 0.5}pt`))
             .append("text")
             .attr("x", 2)
             .attr("y", iheight)
@@ -147,17 +152,74 @@ class Visualization extends Component {
         this.setState({currentKey}, this.createSVG)
     }
 
+    handleSlider(newCoefficient) {
+        let newCoefficients = this.state.coefficients;
+        newCoefficients[0] = newCoefficient;
+        this.setState({coefficients: newCoefficients}, this.createSVG)
+    }
+
+    handleSlider2(newCoefficient) {
+        let newCoefficients = this.state.coefficients;
+        newCoefficients[1] = newCoefficient;
+        this.setState({coefficients: newCoefficients}, this.createSVG)
+    }
+
+    handleSlider3(newCoefficient) {
+        let newCoefficients = this.state.coefficients;
+        newCoefficients[2] = newCoefficient;
+        this.setState({coefficients: newCoefficients}, this.createSVG)
+    }
+
+    handleSlider4(newCoefficient) {
+        let newCoefficients = this.state.coefficients;
+        newCoefficients[3] = newCoefficient;
+        this.setState({coefficients: newCoefficients}, this.createSVG)
+    }
+
     render() {
         const {currentKey, options} = this.state;
+        const style = { width: 600, margin: 10 };
         return (
             <div>
                 {options ?
-                    <Select
-                        value={currentKey}
-                        onChange={this.handleChange}
-                        options={options}
-                        defaultValue={options[0]}
-                    /> : ''}
+                    <div>
+                        <h4>Key</h4>
+                        <Select
+                            value={currentKey}
+                            onChange={this.handleChange}
+                            options={options}
+                            defaultValue={options[0]}
+                        />
+                        <h4>Weights</h4>
+                        <p>Issues</p>
+                        <SliderWithTooltip
+                            style = {style}
+                            max={100}
+                            defaultValue={100}
+                            onChange={this.handleSlider}
+                        />
+                        <p>Modifications</p>
+                        <SliderWithTooltip
+                            style = {style}
+                            max={100}
+                            defaultValue={100}
+                            onChange={this.handleSlider2}
+                        />
+                        <p>Dependencies Out</p>
+                        <SliderWithTooltip
+                            style = {style}
+                            max={100}
+                            defaultValue={100}
+                            onChange={this.handleSlider3}
+                        />
+                        <p>Dependencies In</p>
+                        <SliderWithTooltip
+                            style = {style}
+                            max={100}
+                            defaultValue={100}
+                            onChange={this.handleSlider4}
+                        />
+                    </div> : ''}
                 <svg
                     ref={(svg) => {
                         this.svg = svg;
