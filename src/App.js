@@ -30,6 +30,7 @@ class App extends Component {
         const {currentProject, options, vizType} = this.state;
         return (
             <div>
+                <h1>ArchID</h1>
                 {options ?
                 <Select
                     value={currentProject}
