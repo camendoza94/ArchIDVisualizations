@@ -6,8 +6,6 @@ let architecture = JSON.parse(JSON.stringify(initial));
 let mod = {};
 let data = {};
 
-const colors = ["#ede0da", "#cca92a", "#d66228", "#d62445", "#a0001d", "#d62445"];
-
 function getPath(s) {
     let parts = s.split("/");
     let path = "";
@@ -30,22 +28,17 @@ const getFiles = async (src) => {
             let res = glob.sync(src + pattern);
             let newRes = res.map(file => {
                 let found = currentData.files.find(f => f.name === getPath(file));
-                let sum = found ? found.issues.reduce((a, b) => a + b, 0) : 0;
-                let authors = found ? found.authors: [];
+                let sum = found && found.issues ? found.issues.reduce((a, b) => a + b, 0) : 0;
+                let authors = found && found.authors ? found.authors : [];
+                let outDeps = found && found.dependenciesOut ? found.dependenciesOut : [];
+                let inDeps = found && found.dependenciesIn ? found.dependenciesIn : [];
                 return {
                     name: file.split("/")[file.split("/").length - 1],
-                    size: sum + 1,
-                    color: colors[sum % 5],
-                    children: authors
+                    size: sum,
+                    children: authors,
+                    outDeps,
+                    inDeps
                 }
-            });
-            let max = Math.max(...newRes.map(file => file.size));
-            let div = (max * 1.0) / 5;
-            newRes.forEach((res) => {
-                if (res.size === 1)
-                    res.color = colors[0];
-                else
-                    res.color = colors[Math.ceil(res.size / div) - 1]
             });
             architecture.children.find(child => child.name === mod.name).children.push(...newRes);
         });

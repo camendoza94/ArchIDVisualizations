@@ -26,8 +26,8 @@ class Visualization extends Component {
                     layer: layer.name,
                     issues: file.size,
                     mods: file.children ? file.children.map(a => a.rows).reduce((a, b) => a + b, 0) : 0,
-                    inDeps: file.inDeps,
-                    outDeps: file.outDeps,
+                    inDeps: file.inDeps ? file.inDeps.length : 0,
+                    outDeps: file.outDeps ? file.outDeps.length : 0,
                     name: file.name
                 })
 
@@ -61,7 +61,7 @@ class Visualization extends Component {
 
             return ret;
         }).sort((a, b) => d3.descending(a._total, b._total)).slice(0, 30); //TODO Max number of rows
-
+        console.log(adjustedData);
         let stackedData = d3.stack()
             .keys(columns)
             (adjustedData);
@@ -200,7 +200,7 @@ class Visualization extends Component {
                         </div>
                         <div className="container">
                             <div className="row">
-                                <p className="col-md-2">Dependencies Out:</p>
+                                <p className="col-md-2">Dependencies In:</p>
                                 <div className="col-md-6">
                                     <SliderWithTooltip
                                         style={style}
@@ -214,7 +214,7 @@ class Visualization extends Component {
                         </div>
                         <div className="container">
                             <div className="row">
-                                <p className="col-md-2">Dependencies In:</p>
+                                <p className="col-md-2">Dependencies Out:</p>
                                 <div className="col-md-6">
                                     <SliderWithTooltip
                                         style={style}
