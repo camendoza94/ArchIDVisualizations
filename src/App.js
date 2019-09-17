@@ -29,16 +29,23 @@ class App extends Component {
     render() {
         const {currentProject, options, vizType} = this.state;
         return (
-            <div>
+            <div className="container">
                 <h1>ArchID</h1>
                 {options ?
-                <Select
-                    value={currentProject}
-                    onChange={this.handleChange}
-                    options={options}
-                    defaultValue={options[0]}
-                /> : ''}
-                {currentProject ? <Visualization key={currentProject.label} vizType={vizType} projectData={currentProject} width="932" height="932"/> : ''}
+                    <div className="row">
+                        <h4 className="col-md-2">Project</h4>
+                        <div className="col-md-6">
+                            <Select
+                                value={currentProject}
+                                onChange={this.handleChange}
+                                options={options}
+                                defaultValue={options[0]}
+                            />
+                        </div>
+                    </div> : ''}
+                {currentProject ?
+                    <Visualization key={currentProject.label} vizType={vizType} projectData={currentProject} width="932"
+                                   height="932"/> : ''}
             </div>
         );
     }

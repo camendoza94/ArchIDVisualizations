@@ -2,16 +2,16 @@ const axios = require('axios');
 const fs = require('fs');
 
 let data = {};
-let currentData ={};
+let currentData = {};
 
-const addSocial =  async () => {
+const addSocial = async () => {
     currentData = data.find(project => project.name === require('path').basename(process.cwd())).data[0];
     currentData.files.forEach(f => {
-        let eData = JSON.parse(fs.readFileSync('./inspector.json', 'utf8'));
+        let eData = JSON.parse(fs.readFileSync('./inspector.json', 'utf16le').trim());
         let currentFile = eData.responsibilities.files.find(file => {
             return file.file.substring(file.file.indexOf("co/edu/")) === f.name
         });
-        if(currentFile)
+        if (currentFile)
             f.authors = currentFile.authors;
     })
 };

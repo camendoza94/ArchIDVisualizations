@@ -10,7 +10,7 @@ class Visualization extends Component {
 
     constructor(props) {
         super(props);
-        this.state = {coefficients: [100, 100, 100, 100]};
+        this.state = {coefficients: [100, 70, 40, 40]};
         this.max = 0;
         this.handleChange = this.handleChange.bind(this);
         this.handleSlider = this.handleSlider.bind(this);
@@ -162,69 +162,67 @@ class Visualization extends Component {
             <div>
                 {options ?
                     <div>
-                        <h4>Key</h4>
-                        <Select
-                            value={currentKey}
-                            onChange={this.handleChange}
-                            options={options}
-                            defaultValue={options[0]}
-                        />
-                        <h4>Weights</h4>
-                        <div className="container">
-                            <div className="row">
-                                <p className="col-md-2">Issues:</p>
-                                <div className="col-md-6">
-                                    <SliderWithTooltip
-                                        style={style}
-                                        max={100}
-                                        defaultValue={100}
-                                        onChange={(e) => this.handleSlider(e, 0)}
-                                    />
-                                </div>
-                                <p className="col-md-2">{coefficients[0]}</p>
+                        <div className="row">
+                            <h4 className="col-md-2">Key</h4>
+                            <div className="col-md-6">
+                                <Select
+                                    value={currentKey}
+                                    onChange={this.handleChange}
+                                    options={options}
+                                    defaultValue={options[0]}
+                                />
                             </div>
                         </div>
-                        <div className="container">
-                            <div className="row">
-                                <p className="col-md-2">Modifications:</p>
-                                <div className="col-md-6">
-                                    <SliderWithTooltip
-                                        style={style}
-                                        max={100}
-                                        defaultValue={100}
-                                        onChange={(e) => this.handleSlider(e, 1)}
-                                    />
-                                </div>
-                                <p className="col-md-2">{coefficients[1]}</p>
-                            </div>
+                        <div className="row">
+                            <h4 className="col-md-2">Weights</h4>
                         </div>
-                        <div className="container">
-                            <div className="row">
-                                <p className="col-md-2">Dependencies In:</p>
-                                <div className="col-md-6">
-                                    <SliderWithTooltip
-                                        style={style}
-                                        max={100}
-                                        defaultValue={100}
-                                        onChange={(e) => this.handleSlider(e, 2)}
-                                    />
-                                </div>
-                                <p className="col-md-2">{coefficients[2]}</p>
+                        <div className="row">
+                            <p className="col-md-2">Issues:</p>
+                            <div className="col-md-6">
+                                <SliderWithTooltip
+                                    style={style}
+                                    max={100}
+                                    defaultValue={100}
+                                    onChange={(e) => this.handleSlider(e, 0)}
+                                />
                             </div>
+                            <p className="col-md-2">{coefficients[0]}</p>
                         </div>
-                        <div className="container">
-                            <div className="row">
-                                <p className="col-md-2">Dependencies Out:</p>
-                                <div className="col-md-6">
-                                    <SliderWithTooltip
-                                        style={style}
-                                        max={100}
-                                        defaultValue={100}
-                                        onChange={(e) => this.handleSlider(e, 3)}
-                                    />
-                                </div>
-                                <p className="col-md-2">{coefficients[3]}</p>
+                        <div className="row">
+                            <p className="col-md-2">Modifications:</p>
+                            <div className="col-md-6">
+                                <SliderWithTooltip
+                                    style={style}
+                                    max={100}
+                                    defaultValue={70}
+                                    onChange={(e) => this.handleSlider(e, 1)}
+                                />
                             </div>
+                            <p className="col-md-2">{coefficients[1]}</p>
+                        </div>
+                        <div className="row">
+                            <p className="col-md-2">Dependencies In:</p>
+                            <div className="col-md-6">
+                                <SliderWithTooltip
+                                    style={style}
+                                    max={100}
+                                    defaultValue={40}
+                                    onChange={(e) => this.handleSlider(e, 2)}
+                                />
+                            </div>
+                            <p className="col-md-2">{coefficients[2]}</p>
+                        </div>
+                        <div className="row">
+                            <p className="col-md-2">Dependencies Out:</p>
+                            <div className="col-md-6">
+                                <SliderWithTooltip
+                                    style={style}
+                                    max={100}
+                                    defaultValue={40}
+                                    onChange={(e) => this.handleSlider(e, 3)}
+                                />
+                            </div>
+                            <p className="col-md-2">{coefficients[3]}</p>
                         </div>
                     </div> : ''}
                 <svg
