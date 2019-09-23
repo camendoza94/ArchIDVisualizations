@@ -44,8 +44,7 @@ class App extends Component {
                         </div>
                     </div> : ''}
                 {currentProject ?
-                    <Visualization key={currentProject.label} vizType={vizType} projectData={currentProject} width="932"
-                                   height="932"/> : ''}
+                    <Visualization key={currentProject.label} vizType={vizType} projectData={currentProject}/> : ''}
             </div>
         );
     }

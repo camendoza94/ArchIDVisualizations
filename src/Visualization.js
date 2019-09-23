@@ -33,10 +33,7 @@ class Visualization extends Component {
 
             }
         }
-        const options = d3.keys(unnestedData[0]).map(key => {
-                return {value: key, label: key}
-            }
-        );
+        const options = [{value: "name", label: "name"}, {value: "layer", label: "layer"}];
         this.setState({options, currentKey: options[0], data: unnestedData}, this.createSVG);
     }
 
@@ -61,7 +58,6 @@ class Visualization extends Component {
 
             return ret;
         }).sort((a, b) => d3.descending(a._total, b._total)).slice(0, 30); //TODO Max number of rows
-        console.log(adjustedData);
         let stackedData = d3.stack()
             .keys(columns)
             (adjustedData);
@@ -95,17 +91,16 @@ class Visualization extends Component {
             .attr("stroke", "white")
             .selectAll("rect")
             .data(d => d)
-            .join(enter => enter.append("rect")
-                    .attr("x", d => x(d[0]))
-                    .attr("width", (d) => x(d[1]) - x(d[0]))
-                    .attr("y", (d) => y(d.data[this.state.currentKey.label]))
-                    .attr("height", y.bandwidth()),
-                update => update
-                    .transition().duration(1500)
-                    .attr("x", d => x(d[0]))
-                    .attr("width", (d) => x(d[1]) - x(d[0]))
-                    .attr("y", (d) => y(d.data.name))
-            );
+            .enter()
+            .append("rect")
+            .attr("x", d => {
+                return x(d[0])
+            })
+            .attr("width", d => x(d[1]) - x(d[0]))
+            .attr("y", d => y(d.data[this.state.currentKey.label]))
+            .attr("height", y.bandwidth())
+            .append("title").text(d => d.data.name); //TODO Change title to value
+
 
         g.append("g")
             .attr("class", "axis")
