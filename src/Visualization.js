@@ -89,17 +89,19 @@ class Visualization extends Component {
             .join("g")
             .attr("fill", d => z(d.key))
             .attr("stroke", "white")
+            .attr("data-index", (d, i) => i)
             .selectAll("rect")
             .data(d => d)
             .enter()
             .append("rect")
-            .attr("x", d => {
-                return x(d[0])
-            })
+            .attr("x", d => x(d[0]))
             .attr("width", d => x(d[1]) - x(d[0]))
             .attr("y", d => y(d.data[this.state.currentKey.label]))
             .attr("height", y.bandwidth())
-            .append("title").text(d => d.data.name); //TODO Change title to value
+            .append("title").text((d, i, j) => {
+            const key = j[i].parentNode.parentNode.getAttribute("data-index");
+            return columns[key] + ": " + this.state.data.find(c => c[this.state.currentKey.label] === adjustedData[i][this.state.currentKey.label])[columns[key]];
+        });
 
 
         g.append("g")
