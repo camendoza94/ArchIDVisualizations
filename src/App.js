@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import './App.css';
-import Visualization from "./Visualization";
+import Visualization from "./Visualization2";
 import {getProjects} from './api';
 import Select from 'react-select';
 
@@ -8,7 +8,7 @@ import Select from 'react-select';
 class App extends Component {
     constructor(props) {
         super(props);
-        this.state = {vizType: 0};
+        this.state = {};
         this.handleChange = this.handleChange.bind(this);
     }
 
@@ -27,7 +27,7 @@ class App extends Component {
     }
 
     render() {
-        const {currentProject, options, vizType} = this.state;
+        const {currentProject, options} = this.state;
         return (
             <div className="container">
                 <h1>ArchID</h1>
@@ -44,7 +44,7 @@ class App extends Component {
                         </div>
                     </div> : ''}
                 {currentProject ?
-                    <Visualization key={currentProject.label} vizType={vizType} projectData={currentProject}/> : ''}
+                    <Visualization key={currentProject.label} projectData={currentProject}/> : ''}
             </div>
         );
     }
