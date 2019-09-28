@@ -1,11 +1,13 @@
 import React, {Component} from 'react';
 import * as d3 from "d3";
+import Select from "react-select";
 
 class Visualization extends Component {
 
     constructor(props) {
         super(props);
         this.max = 0;
+        this.state = {};
         this.pack = data => d3.pack()
             .size([700, 700])
             .padding(3)
@@ -15,6 +17,7 @@ class Visualization extends Component {
         this.color = d3.scaleOrdinal()
             .domain([1, this.max])
             .range(["#00FF00", "#7FFF00", "#FFFF00", "#FF7F00", "#FF0000"]);
+        this.handleChange = this.handleChange.bind(this);
     }
 
     componentDidMount() {
@@ -27,6 +30,7 @@ class Visualization extends Component {
                         unnestedData.push({
                             layer: layer.name,
                             file: file.name,
+                            module: file.module,
                             issues: file.size,
                             mods: author.rows,
                             name: author.name
@@ -34,8 +38,13 @@ class Visualization extends Component {
                     }
             }
         }
+        const options = [{value: "layer", label: "layer"}, {value: "module", label: "module"}];
+        this.setState({options, currentKey: options[0], data: unnestedData}, this.createSVG);
+    }
+
+    createSVG() {
         let nestedData = d3.nest()
-            .key(d => d.layer)
+            .key(d => d[this.state.currentKey.label])
             .key(d => d.file)
             .rollup((leaves) => {
                 return {
@@ -44,8 +53,7 @@ class Visualization extends Component {
                     "authors": d3.sum(leaves, () => 1)
                 }
             })
-            .entries(unnestedData);
-        console.log(nestedData);
+            .entries(this.state.data);
         nestedData = nestedData.map(nested => ({
             name: nested.key,
             children: nested.values.map(o => ({
@@ -56,9 +64,7 @@ class Visualization extends Component {
 
             }))
         }));
-
         nestedData = {name: this.props.projectData.value.name, children: nestedData};
-        console.log(nestedData);
 
         const root = this.pack(nestedData);
         let focus = root;
@@ -66,8 +72,9 @@ class Visualization extends Component {
         const width = this.props.width || 700,
             height = this.props.height || 700;
 
-        const svg = d3.select(this.svg)
-            .attr("viewBox", `-${width / 2} -${height / 2} ${width} ${height}`)
+        const svg = d3.select(this.svg);
+        svg.selectAll("*").remove();
+        svg.attr("viewBox", `-${width / 2} -${height / 2} ${width} ${height}`)
             .style("display", "block")
             .style("margin", "0 -14px")
             .style("background", "#eeeeee")
@@ -138,14 +145,32 @@ class Visualization extends Component {
         return svg.node();
     }
 
+    handleChange(currentKey) {
+        this.setState({currentKey}, this.createSVG)
+    }
 
     render() {
+        const {currentKey, options} = this.state;
         return (
-            <svg width={700} height={700}
-                 ref={(svg) => {
-                     this.svg = svg;
-                 }}>
-            </svg>
+            <div>
+                {options ?
+                    <div className="row">
+                        <h4 className="col-md-2">Key</h4>
+                        <div className="col-md-6">
+                            <Select
+                                value={currentKey}
+                                onChange={this.handleChange}
+                                options={options}
+                                defaultValue={options[0]}
+                            />
+                        </div>
+                    </div> : ""}
+                <svg width={700} height={700}
+                     ref={(svg) => {
+                         this.svg = svg;
+                     }}>
+                </svg>
+            </div>
         )
     }
 }

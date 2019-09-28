@@ -1,0 +1,24 @@
+{
+  "name": "architecture",
+  "children":
+  [
+    {
+      "name": "web",
+      "pattern": ["/**/co/epm/cpe/*/api/controller/*.java"],
+      "size": 30,
+      "children": []
+    },
+    {
+      "name": "services",
+      "pattern": ["/**/co/epm/cpe/*/api/service/*.java", "/**/co/epm/cpe/*/api/to/*.java"],
+      "size": 30,
+      "children": []
+    },
+    {
+      "name": "data",
+      "pattern": ["/**/co/epm/cpe/*/api/dao/*.java", "/**/co/epm/cpe/*/api/model/*.java"],
+      "size": 30,
+      "children": []
+    }
+  ]
+}
