@@ -9,11 +9,12 @@ let data = {};
 function getPath(s) {
     let parts = s.split("/");
     let path = "";
-    for (let i = 6; i >= 0; i--) {
-        if (i === 0)
-            path += parts[parts.length - 1 - i];
+    let i = parts.findIndex(p => p === "co" || p === "com");
+    for (i; i < parts.length; i++) {
+        if (i === parts.length - 1)
+            path += parts[i];
         else
-            path += parts[parts.length - 1 - i] + "/";
+            path += parts[i] + "/";
     }
     return path;
 
@@ -32,12 +33,22 @@ const getFiles = async (src) => {
                 let authors = found && found.authors ? found.authors : [];
                 let outDeps = found && found.dependenciesOut ? found.dependenciesOut : [];
                 let inDeps = found && found.dependenciesIn ? found.dependenciesIn : [];
+                let name = file.split("/")[file.split("/").length - 1];
+                let moduleEnd = 0;
+                for (let i = 1; i < name.length; i++) {
+                    if (name.charAt(i) === name.charAt(i).toUpperCase()) {
+                        moduleEnd = i;
+                        break;
+                    }
+                }
+                let module = name.substring(0, moduleEnd);
                 return {
-                    name: file.split("/")[file.split("/").length - 1],
+                    name,
                     size: sum,
                     children: authors,
                     outDeps,
-                    inDeps
+                    inDeps,
+                    module
                 }
             });
             architecture.children.find(child => child.name === mod.name).children.push(...newRes);

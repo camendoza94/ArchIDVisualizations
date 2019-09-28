@@ -41,7 +41,7 @@ class Visualization extends Component {
                 return {
                     "issues": d3.max(leaves, d => d.issues),
                     "mods": d3.sum(leaves, d => d.mods),
-                    "authors": d3.sum(leaves, d => 1)
+                    "authors": d3.sum(leaves, () => 1)
                 }
             })
             .entries(unnestedData);
@@ -116,7 +116,7 @@ class Visualization extends Component {
 
             const transition = svg.transition()
                 .duration(d3.event.altKey ? 7500 : 750)
-                .tween("zoom", d => {
+                .tween("zoom", () => {
                     const i = d3.interpolateZoom(view, [focus.x, focus.y, focus.r * 2]);
                     return t => zoomTo(i(t));
                 });

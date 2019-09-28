@@ -9,7 +9,7 @@ const addSocial = async () => {
     currentData.files.forEach(f => {
         let eData = JSON.parse(fs.readFileSync('./inspector.json', 'utf8').trim());
         let currentFile = eData.responsibilities.files.find(file => {
-            return file.file.substring(file.file.indexOf("co/edu/")) === f.name
+            return (file.file.substring(file.file.indexOf("co/edu/")) === f.name || file.file.substring(file.file.indexOf("com/epm/")) === f.name)
         });
         if (currentFile)
             f.authors = currentFile.authors;
