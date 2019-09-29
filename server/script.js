@@ -5,22 +5,30 @@ let data = {};
 let currentData = {};
 
 const addSocial = async () => {
-    currentData = data.find(project => project.name === require('path').basename(process.cwd())).data[0];
-    currentData.files.forEach(f => {
-        let eData = JSON.parse(fs.readFileSync('./inspector.json', 'utf8').trim());
-        let currentFile = eData.responsibilities.files.find(file => {
+    let projectData = data.find(project => project.name === require('path').basename(process.cwd())).data;
+    currentData = projectData[projectData.length - 1];
+    let eData = JSON.parse(fs.readFileSync('./inspector.json', 'utf8').trim());
+    eData.responsibilities.files.forEach(file => {
+        let currentFile = currentData.files.find(f => {
             return (file.file.substring(file.file.indexOf("co/edu/")) === f.name || file.file.substring(file.file.indexOf("com/epm/")) === f.name)
         });
         if (currentFile)
-            f.authors = currentFile.authors;
-    })
+            currentFile.authors = file.authors;
+        else {
+            let newFile = {
+                name: file.file.indexOf("co/edu/") !== -1 ? file.file.substring(file.file.indexOf("co/edu/")) : file.file.substring(file.file.indexOf("com/epm/")),
+                issues: [],
+                authors: file.authors
+            };
+            currentData.files.push(newFile)
+        }
+    });
 };
 
 const getFiles = () => {
     axios.get("https://archtoringbd.herokuapp.com/files").then(async (response) => {
         data = response.data;
         await addSocial();
-        fs.writeFileSync('./request.json', JSON.stringify(currentData));
         axios.put(`https://archtoringbd.herokuapp.com/files/${require('path').basename(process.cwd())}`, currentData).then((response) => {
             console.log(response);
         })

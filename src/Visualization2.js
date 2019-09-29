@@ -33,7 +33,9 @@ class Visualization extends Component {
                             module: file.module,
                             issues: file.size,
                             mods: author.rows,
-                            name: author.name
+                            name: author.name,
+                            inDeps: file.inDeps,
+                            outDeps: file.outDeps
                         })
                     }
             }
@@ -48,9 +50,10 @@ class Visualization extends Component {
             .key(d => d.file)
             .rollup((leaves) => {
                 return {
-                    "issues": d3.max(leaves, d => d.issues),
+                    "issues": d3.max(leaves, d => d.issues), //TODO By author
                     "mods": d3.sum(leaves, d => d.mods),
-                    "authors": d3.sum(leaves, () => 1)
+                    "authors": d3.sum(leaves, () => 1),
+                    "inDeps": leaves[0].inDeps
                 }
             })
             .entries(this.state.data);

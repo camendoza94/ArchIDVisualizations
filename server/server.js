@@ -21,7 +21,8 @@ function getPath(s) {
 }
 
 const getFiles = async (src) => {
-    let currentData = data.find(project => project.name === require('path').basename(process.cwd())).data[0];
+    let projectData = data.find(project => project.name === require('path').basename(process.cwd())).data;
+    let currentData = projectData[projectData.length - 1];
     architecture.name = require('path').basename(process.cwd());
     architecture.children.forEach((child) => {
         mod = child;
