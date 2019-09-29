@@ -30,7 +30,7 @@ const getFiles = async (src) => {
             let res = glob.sync(src + pattern);
             let newRes = res.map(file => {
                 let found = currentData.files.find(f => f.name === getPath(file));
-                let sum = found && found.issues ? found.issues.reduce((a, b) => a + b, 0) : 0;
+                let issues = found && found.issues ? found.issues : [];
                 let authors = found && found.authors ? found.authors : [];
                 let outDeps = found && found.dependenciesOut ? found.dependenciesOut : [];
                 let inDeps = found && found.dependenciesIn ? found.dependenciesIn : [];
@@ -45,7 +45,7 @@ const getFiles = async (src) => {
                 let module = name.substring(0, moduleEnd);
                 return {
                     name,
-                    size: sum,
+                    issues,
                     children: authors,
                     outDeps,
                     inDeps,
