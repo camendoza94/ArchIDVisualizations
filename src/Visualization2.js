@@ -53,7 +53,8 @@ class Visualization extends Component {
                     "issues": d3.max(leaves, d => d.issues), //TODO By author
                     "mods": d3.sum(leaves, d => d.mods),
                     "authors": d3.sum(leaves, () => 1),
-                    "inDeps": leaves[0].inDeps
+                    "inDeps": leaves[0].inDeps,
+                    "outDeps": leaves[0].outDeps
                 }
             })
             .entries(this.state.data);
@@ -63,12 +64,14 @@ class Visualization extends Component {
                 name: o.key,
                 value: o.value.mods,
                 issues: o.value.issues,
-                authors: o.value.authors
+                authors: o.value.authors,
+                inDeps: o.value.inDeps,
+                outDeps: o.value.outDeps
 
             }))
         }));
         nestedData = {name: this.props.projectData.value.name, children: nestedData};
-
+        console.log(nestedData);
         const root = this.pack(nestedData);
         let focus = root;
         let view;
