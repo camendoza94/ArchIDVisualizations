@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import './App.css';
-import Visualization from "./Visualization2";
-import {getProjects} from './api';
+import Visualization from "./Visualization3";
+import {getCategorization, getProjects} from './api';
 import Select from 'react-select';
 
 
@@ -18,20 +18,33 @@ class App extends Component {
                     return {value: project, label: project.name}
                 }
             );
-            this.setState({projects, options, currentProject: options[0]})
+            this.setState({projects, options, currentProject: options[0]}, this.getCats)
+        })
+    }
+
+    getCats() {
+        getCategorization().then(projects => {
+            this.setState({
+                categorization: projects,
+                currentCategorization: projects.find(c => c.name === this.state.currentProject.label) || projects[0]
+            })
         })
     }
 
     handleChange(currentProject) {
-        this.setState({currentProject: currentProject})
+        let currentCategorization = this.state.categorization.find(c => c.name === currentProject.label) || this.state.categorization[0];
+        this.setState({
+            currentProject: currentProject,
+            currentCategorization
+        })
     }
 
     render() {
-        const {currentProject, options} = this.state;
+        const {currentProject, options, categorization, currentCategorization} = this.state;
         return (
             <div className="container">
                 <h1>ArchID</h1>
-                {options ?
+                {options && categorization ?
                     <div className="row">
                         <h4 className="col-md-2">Project</h4>
                         <div className="col-md-6">
@@ -43,8 +56,9 @@ class App extends Component {
                             />
                         </div>
                     </div> : ''}
-                {currentProject ?
-                    <Visualization key={currentProject.label} projectData={currentProject}/> : ''}
+                {currentProject && categorization ?
+                    <Visualization categorization={currentCategorization} key={currentProject.label}
+                                   projectData={currentProject}/> : ''}
             </div>
         );
     }
