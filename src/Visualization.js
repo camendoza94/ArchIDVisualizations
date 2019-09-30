@@ -24,7 +24,7 @@ class Visualization extends Component {
                 this.max = file.size > this.max ? file.size : this.max;
                 unnestedData.push({
                     layer: layer.name,
-                    issues: file.issues.length,  //TODO By author
+                    issues: file.issues.reduce((a, b) => a + b, 0),  //TODO By author
                     mods: file.children ? file.children.map(a => a.rows).reduce((a, b) => a + b, 0) : 0,
                     inDeps: file.inDeps ? file.inDeps.length : 0,
                     outDeps: file.outDeps ? file.outDeps.length : 0,
@@ -38,7 +38,7 @@ class Visualization extends Component {
     }
 
     createSVG() {
-        const height = 550;
+        const height = 650;
         const width = 1000;
         let columns = d3.keys(this.state.data[0]).filter(d => d !== this.state.currentKey.label && !isNaN(this.state.data[0][d])).slice(0, 4); // TODO Max Number of Columns
         let scales = columns.map((col, i) =>
@@ -57,7 +57,7 @@ class Visualization extends Component {
                 }); // adjust the values by the coefficient
 
             return ret;
-        }).sort((a, b) => d3.descending(a._total, b._total)).slice(0, 30); //TODO Max number of rows
+        }).sort((a, b) => d3.descending(a._total, b._total)).slice(0, 20); //TODO Max number of rows
         let stackedData = d3.stack()
             .keys(columns)
             (adjustedData);
@@ -107,7 +107,7 @@ class Visualization extends Component {
         g.append("g")
             .attr("class", "axis")
             .call(d3.axisLeft(y).ticks(null, "s"))
-            .call(axis => axis.selectAll("text").style("font-size", `${iheight / adjustedData.length * 0.5}pt`))
+            .call(axis => axis.selectAll("text").style("font-size", `${iheight / adjustedData.length * 0.3}pt`))
             .append("text")
             .attr("x", 2)
             .attr("y", iheight)

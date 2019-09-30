@@ -28,7 +28,7 @@ class Visualization extends Component {
                             layer: layer.name,
                             file: file.name,
                             module: file.module,
-                            issues: file.issues.length,
+                            issues: file.issues.reduce((a, b) => a + b, 0),
                             mods: author.rows,
                             name: author.name,
                             inDeps: file.inDeps,

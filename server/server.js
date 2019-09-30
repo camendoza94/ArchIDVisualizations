@@ -1,5 +1,5 @@
 const glob = require('glob');
-const initial = require('./architecture');
+const initial = require('./archIntergrupo.json');
 const axios = require('axios');
 
 let architecture = JSON.parse(JSON.stringify(initial));
