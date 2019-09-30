@@ -2,12 +2,14 @@ import React, {Component} from 'react';
 
 class Visualization extends Component {
 
-    getIssues(i) {
+    getIssues(rules) {
         let issues = 0;
         for (let layer of this.props.projectData.value.children) {
             for (let file of layer.children) {
-                let currentNumber =  file.issues[i] || 0;
-                issues = issues += currentNumber;
+                for (let r of rules) {
+                    let currentNumber = file.issues[r] || 0;
+                    issues = issues += currentNumber;
+                }
             }
         }
         return issues;
@@ -23,19 +25,17 @@ class Visualization extends Component {
                         <th scope="col">#</th>
                         <th scope="col">Design Decision</th>
                         <th scope="col">Quality Attribute</th>
-                        <th scope="col">Issue</th>
-                        <th scope="col">#</th>
+                        <th scope="col">Issues</th>
                     </tr>
                     </thead>
                     <tbody>
-                    {categorization.rules.map((category, i) => {
+                    {categorization.decisions.map((category, i) => {
                         return (
                             <tr key={i}>
                                 <th scope="row">{i + 1}</th>
-                                <td>{category.decision}</td>
+                                <td>{category.name}</td>
                                 <td>{category.qa}</td>
-                                <td>{i + 1}</td>
-                                <td>{this.getIssues(i)}</td>
+                                <td>{this.getIssues(category.rules)}</td>
                             </tr>
                         )
                     })}
