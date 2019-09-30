@@ -14,9 +14,6 @@ class Visualization extends Component {
             (d3.hierarchy(data)
                 .sum(d => d.value)
                 .sort((a, b) => b.rows - a.rows || b.value - a.value));
-        this.color = d3.scaleOrdinal()
-            .domain([1, this.max])
-            .range(["#00FF00", "#7FFF00", "#FFFF00", "#FF7F00", "#FF0000"]);
         this.handleChange = this.handleChange.bind(this);
     }
 
@@ -31,7 +28,7 @@ class Visualization extends Component {
                             layer: layer.name,
                             file: file.name,
                             module: file.module,
-                            issues: file.size,
+                            issues: file.issues.length,
                             mods: author.rows,
                             name: author.name,
                             inDeps: file.inDeps,
@@ -40,6 +37,9 @@ class Visualization extends Component {
                     }
             }
         }
+        this.color = d3.scaleLinear()
+            .domain(d3.range(1, this.max, this.max / 3))
+            .range(["green", "yellow", "red"]);
         const options = [{value: "layer", label: "layer"}, {value: "module", label: "module"}];
         this.setState({options, currentKey: options[0], data: unnestedData}, this.createSVG);
     }
@@ -50,7 +50,7 @@ class Visualization extends Component {
             .key(d => d.file)
             .rollup((leaves) => {
                 return {
-                    "issues": d3.max(leaves, d => d.issues), //TODO By author
+                    "issues": d3.max(leaves, d => d.issues),
                     "mods": d3.sum(leaves, d => d.mods),
                     "authors": d3.sum(leaves, () => 1),
                     "inDeps": leaves[0].inDeps,
@@ -71,7 +71,6 @@ class Visualization extends Component {
             }))
         }));
         nestedData = {name: this.props.projectData.value.name, children: nestedData};
-        console.log(nestedData);
         const root = this.pack(nestedData);
         let focus = root;
         let view;
@@ -91,7 +90,7 @@ class Visualization extends Component {
             .selectAll("circle")
             .data(root.descendants().slice(1))
             .join("circle")
-            .attr("fill", d => (!d.depth || !d.data.value) ? "#6e6e6e" : this.color(d.data.authors))
+            .attr("fill", d => (!d.depth || !d.data.authors) ? "#6e6e6e" : this.color(d.data.authors))
             .attr("pointer-events", d => !d.children ? "none" : null)
             .on("mouseover", function () {
                 d3.select(this).attr("stroke", "#000");

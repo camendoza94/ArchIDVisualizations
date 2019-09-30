@@ -24,7 +24,7 @@ class Visualization extends Component {
                 this.max = file.size > this.max ? file.size : this.max;
                 unnestedData.push({
                     layer: layer.name,
-                    issues: file.size,
+                    issues: file.issues.length,  //TODO By author
                     mods: file.children ? file.children.map(a => a.rows).reduce((a, b) => a + b, 0) : 0,
                     inDeps: file.inDeps ? file.inDeps.length : 0,
                     outDeps: file.outDeps ? file.outDeps.length : 0,
