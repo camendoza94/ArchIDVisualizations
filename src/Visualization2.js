@@ -38,7 +38,7 @@ class Visualization extends Component {
             }
         }
         this.color = d3.scaleLinear()
-            .domain(d3.range(1, this.max, this.max / 3))
+            .domain([1, this.max/3, this.max])
             .range(["green", "yellow", "red"]);
         const options = [{value: "layer", label: "layer"}, {value: "module", label: "module"}];
         this.setState({options, currentKey: options[0], data: unnestedData}, this.createSVG);
@@ -111,6 +111,31 @@ class Visualization extends Component {
             .style("display", d => d.parent === root ? "inline" : "none")
             .text(d => d.data.name);
 
+        const legend = svg.append("g")
+            .attr("font-family", "sans-serif")
+            .attr("font-size", 10)
+            .attr("text-anchor", "end")
+            .selectAll("g")
+            .data(Array.from(Array(this.max).keys()).map(x => ++x))
+            .join("g")
+            .attr("transform", function (d, i) {
+                return "translate(-50," + (-350 + (i * 20)) + ")";
+            });
+
+        const margin = {right: 60, left: 300};
+        const iwidth = width - margin.left - margin.right;
+
+        legend.append("rect")
+            .attr("x", iwidth - 19)
+            .attr("width", 19)
+            .attr("height", 19)
+            .attr("fill", this.color);
+        legend.append("text")
+            .attr("x", iwidth - 24)
+            .attr("y", 9.5)
+            .attr("dy", "0.32em")
+            .text(d => d);
+
         zoomTo([root.x, root.y, root.r * 2]);
 
         function zoomTo(v) {
@@ -133,10 +158,9 @@ class Visualization extends Component {
                     return t => zoomTo(i(t));
                 });
 
-            label
-                .filter(function (d) {
-                    return d.parent === focus || this.style.display === "inline";
-                })
+            label.filter(function (d) {
+                return d.parent === focus || this.style.display === "inline";
+            })
                 .transition(transition)
                 .style("fill-opacity", d => d.parent === focus ? 1 : 0)
                 .on("start", function (d) {
