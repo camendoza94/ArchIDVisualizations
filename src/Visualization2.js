@@ -38,7 +38,7 @@ class Visualization extends Component {
             }
         }
         this.color = d3.scaleLinear()
-            .domain([1, this.max/3, this.max])
+            .domain([1, this.max / 3, this.max])
             .range(["green", "yellow", "red"]);
         const options = [{value: "layer", label: "layer"}, {value: "module", label: "module"}];
         this.setState({options, currentKey: options[0], data: unnestedData}, this.createSVG);
@@ -101,14 +101,17 @@ class Visualization extends Component {
             .on("click", d => focus !== d && (zoom(d), d3.event.stopPropagation()));
 
         const label = svg.append("g")
-            .style("font", "10px sans-serif")
             .attr("pointer-events", "none")
             .attr("text-anchor", "middle")
+            .attr("dominant-baseline", "central")
             .selectAll("text")
             .data(root.descendants())
             .join("text")
-            .style("fill-opacity", d => d.parent === root ? 1 : 0)
+            .style("fill-opacity", d => d.depth === 1 ? 0.7 : 1)
             .style("display", d => d.parent === root ? "inline" : "none")
+            .style("font", d => d.depth === 1 ? "36px sans-serif" : "13px sans-serif")
+            .style("fill", d => d.depth === 1 ? "#555555" : null)
+            .style("font-weight", d => d.depth === 1 ? "bold" : null)
             .text(d => d.data.name);
 
         const legend = svg.append("g")
@@ -116,7 +119,7 @@ class Visualization extends Component {
             .attr("font-size", 10)
             .attr("text-anchor", "end")
             .selectAll("g")
-            .data(Array.from(Array(this.max).keys()).map(x => ++x))
+            .data(Array.from(Array(this.max).keys()).map(x => ++x + " author(s)"))
             .join("g")
             .attr("transform", function (d, i) {
                 return "translate(-50," + (-350 + (i * 20)) + ")";
@@ -129,7 +132,7 @@ class Visualization extends Component {
             .attr("x", iwidth - 19)
             .attr("width", 19)
             .attr("height", 19)
-            .attr("fill", this.color);
+            .attr("fill", (d, i) => this.color(i + 1));
         legend.append("text")
             .attr("x", iwidth - 24)
             .attr("y", 9.5)
@@ -162,7 +165,7 @@ class Visualization extends Component {
                 return d.parent === focus || this.style.display === "inline";
             })
                 .transition(transition)
-                .style("fill-opacity", d => d.parent === focus ? 1 : 0)
+                .style("fill-opacity", d => d.parent === focus ? d.depth === 1 ? 0.7 : 1 : 0)
                 .on("start", function (d) {
                     if (d.parent === focus) this.style.display = "inline";
                 })
@@ -194,6 +197,8 @@ class Visualization extends Component {
                             />
                         </div>
                     </div> : ""}
+                <p>Circle size is proportional to number of modifications in a given file <br/>
+                    Color corresponds to number of authors working on a given file</p>
                 <svg width={700} height={700}
                      ref={(svg) => {
                          this.svg = svg;
