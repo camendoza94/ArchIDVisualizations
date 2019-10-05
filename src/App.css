@@ -22,3 +22,27 @@ rect {
     fill: #ddd;
     stroke: #fff;
 }
+
+th {
+    font-size: 14px;
+    font-weight: semibold;
+    color: #4a4a4a;
+    text-transform: uppercase;
+}
+
+tbody > tr:hover:not(.detail) {
+    background-color: #F5F8FC;
+}
+
+a.action {
+    color: #0954AB !important;
+    opacity: 0;
+}
+
+td:hover a {
+    opacity: 1;
+}
+
+.detail {
+    background-color: #eff2f6;
+}
