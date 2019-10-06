@@ -8,7 +8,7 @@ class Visualization extends Component {
             for (let layer of this.props.projectData.value.children) {
                 for (let file of layer.children) {
                     for (let r of rules) {
-                        let currentNumber = file.issues[r] || 0;
+                        let currentNumber = file.issues[r.id] || 0;
                         issues = issues += currentNumber;
                     }
                 }
@@ -48,7 +48,7 @@ class Visualization extends Component {
                             <Fragment key={"Fragment" + i}>
                                 <tr key={i} data-toggle="collapse" data-target={"#collapse" + i}>
                                     <th scope="row">{i + 1}</th>
-                                    <td>{category.name}</td>
+                                    <td>{category.title}</td>
                                     <td>{category.qa}</td>
                                     <td>{this.getIssues(category.rules)}</td>
                                     <td><a className="action">View Detail</a></td>
@@ -58,17 +58,17 @@ class Visualization extends Component {
                                     <th scope="col">Design Decision</th>
                                     <th scope="col">Rule Name</th>
                                     <th scope="col">Issues</th>
-                                    <th scope="col">Severity</th>
+                                    <th scope="col">Category</th>
                                 </tr>
                                 {category.rules.map((rule, j) => {
                                     return (
 
                                         <tr key={"d" + i + j} className="collapse detail" id={"collapse" + i}>
                                             <th scope="row">{(i + 1) + "." + (j + 1)}</th>
-                                            <td>{category.name}</td>
-                                            <td>{category.qa}</td>
-                                            <td>{this.getIssues(rule)}</td>
-                                            <td>{this.getRuleInfo(rule)}</td>
+                                            <td>{category.title}</td>
+                                            <td>{rule.title}</td>
+                                            <td>{this.getIssues(rule.id)}</td>
+                                            <td>{rule.category}</td>
                                         </tr>)
                                 })}
                             </Fragment>
