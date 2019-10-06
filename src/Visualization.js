@@ -34,33 +34,63 @@ class Visualization extends Component {
             }
         }
         const options = [{value: "name", label: "name"}, {value: "layer", label: "layer"}];
-        this.setState({options, currentKey: options[0], data: unnestedData}, this.createSVG);
+        this.setState({options, currentKey: options[1], data: unnestedData}, this.createSVG);
     }
 
     createSVG() {
         const height = 650;
         const width = 1000;
         let columns = d3.keys(this.state.data[0]).filter(d => d !== this.state.currentKey.label && !isNaN(this.state.data[0][d])).slice(0, 4); // TODO Max Number of Columns
-        let scales = columns.map((col, i) =>
-            d3.scaleLinear()
-                .domain([0, d3.max(this.state.data, e => e[col])])
-                .range([0, this.state.coefficients[i]]));
 
-        let adjustedData = this.state.data.map((d) => {
+        let adjustedData = [];
+        this.state.data.forEach((d) => {
             const ret = {};
             ret[this.state.currentKey.label] = d[this.state.currentKey.label];
             ret._total = 0;
-            columns
-                .forEach((col, i) => {
-                    ret[col] = scales[i](d[col] || 0);
-                    ret._total += ret[col];
-                }); // adjust the values by the coefficient
+            columns.forEach((col, i) => {
+                ret[col] = (d[col] || 0);
+                ret._total += ret[col];
+            });
+            let existing = adjustedData.find(c => c[this.state.currentKey.label] === ret[this.state.currentKey.label]);
+            if (existing) {
+                columns.forEach(col => {
+                    existing[col] += ret[col];
+                    existing._total += ret[col];
+                });
+            } else {
+                adjustedData.push(ret);
+            }
+        });
 
-            return ret;
-        }).sort((a, b) => d3.descending(a._total, b._total)).slice(0, 20); //TODO Max number of rows
+        let scales = columns.map((col, i) =>
+            d3.scaleLinear()
+                .domain([0, d3.max(adjustedData, e => e[col])])
+                .range([0, this.state.coefficients[i]]));
+
+        let adjustedDataFinal = [];
+
+        adjustedData.forEach((d) => {
+            const ret = {};
+            ret[this.state.currentKey.label] = d[this.state.currentKey.label];
+            ret._total = 0;
+            columns.forEach((col, i) => {
+                ret[col] = scales[i](d[col] || 0);
+                ret._total += ret[col];
+            }); // adjust the values by the coefficient
+            let existing = adjustedDataFinal.find(c => c[this.state.currentKey.label] === ret[this.state.currentKey.label]);
+            if (existing) {
+                columns.forEach(col => {
+                    existing[col] += ret[col];
+                    existing._total += ret[col];
+                });
+            } else {
+                adjustedDataFinal.push(ret);
+            }
+        });
+        adjustedDataFinal = adjustedDataFinal.sort((a, b) => d3.descending(a._total, b._total)).slice(0, 20); //TODO Max number of rows
         let stackedData = d3.stack()
             .keys(columns)
-            (adjustedData);
+            (adjustedDataFinal);
         const svg = d3.select(this.svg);
         svg.selectAll("*").remove();
         svg.attr("width", width)
@@ -80,7 +110,7 @@ class Visualization extends Component {
         let z = d3.scaleOrdinal(d3.schemeDark2);
 
         x.domain([0, columns.length * 100]);
-        y.domain(adjustedData.map(d => d[this.state.currentKey.label]));
+        y.domain(adjustedDataFinal.map(d => d[this.state.currentKey.label]));
         z.domain([0, columns.length]);
 
         g.append("g")
@@ -100,14 +130,14 @@ class Visualization extends Component {
             .attr("height", y.bandwidth())
             .append("title").text((d, i, j) => {
             const key = j[i].parentNode.parentNode.getAttribute("data-index");
-            return columns[key] + ": " + this.state.data.find(c => c[this.state.currentKey.label] === adjustedData[i][this.state.currentKey.label])[columns[key]];
+            return columns[key] + ": " + adjustedData.find(c => c[this.state.currentKey.label] === adjustedDataFinal[i][this.state.currentKey.label])[columns[key]];
         });
 
 
         g.append("g")
             .attr("class", "axis")
             .call(d3.axisLeft(y).ticks(null, "s"))
-            .call(axis => axis.selectAll("text").style("font-size", `${iheight / adjustedData.length * 0.3}pt`))
+            .call(axis => axis.selectAll("text").style("font-size", `${iheight /50}pt`))
             .append("text")
             .attr("x", 2)
             .attr("y", iheight)
