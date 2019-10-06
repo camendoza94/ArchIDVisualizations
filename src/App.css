@@ -9,9 +9,12 @@ circle {
 }
 
 rect {
-    fill-opacity: .25;
     stroke: rgb(31, 119, 180);
     stroke-width: 0.5px;
+}
+
+rect.legend {
+    fill-opacity: .25;
 }
 
 .leaf circle {

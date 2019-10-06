@@ -129,6 +129,7 @@ class Visualization extends Component {
         const iwidth = width - margin.left - margin.right;
 
         legend.append("rect")
+            .attr("class", "legend")
             .attr("x", iwidth - 19)
             .attr("width", 19)
             .attr("height", 19)
