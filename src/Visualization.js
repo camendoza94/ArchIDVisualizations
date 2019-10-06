@@ -137,7 +137,7 @@ class Visualization extends Component {
         g.append("g")
             .attr("class", "axis")
             .call(d3.axisLeft(y).ticks(null, "s"))
-            .call(axis => axis.selectAll("text").style("font-size", `${iheight /50}pt`))
+            .call(axis => axis.selectAll("text").style("font-size", `${iheight / 50}pt`))
             .append("text")
             .attr("x", 2)
             .attr("y", iheight)
@@ -155,7 +155,7 @@ class Visualization extends Component {
             .data(columns)
             .join("g")
             .attr("transform", function (d, i) {
-                return "translate(-50," + i * 20 + ")";
+                return "translate(-50," + (400 + (i * 20)) + ")";
             });
 
         legend.append("rect")
