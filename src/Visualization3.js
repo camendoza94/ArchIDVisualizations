@@ -8,7 +8,7 @@ class Visualization extends Component {
             for (let layer of this.props.projectData.value.children) {
                 for (let file of layer.children) {
                     for (let r of rules) {
-                        let currentNumber = file.issues[r.id] || 0;
+                        let currentNumber = file.issues[r.id - 1] || 0;
                         issues = issues += currentNumber;
                     }
                 }
@@ -16,16 +16,12 @@ class Visualization extends Component {
         } else {
             for (let layer of this.props.projectData.value.children) {
                 for (let file of layer.children) {
-                    let currentNumber = file.issues[rules] || 0;
+                    let currentNumber = file.issues[rules - 1] || 0;
                     issues = issues += currentNumber;
                 }
             }
         }
         return issues;
-    }
-
-    getRuleInfo(rule) {
-
     }
 
     render() {

@@ -10,7 +10,7 @@
     },
     {
       "name": "services",
-      "pattern": ["/**/com/epm/cpe/*/api/service/*.java", "/**/com/epm/cpe/*/api/to/*.java"],
+      "pattern": ["/**/com/epm/cpe/*/api/service/**/*.java", "/**/com/epm/cpe/*/api/to/*.java"],
       "size": 30,
       "children": []
     },
