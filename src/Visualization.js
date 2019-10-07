@@ -34,7 +34,7 @@ class Visualization extends Component {
             }
         }
         const options = [{value: "name", label: "name"}, {value: "layer", label: "layer"}];
-        this.setState({options, currentKey: options[1], data: unnestedData}, this.createSVG);
+        this.setState({options, currentKey: options[0], data: unnestedData}, this.createSVG);
     }
 
     createSVG() {
@@ -137,7 +137,7 @@ class Visualization extends Component {
         g.append("g")
             .attr("class", "axis")
             .call(d3.axisLeft(y).ticks(null, "s"))
-            .call(axis => axis.selectAll("text").style("font-size", `${iheight / 50}pt`))
+            .call(axis => axis.selectAll("text").style("font-size", `${iheight / 60}pt`))
             .append("text")
             .attr("x", 2)
             .attr("y", iheight)
