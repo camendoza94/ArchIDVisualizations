@@ -15,6 +15,7 @@ class Visualization extends Component {
                 .sum(d => d.value)
                 .sort((a, b) => b.rows - a.rows || b.value - a.value));
         this.handleChange = this.handleChange.bind(this);
+        this.resetDeps = this.resetDeps.bind(this);
     }
 
     componentDidMount() {
@@ -91,14 +92,23 @@ class Visualization extends Component {
             .data(root.descendants().slice(1))
             .join("circle")
             .attr("fill", d => (!d.depth || !d.data.authors) ? "#6e6e6e" : this.color(d.data.authors))
-            .attr("pointer-events", d => !d.children ? "none" : null)
             .on("mouseover", function () {
                 d3.select(this).attr("stroke", "#000");
             })
             .on("mouseout", function () {
                 d3.select(this).attr("stroke", null);
             })
-            .on("click", d => focus !== d && (zoom(d), d3.event.stopPropagation()));
+            .on("click", d => {
+                let zoomTo = d.depth === 2 ? d.parent : d;
+                if (d.depth === 2 && focus === d.parent && !this.state.showing) {
+                    this.setState({showing: d});
+                    showDependencies(d);
+                }
+                if (focus !== zoomTo) {
+                    zoom(zoomTo);
+                    d3.event.stopPropagation()
+                }
+            });
 
         const label = svg.append("g")
             .attr("pointer-events", "none")
@@ -109,7 +119,7 @@ class Visualization extends Component {
             .join("text")
             .style("fill-opacity", d => d.depth === 1 ? 0.7 : 1)
             .style("display", d => d.parent === root ? "inline" : "none")
-            .style("font", d => d.depth === 1 ? "36px sans-serif" : "13px sans-serif")
+            .style("font", d => d.depth === 1 ? "24px sans-serif" : "10px sans-serif")
             .style("fill", d => d.depth === 1 ? "#555555" : null)
             .style("font-weight", d => d.depth === 1 ? "bold" : null)
             .text(d => d.data.name);
@@ -141,6 +151,39 @@ class Visualization extends Component {
             .text(d => d);
 
         zoomTo([root.x, root.y, root.r * 2]);
+
+        function showDependencies(d) {
+            node.filter(function (d1) {
+                return d.data.inDeps.find(i => {
+                        let name = i.split("/")[i.split("/").length - 1];
+                        return d1.data.name === name
+                    }
+                )
+            })
+                .attr("fill", "purple");
+
+            node.filter(function (d1) {
+                return d.data.outDeps.find(i => {
+                        let name = i.split("/")[i.split("/").length - 1];
+                        return d1.data.name === name
+                    }
+                )
+            })
+                .attr("fill", "blue");
+
+            node.filter(function (d1) {
+                return !(d.data.outDeps.find(i => {
+                        let name = i.split("/")[i.split("/").length - 1];
+                        return d1.data.name === name
+                    }
+                ) || d.data.inDeps.find(i => {
+                        let name = i.split("/")[i.split("/").length - 1];
+                        return d1.data.name === name
+                    }
+                ) || d1 === d)
+            })
+                .attr("fill", "white");
+        }
 
         function zoomTo(v) {
             const k = width / v[2];
@@ -182,6 +225,10 @@ class Visualization extends Component {
         this.setState({currentKey}, this.createSVG)
     }
 
+    resetDeps() {
+        this.setState({showing: null}, this.createSVG)
+    }
+
     render() {
         const {currentKey, options} = this.state;
         return (
@@ -200,6 +247,7 @@ class Visualization extends Component {
                     </div> : ""}
                 <p>Circle size is proportional to number of modifications in a given file <br/>
                     Color corresponds to number of authors working on a given file</p>
+                <button type="button" className="btn btn-info" onClick={this.resetDeps}>Reset dependencies</button>
                 <svg width={700} height={700}
                      ref={(svg) => {
                          this.svg = svg;
