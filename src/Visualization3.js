@@ -47,7 +47,7 @@ class Visualization extends Component {
                                     <td>{category.title}</td>
                                     <td>{category.qa}</td>
                                     <td>{this.getIssues(category.rules)}</td>
-                                    <td><a className="action">View Detail</a></td>
+                                    <td><button className="btn btn-link">View Detail</button></td>
                                 </tr>
                                 <tr className="collapse detail" id={"collapse" + i}>
                                     <th scope="col">#</th>

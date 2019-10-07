@@ -37,11 +37,6 @@ tbody > tr:hover:not(.detail) {
     background-color: #F5F8FC;
 }
 
-a.action {
-    color: #0954AB !important;
-    opacity: 0;
-}
-
 td:hover a {
     opacity: 1;
 }

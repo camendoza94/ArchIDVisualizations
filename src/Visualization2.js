@@ -247,7 +247,7 @@ class Visualization extends Component {
                     </div> : ""}
                 <p>Circle size is proportional to number of modifications in a given file <br/>
                     Color corresponds to number of authors working on a given file</p>
-                <button type="button" className="btn btn-info" onClick={this.resetDeps}>Reset dependencies</button>
+                <button type="button" className="btn btn-outline-info" onClick={this.resetDeps}>Reset dependencies</button>
                 <svg width={700} height={700}
                      ref={(svg) => {
                          this.svg = svg;
