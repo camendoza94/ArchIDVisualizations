@@ -14,6 +14,7 @@ class App extends Component {
 
     componentDidMount() {
         getProjects().then(projects => {
+            projects = projects.filter(p => p.name === "DemoProyectoJava");
             let options = projects.map(project => {
                     return {value: project, label: project.name}
                 }

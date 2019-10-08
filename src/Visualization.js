@@ -133,11 +133,27 @@ class Visualization extends Component {
             return columns[key] + ": " + adjustedData.find(c => c[this.state.currentKey.label] === adjustedDataFinal[i][this.state.currentKey.label])[columns[key]];
         });
 
+        let text = g.selectAll("text")
+            .data(adjustedDataFinal, d => d);
+        text.exit().remove();
+
+        text.enter().append("text")
+            .attr("class", "text")
+            .attr("text-anchor", "start")
+            .attr("x", (d, i) => x(stackedData[3][i][1]))
+            .attr("y", d => y(d[this.state.currentKey.label]))
+            .attr('dy', '1.5em')
+            .attr('dx', '0.5em')
+            .attr("height", y.bandwidth())
+            .style("font-size", `${iheight / 70}pt`)
+            .text(d => Number(d._total).toFixed(2))
+            .merge(text);
+
 
         g.append("g")
             .attr("class", "axis")
             .call(d3.axisLeft(y).ticks(null, "s"))
-            .call(axis => axis.selectAll("text").style("font-size", `${iheight / 60}pt`))
+            .call(axis => axis.selectAll("text").style("font-size", `${iheight / 70}pt`))
             .append("text")
             .attr("x", 2)
             .attr("y", iheight)
