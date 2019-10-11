@@ -149,7 +149,7 @@ class Visualization extends Component {
             .attr("font-size", 10)
             .attr("text-anchor", "end")
             .selectAll("g")
-            .data(Array.from(Array(this.max).keys()).map(x => ++x + " " + this.state.metrics[this.state.currentMetrics[1]]))
+            .data(["0 " + this.state.metrics[this.state.currentMetrics[1]]].concat(Array.from(Array(this.max).keys()).map(x => ++x + " " + this.state.metrics[this.state.currentMetrics[1]])))
             .join("g")
             .attr("transform", function (d, i) {
                 return "translate(-50," + (-350 + (i * 20)) + ")";
@@ -163,7 +163,7 @@ class Visualization extends Component {
             .attr("x", iwidth - 19)
             .attr("width", 19)
             .attr("height", 19)
-            .attr("fill", (d, i) => this.color(i + 1));
+            .attr("fill", (d, i) => i === 0 ? "#555555" : this.color(i));
         legend.append("text")
             .attr("x", iwidth - 24)
             .attr("y", 9.5)
