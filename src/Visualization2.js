@@ -25,7 +25,6 @@ class Visualization extends Component {
         let unnestedData = [];
         for (let layer of this.props.projectData.value.children) {
             for (let file of layer.children) {
-                this.max = file.children && (file.children.length > this.max) ? file.children.length : this.max;
                 if (file.children)
                     for (let author of file.children) {
                         unnestedData.push({
@@ -36,16 +35,15 @@ class Visualization extends Component {
                             mods: author.rows,
                             name: author.name,
                             inDeps: file.inDeps,
-                            outDeps: file.outDeps
+                            outDeps: file.outDeps,
+                            authors: file.children.length,
+                            dependencies: file.inDeps.length + file.outDeps.length
                         })
                     }
             }
         }
-        this.color = d3.scaleLinear()
-            .domain([1, this.max / 3, this.max])
-            .range(["green", "yellow", "red"]);
         const options = [{value: "layer", label: "layer"}, {value: "module", label: "module"}];
-        const metrics = ["issues", "modifications", "authors", "dependencies"];
+        const metrics = ["mods", "authors", "issues", "dependencies"];
         this.setState({
             options,
             currentKey: options[0],
@@ -56,6 +54,12 @@ class Visualization extends Component {
     }
 
     createSVG() {
+        this.max = d3.max(this.state.data, d => d[this.state.metrics[this.state.currentMetrics[1]]]);
+        this.color = d3.scaleLinear()
+            .domain([1, this.max / 3, this.max])
+            .range(["green", "yellow", "red"]);
+        if (this.state.currentMetrics.length !== 2)
+            return;
         let nestedData = d3.nest()
             .key(d => d[this.state.currentKey.label])
             .key(d => d.file)
@@ -63,9 +67,10 @@ class Visualization extends Component {
                 return {
                     "issues": d3.max(leaves, d => d.issues),
                     "mods": d3.sum(leaves, d => d.mods),
-                    "authors": d3.sum(leaves, () => 1),
+                    "authors": d3.max(leaves, d => d.authors),
                     "inDeps": leaves[0].inDeps,
-                    "outDeps": leaves[0].outDeps
+                    "outDeps": leaves[0].outDeps,
+                    "dependencies": leaves[0].dependencies
                 }
             })
             .entries(this.state.data);
@@ -73,11 +78,13 @@ class Visualization extends Component {
             name: nested.key,
             children: nested.values.map(o => ({
                 name: o.key,
-                value: o.value.mods,
+                value: o.value[this.state.metrics[this.state.currentMetrics[0]]] + 0.1,
+                mods: o.value.mods,
                 issues: o.value.issues,
                 authors: o.value.authors,
                 inDeps: o.value.inDeps,
-                outDeps: o.value.outDeps
+                outDeps: o.value.outDeps,
+                dependencies: o.value.dependencies
 
             }))
         }));
@@ -101,12 +108,15 @@ class Visualization extends Component {
             .selectAll("circle")
             .data(root.descendants().slice(1))
             .join("circle")
-            .attr("fill", d => (!d.depth || !d.data.authors) ? "#6e6e6e" : this.color(d.data.authors))
-            .on("mouseover", function () {
-                d3.select(this).attr("stroke", "#000");
+            .attr("fill", d => (!d.depth || !d.data[this.state.metrics[this.state.currentMetrics[1]]]) ? "#6e6e6e" : this.color(d.data[this.state.metrics[this.state.currentMetrics[1]]]))
+            .attr("fill-opacity", d => d.value === 0 ? 0 : 0.25)
+            .attr("display", d => d.value === 0 ? "none" : "inline")
+            .attr("stroke", d => d.value === 0 ? null : "#1F77B4")
+            .on("mouseover", function (d) {
+                if (d.value !== 0) d3.select(this).attr("stroke", "#000");
             })
-            .on("mouseout", function () {
-                d3.select(this).attr("stroke", null);
+            .on("mouseout", function (d) {
+                if (d.value !== 0) d3.select(this).attr("stroke", "#1F77B4");
             })
             .on("click", d => {
                 let zoomTo = d.depth === 2 ? d.parent : d;
@@ -128,7 +138,7 @@ class Visualization extends Component {
             .data(root.descendants())
             .join("text")
             .style("fill-opacity", d => d.depth === 1 ? 0.7 : 1)
-            .style("display", d => d.parent === root ? "inline" : "none")
+            .style("display", d => d.parent === root && d.value !== 0 ? "inline" : "none")
             .style("font", d => d.depth === 1 ? "24px sans-serif" : "10px sans-serif")
             .style("fill", d => d.depth === 1 ? "#555555" : null)
             .style("font-weight", d => d.depth === 1 ? "bold" : null)
@@ -139,7 +149,7 @@ class Visualization extends Component {
             .attr("font-size", 10)
             .attr("text-anchor", "end")
             .selectAll("g")
-            .data(Array.from(Array(this.max).keys()).map(x => ++x + " author(s)"))
+            .data(Array.from(Array(this.max).keys()).map(x => ++x + " " + this.state.metrics[this.state.currentMetrics[1]]))
             .join("g")
             .attr("transform", function (d, i) {
                 return "translate(-50," + (-350 + (i * 20)) + ")";
@@ -221,7 +231,7 @@ class Visualization extends Component {
                 .transition(transition)
                 .style("fill-opacity", d => d.parent === focus ? d.depth === 1 ? 0.7 : 1 : 0)
                 .on("start", function (d) {
-                    if (d.parent === focus) this.style.display = "inline";
+                    if (d.parent === focus && d.value !== 0) this.style.display = "inline";
                 })
                 .on("end", function (d) {
                     if (d.parent !== focus) this.style.display = "none";
@@ -254,7 +264,7 @@ class Visualization extends Component {
             currentMetrics.push(index);
         else
             currentMetrics.splice(i, 1);
-        this.setState({currentMetrics})
+        this.setState({currentMetrics}, this.createSVG)
     }
 
     render() {
