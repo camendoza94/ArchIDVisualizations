@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, {Component, Fragment} from 'react';
 import * as d3 from "d3";
 import Select from "react-select";
 
@@ -16,6 +16,9 @@ class Visualization extends Component {
                 .sort((a, b) => b.rows - a.rows || b.value - a.value));
         this.handleChange = this.handleChange.bind(this);
         this.resetDeps = this.resetDeps.bind(this);
+        this.isDisabled = this.isDisabled.bind(this);
+        this.handleCheckboxes = this.handleCheckboxes.bind(this);
+        this.checked = this.checked.bind(this);
     }
 
     componentDidMount() {
@@ -42,7 +45,14 @@ class Visualization extends Component {
             .domain([1, this.max / 3, this.max])
             .range(["green", "yellow", "red"]);
         const options = [{value: "layer", label: "layer"}, {value: "module", label: "module"}];
-        this.setState({options, currentKey: options[0], data: unnestedData}, this.createSVG);
+        const metrics = ["issues", "modifications", "authors", "dependencies"];
+        this.setState({
+            options,
+            currentKey: options[0],
+            metrics,
+            currentMetrics: [0, 1],
+            data: unnestedData
+        }, this.createSVG);
     }
 
     createSVG() {
@@ -229,8 +239,26 @@ class Visualization extends Component {
         this.setState({showing: null}, this.createSVG)
     }
 
+    isDisabled(index) {
+        return this.state.currentMetrics.length > 1 && this.state.currentMetrics.indexOf(index) === -1
+    }
+
+    checked(index) {
+        return this.state.currentMetrics.indexOf(index) !== -1
+    }
+
+    handleCheckboxes(event, index) {
+        let currentMetrics = this.state.currentMetrics;
+        const i = currentMetrics.indexOf(index);
+        if (i === -1 && currentMetrics.length < 2)
+            currentMetrics.push(index);
+        else
+            currentMetrics.splice(i, 1);
+        this.setState({currentMetrics})
+    }
+
     render() {
-        const {currentKey, options} = this.state;
+        const {currentKey, options, metrics} = this.state;
         return (
             <div>
                 {options ?
@@ -245,9 +273,32 @@ class Visualization extends Component {
                             />
                         </div>
                     </div> : ""}
+                {metrics ?
+                    <Fragment>
+                        <div className="row">
+                            <h4 className="col-md-2">Metrics</h4>
+                            {metrics.map((m, i) => {
+                                return (
+                                    <div className="col-md-2">
+                                        <div className="form-check form-check-inline">
+                                            <input className="form-check-input" type="checkbox"
+                                                   id={"inlineCheckbox" + i}
+                                                   value={"option" + i}
+                                                   disabled={this.isDisabled(i)}
+                                                   checked={this.checked(i)}
+                                                   onChange={e => this.handleCheckboxes(e, i)}/>
+                                            <label className="form-check-label"
+                                                   htmlFor={"inlineCheckbox" + i}>{m}</label>
+                                        </div>
+                                    </div>
+                                )
+                            })}
+                        </div>
+                    </Fragment> : ""}
                 <p>Circle size is proportional to number of modifications in a given file <br/>
                     Color corresponds to number of authors working on a given file</p>
-                <button type="button" className="btn btn-outline-info" onClick={this.resetDeps}>Reset dependencies</button>
+                <button type="button" className="btn btn-outline-info" onClick={this.resetDeps}>Reset dependencies
+                </button>
                 <svg width={700} height={700}
                      ref={(svg) => {
                          this.svg = svg;
