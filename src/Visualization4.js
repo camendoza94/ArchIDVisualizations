@@ -14,6 +14,7 @@ class Visualization extends Component {
                 unnestedData.push({
                     layer: layer.name,
                     issues: file.issues,
+                    issuesDetail: file.issuesDetail,
                     mods: file.children ? file.children.map(a => a.rows).reduce((a, b) => a + b, 0) : 0,
                     inDeps: file.inDeps ? file.inDeps.length : 0,
                     outDeps: file.outDeps ? file.outDeps.length : 0,
@@ -49,23 +50,21 @@ class Visualization extends Component {
 
                         <div id={"collapse" + i} className="collapse" aria-labelledby={"heading" + i}
                              data-parent="#accordion">
-                            {file.issues.map((issue, index) => {
-                                if (issue !== 0) {
-                                    return <div key={"issue" + index + "file" + i} className="card-body">
-                                        <div className="card">
-                                            <div className="card-body">
-                                                <h5 className="card-title">{rules[index].title}</h5>
-                                                <h6 className="card-subtitle mb-2 text-muted">
-                                                    <i className="material-icons">bug_report</i>
-                                                    {rules[index].category}
-                                                    <i className="material-icons">warning</i>
-                                                    {rules[index].severity}
-                                                </h6>
-                                            </div>
+                            {file.issuesDetail.map((issue, index) => {
+                                return <div key={"issue" + issue.rule + "file" + i + "index" + index}
+                                            className="card-body">
+                                    <div className="card">
+                                        <div className="card-body">
+                                            <h5 className="card-title">{rules[issue.rule - 1].title}</h5>
+                                            <h6 className="card-subtitle mb-2 text-muted">
+                                                <i className="material-icons">bug_report</i>
+                                                {rules[issue.rule - 1].category}
+                                                <i className="material-icons">warning</i>
+                                                {rules[issue.rule - 1].severity}
+                                            </h6>
                                         </div>
                                     </div>
-                                }
-                                return "";
+                                </div>
                             })}
                         </div>
                     </div>

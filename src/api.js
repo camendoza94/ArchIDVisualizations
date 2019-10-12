@@ -12,3 +12,9 @@ export function getCategorization() {
         return response.data;
     });
 }
+
+export function getIssueDetail() {
+    return axios.get("https://archtoringbd.herokuapp.com/issuesDetail").then(response => {
+        return response.data;
+    });
+}
