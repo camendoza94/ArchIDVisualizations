@@ -31,6 +31,7 @@ const getFiles = async (src) => {
             let newRes = res.map(file => {
                 let found = currentData.files.find(f => f.name === getPath(file));
                 let issues = found && found.issues ? found.issues : [];
+                let issuesDetail = found && found.issuesDetail ? found.issuesDetail : [];
                 let authors = found && found.authors ? found.authors : [];
                 let outDeps = found && found.dependenciesOut ? found.dependenciesOut : [];
                 let inDeps = found && found.dependenciesIn ? found.dependenciesIn : [];
@@ -44,8 +45,10 @@ const getFiles = async (src) => {
                 }
                 let module = name.substring(0, moduleEnd);
                 return {
+                    path: file,
                     name,
                     issues,
+                    issuesDetail,
                     children: authors,
                     outDeps,
                     inDeps,

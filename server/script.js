@@ -18,6 +18,7 @@ const addSocial = async () => {
             let newFile = {
                 name: file.file.indexOf("co/edu/") !== -1 ? file.file.substring(file.file.indexOf("co/edu/")) : file.file.substring(file.file.indexOf("com/epm/")),
                 issues: [],
+                issuesDetail: [],
                 authors: file.authors
             };
             currentData.files.push(newFile)
