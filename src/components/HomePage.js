@@ -65,7 +65,7 @@ class App extends Component {
                             />
                         </div>
                     </div> : ''}
-                {currentProject && categorization ?
+                {currentProject && categorization && issues ?
                     <Visualization categorization={currentCategorization} key={currentProject.label}
                                    issues={issues} projectData={currentProject}/> : ''}
             </div>

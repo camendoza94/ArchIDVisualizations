@@ -1,7 +1,7 @@
 import React, {Component, Fragment} from 'react';
 import {getFromAzure} from "../api";
 import SyntaxHighlighter from 'react-syntax-highlighter';
-import {github} from 'react-syntax-highlighter/dist/esm/styles/hljs';
+import {darcula} from 'react-syntax-highlighter/dist/esm/styles/hljs';
 
 
 class CodeView extends Component {
@@ -19,9 +19,19 @@ class CodeView extends Component {
     }
 
     highlight() {
-        const start = this.state.contents.indexOf("public");
-        const line = this.state.contents.substring(0, start).split("\n").length;
-        this.setState({highlight: [line]})
+        let lines = [];
+        let start = 0;
+        let line = 0;
+        this.props.location.state.issuesDetail.forEach(i => {
+            let re = new RegExp(`(private|public) \\S* ${i.description}`, "g");
+            if (i.description === "Class")
+                start = this.state.contents.indexOf("public");
+            else
+                start = this.state.contents.search(re);
+            line = this.state.contents.substring(0, start).split("\n").length;
+            lines.push(line)
+        });
+        this.setState({highlight: lines})
     }
 
 
@@ -32,21 +42,40 @@ class CodeView extends Component {
                 {contents && highlight ?
                     <SyntaxHighlighter
                         language="java"
-                        style={github}
+                        style={darcula}
                         wrapLines={true}
                         showLineNumbers={true}
                         lineProps={lineNumber => {
-                            let style = {display: 'block'};
+                            let style = {display: "block"};
+                            let className = "";
                             if (highlight.includes(lineNumber)) {
-                                style.backgroundColor = '#ffecec';
+                                style.backgroundColor = '#330901';
+                                className = "warning"
                             }
                             const onClick = function onClick() {
                                 alert(`Line Number Clicked: ${lineNumber}`);
                             };
-                            return {style, onClick};
+
+                            return {style, onClick, className};
                         }}>
                         {contents}
                     </SyntaxHighlighter> : ""}
+                <button type="button" className="btn btn-secondary" data-toggle="tooltip" data-placement="top"
+                        title="Tooltip on top">
+                    Tooltip on top
+                </button>
+                <button type="button" className="btn btn-secondary" data-toggle="tooltip" data-placement="right"
+                        title="Tooltip on right">
+                    Tooltip on right
+                </button>
+                <button type="button" className="btn btn-secondary" data-toggle="tooltip" data-placement="bottom"
+                        title="Tooltip on bottom">
+                    Tooltip on bottom
+                </button>
+                <button type="button" className="btn btn-secondary" data-toggle="tooltip" data-placement="left"
+                        title="Tooltip on left">
+                    Tooltip on left
+                </button>
             </Fragment>
         )
     }

@@ -16,7 +16,7 @@ class Visualization extends Component {
                     layer: layer.name,
                     issues: file.issues,
                     path: file.path,
-                    issuesDetail: file.issuesDetail,
+                    issuesDetail: file.issuesDetail.map(d => this.props.issues.find(i => i.id === d.id)),
                     mods: file.children ? file.children.map(a => a.rows).reduce((a, b) => a + b, 0) : 0,
                     inDeps: file.inDeps ? file.inDeps.length : 0,
                     outDeps: file.outDeps ? file.outDeps.length : 0,
@@ -50,7 +50,7 @@ class Visualization extends Component {
                             </h2>
                             <Link to={{
                                 pathname: `/repo/${this.props.projectData.label}/file/${file.name}`,
-                                state: {path: file.path}
+                                state: {path: file.path, issuesDetail: file.issuesDetail, rules}
                             }}>
                                 <i className="material-icons">file_copy</i>
                             </Link>
