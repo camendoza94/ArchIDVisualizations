@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {getFromAzure} from "../api";
 
-class Visualization extends Component {
+class CodeView extends Component {
 
     constructor(props) {
         super(props);
@@ -10,7 +10,8 @@ class Visualization extends Component {
 
     componentDidMount() {
         const repo = this.props.match.params.repo;
-        const path = this.props.match.params.file;
+        let path = this.props.location.state.path;
+        path = path.substring(2);
         getFromAzure(repo, path).then(contents => this.setState({contents}));
     }
 
@@ -19,10 +20,10 @@ class Visualization extends Component {
         const {contents} = this.state;
         return (
             {contents} && <pre>
-                contents
+                {contents}
             </pre>
         )
     }
 }
 
-export default Visualization;
+export default CodeView;

@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import {Link} from "react-router-dom";
 
 class Visualization extends Component {
 
@@ -14,6 +15,7 @@ class Visualization extends Component {
                 unnestedData.push({
                     layer: layer.name,
                     issues: file.issues,
+                    path: file.path,
                     issuesDetail: file.issuesDetail,
                     mods: file.children ? file.children.map(a => a.rows).reduce((a, b) => a + b, 0) : 0,
                     inDeps: file.inDeps ? file.inDeps.length : 0,
@@ -46,6 +48,12 @@ class Visualization extends Component {
                                     className="small">{file.issues.reduce((a, b) => a + b, 0)}</span>
                                 </button>
                             </h2>
+                            <Link to={{
+                                pathname: `/repo/${file.name}/file/${file.name}`,
+                                state: {path: file.path}
+                            }}>
+                                <i className="material-icons">file_copy</i>
+                            </Link>
                         </div>
 
                         <div id={"collapse" + i} className="collapse" aria-labelledby={"heading" + i}
