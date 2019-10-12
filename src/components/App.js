@@ -1,8 +1,10 @@
 import React, {Component} from 'react';
-import './App.css';
-import Visualization from "./Visualization";
-import {getCategorization, getProjects} from './api';
+import '../styles/App.css';
+import Visualization from "./Visualization4";
+import {getCategorization, getIssueDetail, getProjects} from '../api';
 import Select from 'react-select';
+import {BrowserRouter as Router, Route, Switch} from 'react-router-dom';
+import CodeView from "./CodeView";
 
 
 class App extends Component {
@@ -28,6 +30,14 @@ class App extends Component {
             this.setState({
                 categorization: projects,
                 currentCategorization: projects.find(c => c.name === this.state.currentProject.label) || projects[0]
+            }, this.getDetail)
+        })
+    }
+
+    getDetail() {
+        getIssueDetail().then(issues => {
+            this.setState({
+                issues
             })
         })
     }
@@ -41,11 +51,16 @@ class App extends Component {
     }
 
     render() {
-        const {currentProject, options, categorization, currentCategorization} = this.state;
+        const {currentProject, options, categorization, currentCategorization, issues} = this.state;
         return (
             <div className="container">
+                <Router>
+                    <Switch>
+                        <Route exact path='/repo/:repo/file/:file' component={CodeView}/>
+                    </Switch>
+                </Router>
                 <h1>ArchID</h1>
-                {options && categorization ?
+                {options && categorization && issues ?
                     <div className="row">
                         <h4 className="col-md-2">Project</h4>
                         <div className="col-md-6">
@@ -59,7 +74,7 @@ class App extends Component {
                     </div> : ''}
                 {currentProject && categorization ?
                     <Visualization categorization={currentCategorization} key={currentProject.label}
-                                   projectData={currentProject}/> : ''}
+                                   issues={issues} projectData={currentProject}/> : ''}
             </div>
         );
     }

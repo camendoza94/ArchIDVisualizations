@@ -18,3 +18,9 @@ export function getIssueDetail() {
         return response.data;
     });
 }
+
+export function getFromAzure(repo, path) {
+    return axios.get("https://archtoringbd.herokuapp.com/issuesDetail").then(response => {
+        return response.data;
+    });
+}

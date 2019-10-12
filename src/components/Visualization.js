@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import * as d3 from "d3";
 import Select from "react-select";
 import Slider, {createSliderWithTooltip} from 'rc-slider';
-import './rc-slider.css';
+import '../styles/rc-slider.css';
 
 const SliderWithTooltip = createSliderWithTooltip(Slider);
 
@@ -47,7 +47,7 @@ class Visualization extends Component {
             const ret = {};
             ret[this.state.currentKey.label] = d[this.state.currentKey.label];
             ret._total = 0;
-            columns.forEach((col, i) => {
+            columns.forEach((col) => {
                 ret[col] = (d[col] || 0);
                 ret._total += ret[col];
             });
