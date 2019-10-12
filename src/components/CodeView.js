@@ -1,9 +1,8 @@
 import React, {Component, Fragment} from 'react';
 import {getFromAzure} from "../api";
-import hljs from 'highlight.js/lib/highlight';
-import java from 'highlight.js/lib/languages/java';
+import SyntaxHighlighter from 'react-syntax-highlighter';
+import {github} from 'react-syntax-highlighter/dist/esm/styles/hljs';
 
-hljs.registerLanguage('java', java);
 
 class CodeView extends Component {
 
@@ -16,26 +15,38 @@ class CodeView extends Component {
         const repo = this.props.match.params.repo;
         let path = this.props.location.state.path;
         path = path.substring(2);
-        this.updateCodeSyntaxHighlighting();
-        getFromAzure(repo, path).then(contents => this.setState({contents}));
+        getFromAzure(repo, path).then(contents => this.setState({contents}, this.highlight));
     }
 
-    componentDidUpdate() {
-        this.updateCodeSyntaxHighlighting();
+    highlight() {
+        const start = this.state.contents.indexOf("public");
+        const line = this.state.contents.substring(0, start).split("\n").length;
+        this.setState({highlight: [line]})
     }
-
-    updateCodeSyntaxHighlighting = () => {
-        document.querySelectorAll("pre code").forEach(block => {
-            hljs.highlightBlock(block);
-        });
-    };
 
 
     render() {
-        const {contents} = this.state;
+        const {contents, highlight} = this.state;
         return (
             <Fragment>
-                {contents ? <pre><code className="java">{contents}</code></pre> : ""}
+                {contents && highlight ?
+                    <SyntaxHighlighter
+                        language="java"
+                        style={github}
+                        wrapLines={true}
+                        showLineNumbers={true}
+                        lineProps={lineNumber => {
+                            let style = {display: 'block'};
+                            if (highlight.includes(lineNumber)) {
+                                style.backgroundColor = '#ffecec';
+                            }
+                            const onClick = function onClick() {
+                                alert(`Line Number Clicked: ${lineNumber}`);
+                            };
+                            return {style, onClick};
+                        }}>
+                        {contents}
+                    </SyntaxHighlighter> : ""}
             </Fragment>
         )
     }
