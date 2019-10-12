@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, {Component, Fragment} from 'react';
 import {getFromAzure} from "../api";
 
 class CodeView extends Component {
@@ -19,9 +19,9 @@ class CodeView extends Component {
     render() {
         const {contents} = this.state;
         return (
-            {contents} && <pre>
-                {contents}
-            </pre>
+            <Fragment>
+                {contents ? <pre><code className="java">{contents}</code></pre> : ""}
+            </Fragment>
         )
     }
 }
