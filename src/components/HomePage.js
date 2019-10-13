@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import '../styles/App.css';
-import Visualization from "./Visualization4";
+import Visualization from "./Visualization2";
 import {getCategorization, getIssueDetail, getProjects} from '../api';
 import Select from 'react-select';
 
