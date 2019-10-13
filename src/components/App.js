@@ -1,5 +1,4 @@
 import React, {Component} from 'react';
-import 'highlight.js/styles/github.css';
 import '../styles/App.css';
 import {BrowserRouter as Router, Route, Switch} from 'react-router-dom';
 import CodeView from "./CodeView";

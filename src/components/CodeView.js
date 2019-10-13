@@ -18,6 +18,23 @@ class CodeView extends Component {
         getFromAzure(repo, path).then(contents => this.setState({contents}, this.highlight));
     }
 
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        document.querySelectorAll(".warning").forEach((n, i) => {
+            let newNode = document.createElement("span");
+            newNode.className = "tooltiptext";
+            newNode.innerText = this.props.location.state.rules.find(r => r.id === this.props.location.state.issuesDetail[i].rule).title;
+            for (let j = i; j < this.state.highlight.length; j++) {
+                let currentLine = this.state.highlight[j];
+                if (currentLine === this.state.highlight[j + 1]) {
+                    newNode.innerText += "\r\n" + this.props.location.state.rules.find(r => r.id === this.props.location.state.issuesDetail[i + 1].rule).title;
+                } else
+                    break;
+
+            }
+            n.appendChild(newNode)
+        });
+    }
+
     highlight() {
         let lines = [];
         let start = 0;
@@ -50,13 +67,9 @@ class CodeView extends Component {
                             let className = "";
                             if (highlight.includes(lineNumber)) {
                                 style.backgroundColor = '#330901';
-                                className = "warning"
+                                className = "warning";
                             }
-                            const onClick = function onClick() {
-                                alert(`Line Number Clicked: ${lineNumber}`);
-                            };
-
-                            return {style, onClick, className};
+                            return {style, className};
                         }}>
                         {contents}
                     </SyntaxHighlighter> : ""}

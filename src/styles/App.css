@@ -47,3 +47,26 @@ code {
     font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
 }
+
+.warning {
+    position: relative;
+    display: inline-block;
+}
+
+/* Tooltip text */
+.warning .tooltiptext {
+    visibility: hidden;
+    background-color: black;
+    color: #fff;
+    text-align: center;
+    padding: 5px 0;
+    border-radius: 6px;
+    position: absolute;
+    z-index: 1;
+    bottom: 100%;
+    left: 10%;
+}
+
+.warning:hover .tooltiptext {
+    visibility: visible;
+}
