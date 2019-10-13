@@ -24,6 +24,7 @@ const getFiles = async (src) => {
     let projectData = data.find(project => project.name === require('path').basename(process.cwd())).data;
     let currentData = projectData[projectData.length - 1];
     architecture.name = require('path').basename(process.cwd());
+    architecture.repo = currentData.repo;
     architecture.children.forEach((child) => {
         mod = child;
         child.pattern.forEach((pattern) => {

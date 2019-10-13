@@ -50,7 +50,7 @@ class Visualization extends Component {
                             </h2>
                             <Link to={{
                                 pathname: `/repo/${this.props.projectData.label}/file/${file.name}`,
-                                state: {path: file.path, issuesDetail: file.issuesDetail, rules}
+                                state: {path: file.path, issuesDetail: file.issuesDetail, rules, repo: this.props.projectData.value.repo}
                             }}>
                                 <i className="material-icons">file_copy</i>
                             </Link>

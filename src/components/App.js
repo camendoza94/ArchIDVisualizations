@@ -12,7 +12,7 @@ class App extends Component {
         return (
             <Router>
                 <Switch>
-                    <Route exact path='/repo/:repo/file/:file' component={CodeView}/>
+                    <Route exact path='/repo/:repoName/file/:file' component={CodeView}/>
                     <Route exact path='/' component={HomePage}/>
                 </Switch>
             </Router>

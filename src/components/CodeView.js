@@ -12,10 +12,11 @@ class CodeView extends Component {
     }
 
     componentDidMount() {
-        const repo = this.props.match.params.repo;
         let path = this.props.location.state.path;
+        let url = this.props.location.state.repo;
         path = path.substring(2);
-        getFromAzure(repo, path).then(contents => this.setState({contents}, this.highlight));
+        if (url.includes("azure"))
+            getFromAzure(url, path).then(contents => this.setState({contents}, this.highlight));
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
