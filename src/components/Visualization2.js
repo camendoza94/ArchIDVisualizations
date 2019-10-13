@@ -54,10 +54,6 @@ class Visualization extends Component {
     }
 
     createSVG() {
-        this.max = d3.max(this.state.data, d => d[this.state.metrics[this.state.currentMetrics[1]]]);
-        this.color = d3.scaleLinear()
-            .domain([1, this.max / 3, this.max])
-            .range(["green", "yellow", "red"]);
         if (this.state.currentMetrics.length !== 2)
             return;
         let nestedData = d3.nest()
@@ -74,21 +70,28 @@ class Visualization extends Component {
                 }
             })
             .entries(this.state.data);
+        this.max = 0;
         nestedData = nestedData.map(nested => ({
             name: nested.key,
-            children: nested.values.map(o => ({
-                name: o.key,
-                value: o.value[this.state.metrics[this.state.currentMetrics[0]]] + 0.1,
-                mods: o.value.mods,
-                issues: o.value.issues,
-                authors: o.value.authors,
-                inDeps: o.value.inDeps,
-                outDeps: o.value.outDeps,
-                dependencies: o.value.dependencies
+            children: nested.values.map(o => {
+                this.max = o.value[this.state.metrics[this.state.currentMetrics[1]]] > this.max ? o.value[this.state.metrics[this.state.currentMetrics[1]]] : this.max;
+                return {
+                    name: o.key,
+                    value: o.value[this.state.metrics[this.state.currentMetrics[0]]] + 0.1,
+                    mods: o.value.mods,
+                    issues: o.value.issues,
+                    authors: o.value.authors,
+                    inDeps: o.value.inDeps,
+                    outDeps: o.value.outDeps,
+                    dependencies: o.value.dependencies
 
-            }))
+                }
+            })
         }));
         nestedData = {name: this.props.projectData.value.name, children: nestedData};
+        this.color = d3.scaleQuantize()
+            .domain([1, this.max])
+            .range(["green", "yellow", "red"]);
         const root = this.pack(nestedData);
         let focus = root;
         let view;
@@ -108,7 +111,7 @@ class Visualization extends Component {
             .selectAll("circle")
             .data(root.descendants().slice(1))
             .join("circle")
-            .attr("fill", d => (!d.depth || !d.data[this.state.metrics[this.state.currentMetrics[1]]]) ? "#6e6e6e" : this.color(d.data[this.state.metrics[this.state.currentMetrics[1]]]))
+            .attr("fill", d => !d.depth ? "#6e6e6e" : this.color(d.data[this.state.metrics[this.state.currentMetrics[1]]]))
             .attr("fill-opacity", d => d.value === 0 ? 0 : 0.25)
             .attr("display", d => d.value === 0 ? "none" : "inline")
             .attr("stroke", d => d.value === 0 ? null : "#1F77B4")
@@ -144,12 +147,16 @@ class Visualization extends Component {
             .style("font-weight", d => d.depth === 1 ? "bold" : null)
             .text(d => d.data.name);
 
+        let first = `0 - ${Math.ceil(this.max / 3)} ${this.state.metrics[this.state.currentMetrics[1]]}`;
+        let second = `${Math.ceil(this.max / 3 + 1)} - ${Math.floor(this.max * 2 / 3)} ${this.state.metrics[this.state.currentMetrics[1]]}`;
+        let third = ` ${Math.floor(this.max * 2 / 3 + 1)} - ${this.max} ${this.state.metrics[this.state.currentMetrics[1]]}`;
+
         const legend = svg.append("g")
             .attr("font-family", "sans-serif")
             .attr("font-size", 10)
             .attr("text-anchor", "end")
             .selectAll("g")
-            .data(["0 " + this.state.metrics[this.state.currentMetrics[1]]].concat(Array.from(Array(this.max).keys()).map(x => ++x + " " + this.state.metrics[this.state.currentMetrics[1]])))
+            .data([first, second, third])
             .join("g")
             .attr("transform", function (d, i) {
                 return "translate(-50," + (-350 + (i * 20)) + ")";
@@ -163,7 +170,7 @@ class Visualization extends Component {
             .attr("x", iwidth - 19)
             .attr("width", 19)
             .attr("height", 19)
-            .attr("fill", (d, i) => i === 0 ? "#555555" : this.color(i));
+            .attr("fill", (d, i) => this.color(i * this.max / 3 + 1));
         legend.append("text")
             .attr("x", iwidth - 24)
             .attr("y", 9.5)
