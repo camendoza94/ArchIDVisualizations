@@ -39,21 +39,29 @@ class Visualization extends Component {
             <div className="accordion" id="accordion">
                 {data && rules && data.filter(file => file.issues.reduce((a, b) => a + b, 0) > 0).map((file, i) => {
                     return <div className="card" key={"file" + i}>
-                        <div className="card-header" id={"heading" + i}>
-                            <h2 className="mb-0">
-                                <button className="btn" type="button" data-toggle="collapse"
-                                        data-target={"#collapse" + i}
-                                        aria-expanded="true" aria-controls={"#collapse" + i}>
-                                    {file.name}<span
-                                    className="small">{file.issues.reduce((a, b) => a + b, 0)}</span>
-                                </button>
-                            </h2>
-                            <Link to={{
-                                pathname: `/repo/${this.props.projectData.label}/file/${file.name}`,
-                                state: {path: file.path, issuesDetail: file.issuesDetail, rules, repo: this.props.projectData.value.repo}
-                            }}>
-                                <i className="material-icons">file_copy</i>
-                            </Link>
+                        <div className="card-header" id={"heading" + i} data-toggle="collapse"
+                             data-target={"#collapse" + i}
+                             aria-expanded="true" aria-controls={"#collapse" + i}>
+                            <div className="row">
+                                <h2 className="mb-0 col-md-9">
+                                    <button className="btn" type="button">
+                                        {file.name}
+                                    </button>
+                                </h2>
+                                <span
+                                    className="small mb-0 col-md-1">{file.issues.reduce((a, b) => a + b, 0)} issue(s)</span>
+                                <Link className="mb-0 col-md-2" to={{
+                                    pathname: `/repo/${this.props.projectData.label}/file/${file.name}`,
+                                    state: {
+                                        path: file.path,
+                                        issuesDetail: file.issuesDetail,
+                                        rules,
+                                        repo: this.props.projectData.value.repo
+                                    }
+                                }}>
+                                    <i className="material-icons">file_copy</i> Go to source
+                                </Link>
+                            </div>
                         </div>
 
                         <div id={"collapse" + i} className="collapse" aria-labelledby={"heading" + i}
@@ -63,7 +71,7 @@ class Visualization extends Component {
                                             className="card-body">
                                     <div className="card">
                                         <div className="card-body">
-                                            <h5 className="card-title">{rules[issue.rule - 1].title}</h5>
+                                            <h5 className="card-title">{rules[issue.rule - 1].title}<span className="small ml-2">{issue.description}</span></h5>
                                             <h6 className="card-subtitle mb-2 text-muted">
                                                 <i className="material-icons">bug_report</i>
                                                 {rules[issue.rule - 1].category}
