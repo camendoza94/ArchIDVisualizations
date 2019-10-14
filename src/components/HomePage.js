@@ -1,11 +1,12 @@
 import React, {Component} from 'react';
 import '../styles/App.css';
-import {getCategorization, getIssueDetail, getProjects} from '../api';
+import {getCategorization, getHistory, getIssueDetail, getProjects} from '../api';
 import Select from 'react-select';
 import Structure from "./Structure";
 import Metrics from "./Metrics";
 import Rules from "./Rules";
 import Issues from "./Issues";
+import History from "./History";
 
 
 class HomePage extends Component {
@@ -40,6 +41,15 @@ class HomePage extends Component {
         getIssueDetail().then(issues => {
             this.setState({
                 issues
+            }, this.getHistory)
+        })
+    }
+
+    getHistory() {
+        getHistory().then(history => {
+            history = history.filter(p => p.name === "DemoProyectoJava");
+            this.setState({
+                history
             })
         })
     }
@@ -57,7 +67,7 @@ class HomePage extends Component {
     }
 
     render() {
-        const {currentProject, options, categorization, currentCategorization, issues, showing} = this.state;
+        const {currentProject, options, categorization, currentCategorization, issues, showing, history} = this.state;
         return (
             <div className="container">
                 <h1>ArchID</h1>
@@ -70,8 +80,10 @@ class HomePage extends Component {
                     </button>
                     <button type="button" className="btn btn-outline-info" onClick={() => this.setViz(4)}>Issues
                     </button>
+                    <button type="button" className="btn btn-outline-info" onClick={() => this.setViz(5)}>History
+                    </button>
                 </div>
-                {options && categorization && issues && showing ?
+                {options && categorization && issues && showing && history ?
                     <div className="row">
                         <h4 className="col-md-2">Project</h4>
                         <div className="col-md-6">
@@ -83,18 +95,21 @@ class HomePage extends Component {
                             />
                         </div>
                     </div> : ''}
-                {currentProject && categorization && issues && showing && showing === 1 ?
+                {currentProject && categorization && issues && history && showing && showing === 1 ?
                     <Metrics categorization={currentCategorization} key={currentProject.label + showing}
                              issues={issues} projectData={currentProject}/> : ''}
-                {currentProject && categorization && issues && showing && showing === 2 ?
+                {currentProject && categorization && issues && history && showing && showing === 2 ?
                     <Structure categorization={currentCategorization} key={currentProject.label + showing}
                                issues={issues} projectData={currentProject}/> : ''}
-                {currentProject && categorization && issues && showing && showing === 3 ?
+                {currentProject && categorization && issues && history && showing && showing === 3 ?
                     <Rules categorization={currentCategorization} key={currentProject.label + showing}
                            issues={issues} projectData={currentProject}/> : ''}
-                {currentProject && categorization && issues && showing && showing === 4 ?
+                {currentProject && categorization && issues && history && showing && showing === 4 ?
                     <Issues categorization={currentCategorization} key={currentProject.label + showing}
                             issues={issues} projectData={currentProject}/> : ''}
+                {currentProject && categorization && issues && history && showing && showing === 5 ?
+                    <History categorization={currentCategorization} key={currentProject.label + showing}
+                             issues={issues} projectData={currentProject} history={history}/> : ''}
             </div>
         );
     }

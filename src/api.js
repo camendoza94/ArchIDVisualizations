@@ -19,6 +19,12 @@ export function getIssueDetail() {
     });
 }
 
+export function getHistory() {
+    return axios.get("https://archtoringbd.herokuapp.com/history").then(response => {
+        return response.data;
+    });
+}
+
 export function getFromAzure(url, path) {
     const user = process.env.REACT_APP_AUTH_AZURE_USER;
     const secret = process.env.REACT_APP_AUTH_AZURE_SECRET;
