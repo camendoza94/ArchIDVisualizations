@@ -44,13 +44,13 @@ class Issues extends Component {
                              aria-expanded="true" aria-controls={"#collapse" + i}>
                             <div className="row">
                                 <h2 className="mb-0 col-md-9">
-                                    <button className="btn" type="button">
+                                    <button className="btn font-weight-bold" type="button">
                                         {file.name}
                                     </button>
                                 </h2>
                                 <span
-                                    className="small mb-0 col-md-1">{file.issues.reduce((a, b) => a + b, 0)} issue(s)</span>
-                                <Link className="mb-0 col-md-2" to={{
+                                    className="small mt-2 col-md-1 text-danger">{file.issues.reduce((a, b) => a + b, 0)} issue(s)</span>
+                                <Link className="mt-2 col-md-2" to={{
                                     pathname: `/repo/${this.props.projectData.label}/file/${file.name}`,
                                     state: {
                                         path: file.path,
@@ -71,7 +71,9 @@ class Issues extends Component {
                                             className="card-body">
                                     <div className="card">
                                         <div className="card-body">
-                                            <h5 className="card-title">{rules[issue.rule - 1].title}<span className="small ml-2">{issue.description}</span></h5>
+                                            <h5 className="card-title text-danger">{rules[issue.rule - 1].title}<span
+                                                className="small ml-2 text-body">{issue.description === "Class" ? issue.description : issue.description + "()"}</span>
+                                            </h5>
                                             <h6 className="card-subtitle mb-2 text-muted">
                                                 <i className="material-icons">bug_report</i>
                                                 {rules[issue.rule - 1].category}

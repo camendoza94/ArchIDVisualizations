@@ -61,14 +61,16 @@ class HomePage extends Component {
         return (
             <div className="container">
                 <h1>ArchID</h1>
-                <button type="button" className="btn btn-outline-info" onClick={() => this.setViz(1)}>Metrics
-                </button>
-                <button type="button" className="btn btn-outline-info" onClick={() => this.setViz(2)}>Structure
-                </button>
-                <button type="button" className="btn btn-outline-info" onClick={() => this.setViz(3)}>Rules
-                </button>
-                <button type="button" className="btn btn-outline-info" onClick={() => this.setViz(4)}>Issues
-                </button>
+                <div className="mb-3">
+                    <button type="button" className="btn btn-outline-info" onClick={() => this.setViz(1)}>Metrics
+                    </button>
+                    <button type="button" className="btn btn-outline-info" onClick={() => this.setViz(2)}>Structure
+                    </button>
+                    <button type="button" className="btn btn-outline-info" onClick={() => this.setViz(3)}>Rules
+                    </button>
+                    <button type="button" className="btn btn-outline-info" onClick={() => this.setViz(4)}>Issues
+                    </button>
+                </div>
                 {options && categorization && issues && showing ?
                     <div className="row">
                         <h4 className="col-md-2">Project</h4>
