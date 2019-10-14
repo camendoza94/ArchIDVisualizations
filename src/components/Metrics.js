@@ -3,6 +3,7 @@ import * as d3 from "d3";
 import Select from "react-select";
 import Slider, {createSliderWithTooltip} from 'rc-slider';
 import '../styles/rc-slider.css';
+import {withRouter} from 'react-router-dom'
 
 const SliderWithTooltip = createSliderWithTooltip(Slider);
 
@@ -23,6 +24,8 @@ class Metrics extends Component {
                 this.max = file.size > this.max ? file.size : this.max;
                 unnestedData.push({
                     layer: layer.name,
+                    path: file.path,
+                    issuesDetail: file.issuesDetail.map(d => this.props.issues.find(i => i.id === d.id)),
                     issues: file.issues.reduce((a, b) => a + b, 0),  //TODO By author
                     mods: file.children ? file.children.map(a => a.rows).reduce((a, b) => a + b, 0) : 0,
                     inDeps: file.inDeps ? file.inDeps.length : 0,
@@ -32,14 +35,17 @@ class Metrics extends Component {
 
             }
         }
+        const categorization = this.props.categorization;
+        let rules = categorization.decisions.map(d => d.rules);
+        rules = [].concat.apply([], rules).sort((a, b) => a.id - b.id);
         const options = [{value: "name", label: "name"}, {value: "layer", label: "layer"}];
-        this.setState({options, currentKey: options[0], data: unnestedData}, this.createSVG);
+        this.setState({options, currentKey: options[0], data: unnestedData, rules}, this.createSVG);
     }
 
     createSVG() {
         const height = 650;
         const width = 1000;
-        let columns = d3.keys(this.state.data[0]).filter(d => d !== this.state.currentKey.label && !isNaN(this.state.data[0][d])).slice(0, 4); // TODO Max Number of Columns
+        let columns = d3.keys(this.state.data[0]).filter(d => d !== this.state.currentKey.label && typeof (this.state.data[0][d]) === "number").slice(0, 4);
 
         let adjustedData = [];
         this.state.data.forEach((d) => {
@@ -144,6 +150,21 @@ class Metrics extends Component {
             .attr("font-weight", "bold")
             .attr("text-anchor", "start")
             .text("Combined index");
+
+        d3.selectAll(".tick")
+            .attr("cursor", "pointer")
+            .on("click", d => {
+                const file = this.state.data.find(f => f.name === d);
+                this.props.history.push({
+                    pathname: `/repo/${this.props.projectData.label}/file/${d}`,
+                    state: {
+                        path: file.path,
+                        issuesDetail: file.issuesDetail,
+                        rules: this.state.rules,
+                        repo: this.props.projectData.value.repo
+                    }
+                });
+            });
 
         let legend = g.append("g")
             .attr("font-family", "sans-serif")
@@ -260,4 +281,4 @@ class Metrics extends Component {
     }
 }
 
-export default Metrics;
+export default withRouter(Metrics);

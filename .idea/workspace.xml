@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="dd46715e-9bbb-440e-8692-c3084cf8c3f6" name="Default Changelist" comment="">
+    <list default="true" id="dd46715e-9bbb-440e-8692-c3084cf8c3f6" name="Default Changelist" comment="Added link between Metrics and code">
       <change afterPath="$PROJECT_DIR$/.env" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/HomePage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/HomePage.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/Issues.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Issues.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Metrics.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Metrics.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -18,6 +17,7 @@
   <component name="ProjectId" id="1SAi7T7gpVTnku778buYMmMLu0p" />
   <component name="PropertiesComponent">
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
+    <property name="TODO_SCOPE" value="All Places" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="nodejs_interpreter_path" value="node" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
@@ -70,7 +70,14 @@
       <option name="project" value="LOCAL" />
       <updated>1571016514351</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="Style">
+      <created>1571017447354</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1571017447354</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -91,6 +98,8 @@
     <MESSAGE value="Better styling" />
     <MESSAGE value="Renamed components and added links to each in Home" />
     <MESSAGE value="Removed text in metrics added dependencies legend" />
-    <option name="LAST_COMMIT_MESSAGE" value="Removed text in metrics added dependencies legend" />
+    <MESSAGE value="Style" />
+    <MESSAGE value="Added link between Metrics and code" />
+    <option name="LAST_COMMIT_MESSAGE" value="Added link between Metrics and code" />
   </component>
 </project>
