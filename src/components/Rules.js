@@ -1,6 +1,6 @@
 import React, {Component, Fragment} from 'react';
 
-class Visualization extends Component {
+class Rules extends Component {
 
     getIssues(rules) {
         let issues = 0;
@@ -77,4 +77,4 @@ class Visualization extends Component {
     }
 }
 
-export default Visualization;
+export default Rules;

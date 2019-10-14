@@ -6,12 +6,11 @@ import '../styles/rc-slider.css';
 
 const SliderWithTooltip = createSliderWithTooltip(Slider);
 
-class Visualization extends Component {
+class Metrics extends Component {
 
     constructor(props) {
         super(props);
         this.state = {coefficients: [100, 70, 40, 40]};
-        this.max = 0;
         this.handleChange = this.handleChange.bind(this);
         this.handleSlider = this.handleSlider.bind(this);
     }
@@ -278,4 +277,4 @@ class Visualization extends Component {
     }
 }
 
-export default Visualization;
+export default Metrics;

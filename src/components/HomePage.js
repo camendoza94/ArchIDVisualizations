@@ -1,15 +1,19 @@
 import React, {Component} from 'react';
 import '../styles/App.css';
-import Visualization from "./Visualization2";
 import {getCategorization, getIssueDetail, getProjects} from '../api';
 import Select from 'react-select';
+import Structure from "./Structure";
+import Metrics from "./Metrics";
+import Rules from "./Rules";
+import Issues from "./Issues";
 
 
-class App extends Component {
+class HomePage extends Component {
     constructor(props) {
         super(props);
         this.state = {};
         this.handleChange = this.handleChange.bind(this);
+        this.setViz = this.setViz.bind(this);
     }
 
     componentDidMount() {
@@ -19,7 +23,7 @@ class App extends Component {
                     return {value: project, label: project.name}
                 }
             );
-            this.setState({projects, options, currentProject: options[0]}, this.getCats)
+            this.setState({projects, options, currentProject: options[0], showing: 1}, this.getCats)
         })
     }
 
@@ -48,12 +52,24 @@ class App extends Component {
         })
     }
 
+    setViz(i) {
+        this.setState({showing: i})
+    }
+
     render() {
-        const {currentProject, options, categorization, currentCategorization, issues} = this.state;
+        const {currentProject, options, categorization, currentCategorization, issues, showing} = this.state;
         return (
             <div className="container">
                 <h1>ArchID</h1>
-                {options && categorization && issues ?
+                <button type="button" className="btn btn-outline-info" onClick={() => this.setViz(1)}>Metrics
+                </button>
+                <button type="button" className="btn btn-outline-info" onClick={() => this.setViz(2)}>Structure
+                </button>
+                <button type="button" className="btn btn-outline-info" onClick={() => this.setViz(3)}>Rules
+                </button>
+                <button type="button" className="btn btn-outline-info" onClick={() => this.setViz(4)}>Issues
+                </button>
+                {options && categorization && issues && showing ?
                     <div className="row">
                         <h4 className="col-md-2">Project</h4>
                         <div className="col-md-6">
@@ -65,12 +81,21 @@ class App extends Component {
                             />
                         </div>
                     </div> : ''}
-                {currentProject && categorization && issues ?
-                    <Visualization categorization={currentCategorization} key={currentProject.label}
-                                   issues={issues} projectData={currentProject}/> : ''}
+                {currentProject && categorization && issues && showing && showing === 1 ?
+                    <Metrics categorization={currentCategorization} key={currentProject.label + showing}
+                             issues={issues} projectData={currentProject}/> : ''}
+                {currentProject && categorization && issues && showing && showing === 2 ?
+                    <Structure categorization={currentCategorization} key={currentProject.label + showing}
+                               issues={issues} projectData={currentProject}/> : ''}
+                {currentProject && categorization && issues && showing && showing === 3 ?
+                    <Rules categorization={currentCategorization} key={currentProject.label + showing}
+                           issues={issues} projectData={currentProject}/> : ''}
+                {currentProject && categorization && issues && showing && showing === 4 ?
+                    <Issues categorization={currentCategorization} key={currentProject.label + showing}
+                            issues={issues} projectData={currentProject}/> : ''}
             </div>
         );
     }
 }
 
-export default App;
+export default HomePage;

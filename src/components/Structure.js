@@ -2,7 +2,7 @@ import React, {Component, Fragment} from 'react';
 import * as d3 from "d3";
 import Select from "react-select";
 
-class Visualization extends Component {
+class Structure extends Component {
 
     constructor(props) {
         super(props);
@@ -275,7 +275,7 @@ class Visualization extends Component {
     }
 
     render() {
-        const {currentKey, options, metrics} = this.state;
+        const {currentKey, options, metrics, currentMetrics} = this.state;
         return (
             <div>
                 {options ?
@@ -290,13 +290,13 @@ class Visualization extends Component {
                             />
                         </div>
                     </div> : ""}
-                {metrics ?
+                {metrics && currentMetrics ?
                     <Fragment>
                         <div className="row">
                             <h4 className="col-md-2">Metrics</h4>
                             {metrics.map((m, i) => {
                                 return (
-                                    <div className="col-md-2">
+                                    <div key={"metric" + i} className="col-md-2">
                                         <div className="form-check form-check-inline">
                                             <input className="form-check-input" type="checkbox"
                                                    id={"inlineCheckbox" + i}
@@ -312,9 +312,10 @@ class Visualization extends Component {
                             })}
                         </div>
                     </Fragment> : ""}
-                <p>Circle size is proportional to number of modifications in a given file <br/>
-                    Color corresponds to number of authors working on a given file</p>
-                <button type="button" className="btn btn-outline-info" onClick={this.resetDeps}>Reset dependencies
+                {currentMetrics && currentMetrics.length === 2 ?
+                    <p>{`Circle size is proportional to number of ${metrics[currentMetrics[0]]} on a given file`}<br/>
+                        {`Color corresponds to number of ${metrics[currentMetrics[1]]} on a given file`}</p> : ""}
+                <button type="button" className="btn btn-outline-warning" onClick={this.resetDeps}>Reset dependencies
                 </button>
                 <svg width={700} height={700}
                      ref={(svg) => {
@@ -326,4 +327,4 @@ class Visualization extends Component {
     }
 }
 
-export default Visualization;
+export default Structure;

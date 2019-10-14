@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {Link} from "react-router-dom";
 
-class Visualization extends Component {
+class Issues extends Component {
 
     constructor(props) {
         super(props);
@@ -90,4 +90,4 @@ class Visualization extends Component {
     }
 }
 
-export default Visualization;
+export default Issues;
