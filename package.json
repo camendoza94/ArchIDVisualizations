@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@octokit/rest": "^16.33.1",
     "axios": "^0.18.0",
     "d3": "^5.9.2",
     "d3-array": "2.2.0",

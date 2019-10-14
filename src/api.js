@@ -1,4 +1,5 @@
 import axios from 'axios';
+import * as Octokit from '@octokit/rest';
 
 export function getProjects() {
     return axios.get("https://archtoringbd.herokuapp.com/architecture").then(response => {
@@ -36,4 +37,18 @@ export function getFromAzure(url, path) {
     }).then(response => {
         return response.data;
     });
+}
+
+export function getFromGithub(url, path) {
+    const clientWithAuth = new Octokit({
+        auth: process.env.REACT_APP_AUTH_GITHUB_SECRET
+    });
+    const parts = url.split("/");
+    const owner = parts[parts.length - 2];
+    const repo = parts[parts.length - 1];
+    clientWithAuth.repos.getContents({
+        owner,
+        repo,
+        path
+    }).then(response => console.log(response)) //TODO return response
 }
