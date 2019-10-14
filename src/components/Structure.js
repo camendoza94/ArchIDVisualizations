@@ -180,6 +180,29 @@ class Structure extends Component {
         zoomTo([root.x, root.y, root.r * 2]);
 
         function showDependencies(d) {
+            legend.selectAll("*").remove();
+            const legend2 = svg.append("g")
+                .attr("font-family", "sans-serif")
+                .attr("font-size", 10)
+                .attr("text-anchor", "end")
+                .selectAll("g")
+                .data(["OutDependencies", "InDependencies"])
+                .join("g")
+                .attr("transform", function (d, i) {
+                    return "translate(-50," + (-350 + (i * 20)) + ")";
+                });
+            legend2.append("rect")
+                .attr("class", "legend")
+                .attr("x", iwidth - 19)
+                .attr("width", 19)
+                .attr("height", 19)
+                .attr("fill", (d, i) => i === 0 ? "blue" : "purple");
+            legend2.append("text")
+                .attr("x", iwidth - 24)
+                .attr("y", 9.5)
+                .attr("dy", "0.32em")
+                .text(d => d);
+
             node.filter(function (d1) {
                 return d.data.inDeps.find(i => {
                         let name = i.split("/")[i.split("/").length - 1];
