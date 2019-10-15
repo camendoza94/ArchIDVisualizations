@@ -98,7 +98,7 @@
       <option name="presentableId" value="Default" />
       <updated>1571019996922</updated>
       <workItem from="1571020004317" duration="1079000" />
-      <workItem from="1571080584660" duration="13535000" />
+      <workItem from="1571080584660" duration="14339000" />
     </task>
     <task id="LOCAL-00006" summary="Get content from github">
       <created>1571087345329</created>
@@ -114,7 +114,14 @@
       <option name="project" value="LOCAL" />
       <updated>1571094990947</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="Issues chart">
+      <created>1571097709968</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1571097709968</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -141,6 +148,7 @@
     <MESSAGE value="Added link between Metrics and code" />
     <MESSAGE value="Get content from github" />
     <MESSAGE value="History chart" />
-    <option name="LAST_COMMIT_MESSAGE" value="History chart" />
+    <MESSAGE value="Issues chart" />
+    <option name="LAST_COMMIT_MESSAGE" value="Issues chart" />
   </component>
 </project>

@@ -11,7 +11,8 @@ class History extends Component {
 
     componentDidMount() {
         this.renderHistory();
-        this.renderIssues()
+        this.renderIssues();
+        this.renderIssuesHistory();
     }
 
 
@@ -89,14 +90,89 @@ class History extends Component {
         });
     }
 
+    renderIssuesHistory() {
+        let data = {
+            datasets: []
+        };
+        const options = {
+            responsive: true,
+            tooltips: {
+                mode: 'label'
+            },
+            elements: {
+                line: {
+                    fill: false
+                }
+            },
+            scales: {
+                yAxes: [{
+                    scaleLabel: {
+                        display: true,
+                        labelString: 'Number of violations'
+                    }
+                }],
+                xAxes: [{
+                    scaleLabel: {
+                        display: true,
+                        labelString: 'Time'
+                    },
+                    type: 'time',
+                    distribution: 'linear',
+                    time: {
+                        unit: 'month'
+                    }
+                }]
+            }
+        };
+        let rules = this.props.categorization.decisions.map(d => d.rules);
+        rules = [].concat.apply([], rules).sort((a, b) => a.id - b.id).map(r => r.title);
+        const backgroundColors = d3.schemeSet1.concat(d3.schemeSet2);
+        const d = this.props.history[0].data.sort((a, b) => new Date(b.date) - new Date(a.date));
+        rules.forEach((name, i) => {
+            let color = backgroundColors[i];
+            data.datasets.push({
+                label: name,
+                fill: false,
+                lineTension: 0,
+                backgroundColor: color,
+                borderColor: color,
+                borderCapStyle: 'butt',
+                borderDash: [],
+                borderDashOffset: 0.0,
+                borderJoinStyle: 'miter',
+                pointBorderColor: color,
+                pointBackgroundColor: '#fff',
+                pointBorderWidth: 1,
+                pointHoverRadius: 5,
+                pointHoverBackgroundColor: color,
+                pointHoverBorderColor: 'rgba(220,220,220,1)',
+                pointHoverBorderWidth: 2,
+                pointRadius: 1,
+                pointHitRadius: 10,
+                data: d.map(c => {
+                    return {
+                        x: c.date,
+                        y: c.issues[i]
+                    }
+                })
+            });
+        });
+        this.setState({
+            dataIssues: data,
+            optionsIssues: options
+        });
+    }
+
     render() {
-        const {data, options, issues} = this.state;
+        const {data, options, issues, dataIssues, optionsIssues} = this.state;
         return (
             <div className={"row"}>
-                {data && options ?
+                {data && options && issues && dataIssues && optionsIssues ?
                     <Fragment>
                         <h1 className="text-center col-md-12">Issues history for the project</h1>
                         <Line data={data} options={options}/>
+                        <h1 className="text-center col-md-12">Most common violations throughout the semester</h1>
+                        <Line data={dataIssues} options={optionsIssues}/>
                         <h1 className="text-center col-md-12">Most common violations in latest release</h1>
                         <Doughnut data={issues}/>
                     </Fragment> : ""}
