@@ -3,9 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="dd46715e-9bbb-440e-8692-c3084cf8c3f6" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/script.js" beforeDir="false" afterPath="$PROJECT_DIR$/server/script.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/server.js" beforeDir="false" afterPath="$PROJECT_DIR$/server/server.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/History.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/History.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/CodeView.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/CodeView.js" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -100,7 +98,7 @@
       <option name="presentableId" value="Default" />
       <updated>1571019996922</updated>
       <workItem from="1571020004317" duration="1079000" />
-      <workItem from="1571080584660" duration="21678000" />
+      <workItem from="1571080584660" duration="22907000" />
     </task>
     <task id="LOCAL-00006" summary="Get content from github">
       <created>1571087345329</created>
@@ -130,7 +128,14 @@
       <option name="project" value="LOCAL" />
       <updated>1571098660643</updated>
     </task>
-    <option name="localTasksCounter" value="10" />
+    <task id="LOCAL-00010" summary="Fixed history">
+      <created>1571107380893</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1571107380893</updated>
+    </task>
+    <option name="localTasksCounter" value="11" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -159,6 +164,7 @@
     <MESSAGE value="History chart" />
     <MESSAGE value="Issues chart" />
     <MESSAGE value="Finished history chart" />
-    <option name="LAST_COMMIT_MESSAGE" value="Finished history chart" />
+    <MESSAGE value="Fixed history" />
+    <option name="LAST_COMMIT_MESSAGE" value="Fixed history" />
   </component>
 </project>

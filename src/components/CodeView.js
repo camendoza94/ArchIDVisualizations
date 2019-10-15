@@ -23,11 +23,11 @@ class CodeView extends Component {
         document.querySelectorAll(".warning").forEach((n, i) => {
             let newNode = document.createElement("span");
             newNode.className = "tooltiptext";
-            newNode.innerText = this.props.location.state.rules.find(r => r.id === this.props.location.state.issuesDetail[i].rule).title;
-            for (let j = i; j < this.state.highlight.length; j++) {
-                let currentLine = this.state.highlight[j];
-                if (currentLine === this.state.highlight[j + 1]) {
-                    newNode.innerText += "\r\n" + this.props.location.state.rules.find(r => r.id === this.props.location.state.issuesDetail[i + 1].rule).title;
+            newNode.innerHTML =  this.props.location.state.rules.find(r => r.id === this.props.location.state.issuesDetail[i].rule).title;
+            for (let j = 0; i + j < this.state.highlight.length; j++) {
+                let currentLine = this.state.highlight[j + i];
+                if (currentLine === this.state.highlight[j + i + 1]) {
+                    newNode.innerHTML += "<br/>" + this.props.location.state.rules.find(r => r.id === this.props.location.state.issuesDetail[i + j + 1].rule).title;
                 } else
                     break;
 
