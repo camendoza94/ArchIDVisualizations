@@ -1,5 +1,6 @@
-import React, {Component} from 'react';
-import {Line} from 'react-chartjs-2';
+import React, {Component, Fragment} from 'react';
+import {Doughnut, Line} from 'react-chartjs-2';
+import * as d3 from "d3";
 
 class History extends Component {
 
@@ -10,6 +11,7 @@ class History extends Component {
 
     componentDidMount() {
         this.renderHistory();
+        this.renderIssues()
     }
 
 
@@ -69,11 +71,35 @@ class History extends Component {
         });
     }
 
+    renderIssues() {
+        const sortedData = this.props.history[0].data.sort((a, b) => new Date(b.date) - new Date(a.date));
+        const issues = sortedData[sortedData.length - 1].issues;
+        let rules = this.props.categorization.decisions.map(d => d.rules);
+        rules = [].concat.apply([], rules).sort((a, b) => a.id - b.id).map(r => r.title);
+        const backgroundColors = d3.schemeSet1.concat(d3.schemeSet2);
+        let stats = {
+            labels: rules,
+            datasets: [{
+                data: issues,
+                backgroundColor: backgroundColors
+            }]
+        };
+        this.setState({
+            issues: stats
+        });
+    }
+
     render() {
-        const {data, options} = this.state;
+        const {data, options, issues} = this.state;
         return (
             <div className={"row"}>
-                {data && options ? <Line data={this.state.data} options={this.state.options}/> : ""}
+                {data && options ?
+                    <Fragment>
+                        <h1 className="text-center col-md-12">Issues history for the project</h1>
+                        <Line data={data} options={options}/>
+                        <h1 className="text-center col-md-12">Most common violations in latest release</h1>
+                        <Doughnut data={issues}/>
+                    </Fragment> : ""}
             </div>
 
         )
