@@ -41,7 +41,7 @@ class History extends Component {
                 }]
             }
         };
-        const d = this.props.history[0].data.sort((a, b) => new Date(b.date) - new Date(a.date)).map(c => ({
+        const d = this.props.history[0].data.sort((a, b) => new Date(a.date) - new Date(b.date)).map(c => ({
             x: Date.parse(c.date),
             y: c.issues.reduce((a, b) => a + b, 0)
         }));
@@ -73,7 +73,7 @@ class History extends Component {
     }
 
     renderIssues() {
-        const sortedData = this.props.history[0].data.sort((a, b) => new Date(b.date) - new Date(a.date));
+        const sortedData = this.props.history[0].data.sort((a, b) => new Date(a.date) - new Date(b.date));
         const issues = sortedData[sortedData.length - 1].issues;
         let rules = this.props.categorization.decisions.map(d => d.rules);
         rules = [].concat.apply([], rules).sort((a, b) => a.id - b.id).map(r => r.title);
@@ -127,7 +127,7 @@ class History extends Component {
         let rules = this.props.categorization.decisions.map(d => d.rules);
         rules = [].concat.apply([], rules).sort((a, b) => a.id - b.id).map(r => r.title);
         const backgroundColors = d3.schemeSet1.concat(d3.schemeSet2);
-        const d = this.props.history[0].data.sort((a, b) => new Date(b.date) - new Date(a.date));
+        const d = this.props.history[0].data.sort((a, b) => new Date(a.date) - new Date(b.date));
         rules.forEach((name, i) => {
             let color = backgroundColors[i];
             data.datasets.push({

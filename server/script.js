@@ -5,7 +5,7 @@ let data = {};
 let currentData = {};
 
 const addSocial = async () => {
-    let projectData = data.find(project => project.name === require('path').basename(process.cwd())).data;
+    let projectData = data.find(project => project.name === require('path').basename(process.cwd())).data.sort((a, b) => new Date(a.date) - new Date(b.date));
     currentData = projectData[projectData.length - 1];
     let eData = JSON.parse(fs.readFileSync('./inspector.json', 'utf8').trim());
     eData.responsibilities.files.forEach(file => {

@@ -21,7 +21,7 @@ function getPath(s) {
 }
 
 const getFiles = async (src) => {
-    let projectData = data.find(project => project.name === require('path').basename(process.cwd())).data;
+    let projectData = data.find(project => project.name === require('path').basename(process.cwd())).data.sort((a, b) => new Date(a.date) - new Date(b.date));
     let currentData = projectData[projectData.length - 1];
     architecture.name = require('path').basename(process.cwd());
     architecture.repo = currentData.repo;
