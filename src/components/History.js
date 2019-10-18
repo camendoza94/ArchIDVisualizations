@@ -6,15 +6,43 @@ class History extends Component {
 
     constructor(props) {
         super(props);
-        this.state = {}
+        this.state = {showingMinor: true, showingMinorD: true, showingMinorH: true};
+        this.hideMinor = this.hideMinor.bind(this);
+        this.hideMinorDoughnut = this.hideMinorDoughnut.bind(this);
+        this.hideMinorH = this.hideMinorH.bind(this);
     }
 
     componentDidMount() {
-        this.renderHistory();
-        this.renderIssues();
-        this.renderIssuesHistory();
+        let rules = this.props.categorization.decisions.map(d => d.rules);
+        rules = [].concat.apply([], rules).sort((a, b) => a.id - b.id);
+        this.setState({rules}, () => {
+            this.renderHistory();
+            this.renderIssues();
+            this.renderIssuesHistory();
+        });
     }
 
+    hideMinorH() {
+        this.setState({showingMinorH: !this.state.showingMinorH}, this.renderHistory);
+    }
+
+    hideMinor() {
+        this.chartReference.chartInstance.config.data.datasets.forEach((d, i) => {
+            if (this.state.rules[i].severity === "Minor")
+                d._meta["1"].hidden = !d._meta["1"].hidden
+        });
+        this.chartReference.chartInstance.update();
+        this.setState({showingMinor: !this.state.showingMinor});
+    }
+
+    hideMinorDoughnut() {
+        this.chartReferenceD.chartInstance.config.data.datasets[0]._meta["2"].data.forEach((d, i) => {
+            if (this.state.rules[i].severity === "Minor")
+                d.hidden = !d.hidden
+        });
+        this.chartReferenceD.chartInstance.update();
+        this.setState({showingMinorD: !this.state.showingMinorD});
+    }
 
     renderHistory() {
         let data = {
@@ -43,7 +71,7 @@ class History extends Component {
         };
         const d = this.props.history[0].data.sort((a, b) => new Date(a.date) - new Date(b.date)).map(c => ({
             x: Date.parse(c.date),
-            y: c.issues.reduce((a, b) => a + b, 0)
+            y: c.issues.reduce((a, b, i) => !this.state.showingMinorH && this.state.rules[i].severity === "Minor" ? a : a + b, 0)
         }));
         data.datasets.push({
             label: this.props.history[0].name,
@@ -75,11 +103,10 @@ class History extends Component {
     renderIssues() {
         const sortedData = this.props.history[0].data.sort((a, b) => new Date(a.date) - new Date(b.date));
         const issues = sortedData[sortedData.length - 1].issues;
-        let rules = this.props.categorization.decisions.map(d => d.rules);
-        rules = [].concat.apply([], rules).sort((a, b) => a.id - b.id).map(r => r.title);
+        const names = this.state.rules.map(r => r.title);
         const backgroundColors = d3.schemeSet1.concat(d3.schemeSet2);
         let stats = {
-            labels: rules,
+            labels: names,
             datasets: [{
                 data: issues,
                 backgroundColor: backgroundColors
@@ -164,17 +191,30 @@ class History extends Component {
     }
 
     render() {
-        const {data, options, issues, dataIssues, optionsIssues} = this.state;
+        const {data, options, issues, dataIssues, optionsIssues, rules, showingMinor, showingMinorD, showingMinorH} = this.state;
         return (
             <div className={"row"}>
-                {data && options && issues && dataIssues && optionsIssues ?
+                {data && options && issues && dataIssues && optionsIssues && rules ?
                     <Fragment>
+                        <hr className="w-100"/>
+                        <button type="button" className="btn btn-outline-warning"
+                                onClick={this.hideMinorH}>{showingMinorH ? "Hide minor issues" : "Show minor issues"}
+                        </button>
                         <h1 className="text-center col-md-12">Issues history for the project</h1>
                         <Line data={data} options={options}/>
+                        <hr className="w-100"/>
+                        <button type="button" className="btn btn-outline-warning"
+                                onClick={this.hideMinor}>{showingMinor ? "Hide minor issues" : "Show minor issues"}
+                        </button>
                         <h1 className="text-center col-md-12">Most common violations throughout the semester</h1>
-                        <Line data={dataIssues} options={optionsIssues}/>
+                        <Line ref={(reference) => this.chartReference = reference} data={dataIssues}
+                              options={optionsIssues}/>
+                        <hr className="w-100"/>
+                        <button type="button" className="btn btn-outline-warning"
+                                onClick={this.hideMinorDoughnut}>{showingMinorD ? "Hide minor issues" : "Show minor issues"}
+                        </button>
                         <h1 className="text-center col-md-12">Most common violations in latest release</h1>
-                        <Doughnut data={issues}/>
+                        <Doughnut ref={(reference) => this.chartReferenceD = reference} data={issues}/>
                     </Fragment> : ""}
             </div>
 
