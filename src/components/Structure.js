@@ -25,11 +25,13 @@ class Structure extends Component {
         let unnestedData = [];
         for (let layer of this.props.projectData.value.children) {
             for (let file of layer.children) {
-                if (file.children)
+                if (file.children) {
+                    let parts = file.path.split("/");
                     for (let author of file.children) {
                         unnestedData.push({
                             layer: layer.name,
                             file: file.name,
+                            package: parts[parts.length - 2],
                             module: file.module,
                             issues: file.issues.reduce((a, b) => a + b, 0),
                             mods: author.rows,
@@ -40,9 +42,14 @@ class Structure extends Component {
                             dependencies: file.inDeps.length + file.outDeps.length
                         })
                     }
+                }
             }
         }
-        const options = [{value: "layer", label: "layer"}, {value: "module", label: "module"}];
+        const options = [
+            {value: "package", label: "package"},
+            {value: "layer", label: "layer"},
+            {value: "module", label: "module"}
+        ];
         const metrics = ["mods", "authors", "issues", "dependencies"];
         this.setState({
             options,
