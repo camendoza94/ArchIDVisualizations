@@ -19,6 +19,8 @@ class Metrics extends Component {
     componentDidMount() {
         this.max = 0;
         let unnestedData = [];
+        const commits = this.props.currentFiles.data.sort((a, b) => new Date(a.date) - new Date(b.date));
+        const files = commits[commits.length - 1].files;
         for (let layer of this.props.projectData.value.children) {
             for (let file of layer.children) {
                 this.max = file.size > this.max ? file.size : this.max;
@@ -26,7 +28,7 @@ class Metrics extends Component {
                     layer: layer.name,
                     path: file.path,
                     issuesDetail: file.issuesDetail.map(d => this.props.issues.find(i => i.id === d.id)),
-                    issues: file.issues.reduce((a, b) => a + b, 0),  //TODO By author
+                    issues: parseFloat(Number(file.issues.reduce((a, b) => a + b, 0) * 100 / files.find(f => file.name === f.name.split("/")[f.name.split("/").length - 1]).loc).toFixed(2)),
                     mods: file.children ? file.children.map(a => a.rows).reduce((a, b) => a + b, 0) : 0,
                     inDeps: file.inDeps ? file.inDeps.length : 0,
                     outDeps: file.outDeps ? file.outDeps.length : 0,

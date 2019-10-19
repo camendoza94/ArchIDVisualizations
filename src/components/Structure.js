@@ -23,6 +23,8 @@ class Structure extends Component {
 
     componentDidMount() {
         let unnestedData = [];
+        const commits = this.props.currentFiles.data.sort((a, b) => new Date(a.date) - new Date(b.date));
+        const files = commits[commits.length - 1].files;
         for (let layer of this.props.projectData.value.children) {
             for (let file of layer.children) {
                 if (file.children) {
@@ -33,7 +35,7 @@ class Structure extends Component {
                             file: file.name,
                             package: parts[parts.length - 2],
                             module: file.module,
-                            issues: file.issues.reduce((a, b) => a + b, 0),
+                            issues: parseFloat(Number(file.issues.reduce((a, b) => a + b, 0) * 100 / files.find(f => file.name === f.name.split("/")[f.name.split("/").length - 1]).loc).toFixed(2)),
                             mods: author.rows,
                             name: author.name,
                             inDeps: file.inDeps,

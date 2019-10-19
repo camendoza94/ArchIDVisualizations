@@ -1,6 +1,7 @@
 import React, {Component, Fragment} from 'react';
 import {Doughnut, Line} from 'react-chartjs-2';
 import * as d3 from "d3";
+import Select from "react-select";
 
 class History extends Component {
 
@@ -10,16 +11,22 @@ class History extends Component {
         this.hideMinor = this.hideMinor.bind(this);
         this.hideMinorDoughnut = this.hideMinorDoughnut.bind(this);
         this.hideMinorH = this.hideMinorH.bind(this);
+        this.handleCategoryHistory = this.handleCategoryHistory.bind(this);
     }
 
     componentDidMount() {
         let rules = this.props.categorization.decisions.map(d => d.rules);
         rules = [].concat.apply([], rules).sort((a, b) => a.id - b.id);
-        this.setState({rules}, () => {
+        let categories = [...new Set(rules.map(r => r.category))].map(r => ({value: r, label: r}));
+        this.setState({rules, categories, categoryH: categories[0]}, () => {
             this.renderHistory();
             this.renderIssues();
             this.renderIssuesHistory();
         });
+    }
+
+    handleCategoryHistory(categoryH) {
+        this.setState({categoryH}, this.renderHistory);
     }
 
     hideMinorH() {
@@ -53,7 +60,7 @@ class History extends Component {
                 yAxes: [{
                     scaleLabel: {
                         display: true,
-                        labelString: 'Number of architectural issues'
+                        labelString: 'Issues per 1K LOC'
                     }
                 }],
                 xAxes: [{
@@ -69,10 +76,11 @@ class History extends Component {
                 }]
             }
         };
-        const d = this.props.history[0].data.sort((a, b) => new Date(a.date) - new Date(b.date)).map(c => ({
+        const locs = this.props.currentFiles.data.sort((a, b) => new Date(a.date) - new Date(b.date)).map(c => c.loc);
+        const d = this.props.history[0].data.sort((a, b) => new Date(a.date) - new Date(b.date)).map((c, i) => ({
             x: Date.parse(c.date),
-            y: c.issues.reduce((a, b, i) => !this.state.showingMinorH && this.state.rules[i].severity === "Minor" ? a : a + b, 0)
-        }));
+            y: c.issues.reduce((a, b, i) => !this.state.showingMinorH && this.state.rules[i].severity === "Minor" ? a : a + b, 0) * 1000 / locs[i]
+        })); //TODO history of current project.
         data.datasets.push({
             label: this.props.history[0].name,
             fill: false,
@@ -191,12 +199,21 @@ class History extends Component {
     }
 
     render() {
-        const {data, options, issues, dataIssues, optionsIssues, rules, showingMinor, showingMinorD, showingMinorH} = this.state;
+        const {data, options, issues, dataIssues, optionsIssues, rules, showingMinor, showingMinorD, showingMinorH, categoryH, categories} = this.state;
         return (
             <div className={"row"}>
-                {data && options && issues && dataIssues && optionsIssues && rules ?
+                {data && options && issues && dataIssues && optionsIssues && rules && categoryH && categories ?
                     <Fragment>
                         <hr className="w-100"/>
+                        <h5 className="ml-3">Categories</h5>
+                        <div className="col-md-3">
+                            <Select
+                                value={categoryH}
+                                onChange={this.handleCategoryHistory}
+                                options={categories}
+                                defaultValue={categories[0]}
+                            />
+                        </div>
                         <button type="button" className="btn btn-outline-warning"
                                 onClick={this.hideMinorH}>{showingMinorH ? "Hide minor issues" : "Show minor issues"}
                         </button>

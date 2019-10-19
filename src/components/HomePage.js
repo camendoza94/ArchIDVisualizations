@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import '../styles/App.css';
-import {getCategorization, getHistory, getIssueDetail, getProjects} from '../api';
+import {getCategorization, getFiles, getHistory, getIssueDetail, getProjects} from '../api';
 import Select from 'react-select';
 import Structure from "./Structure";
 import Metrics from "./Metrics";
@@ -50,15 +50,24 @@ class HomePage extends Component {
             history = history.filter(p => p.name === "DemoProyectoJava");
             this.setState({
                 history
-            })
+            }, this.getFiles)
+        })
+    }
+
+    getFiles() {
+        getFiles().then(files => {
+            files = files.filter(p => p.name === "DemoProyectoJava");
+            this.setState({files, currentFiles: files[0]})
         })
     }
 
     handleChange(currentProject) {
-        let currentCategorization = this.state.categorization.find(c => c.name === currentProject.label) || this.state.categorization[0];
+        const currentCategorization = this.state.categorization.find(c => c.name === currentProject.label) || this.state.categorization[0];
+        const currentFiles = this.state.files.find(c => c.name === currentProject.label) || this.state.categorization[0];
         this.setState({
             currentProject: currentProject,
-            currentCategorization
+            currentCategorization,
+            currentFiles
         })
     }
 
@@ -67,7 +76,7 @@ class HomePage extends Component {
     }
 
     render() {
-        const {currentProject, options, categorization, currentCategorization, issues, showing, history} = this.state;
+        const {currentProject, options, categorization, currentCategorization, issues, showing, history, files, currentFiles} = this.state;
         return (
             <div className="container">
                 <h1>ArchID</h1>
@@ -95,21 +104,22 @@ class HomePage extends Component {
                             />
                         </div>
                     </div> : ''}
-                {currentProject && categorization && issues && history && showing && showing === 1 ?
+                {currentProject && categorization && issues && history && showing && files && currentFiles && showing === 1 ?
                     <Metrics categorization={currentCategorization} key={currentProject.label + showing}
-                             issues={issues} projectData={currentProject}/> : ''}
-                {currentProject && categorization && issues && history && showing && showing === 2 ?
+                             issues={issues} projectData={currentProject} currentFiles={currentFiles}/> : ''}
+                {currentProject && categorization && issues && history && showing && files && currentFiles && showing === 2 ?
                     <Structure categorization={currentCategorization} key={currentProject.label + showing}
-                               issues={issues} projectData={currentProject}/> : ''}
-                {currentProject && categorization && issues && history && showing && showing === 3 ?
+                               issues={issues} projectData={currentProject} currentFiles={currentFiles}/> : ''}
+                {currentProject && categorization && issues && history && showing && files && showing === 3 ?
                     <Rules categorization={currentCategorization} key={currentProject.label + showing}
                            issues={issues} projectData={currentProject}/> : ''}
-                {currentProject && categorization && issues && history && showing && showing === 4 ?
+                {currentProject && categorization && issues && history && showing && files && showing === 4 ?
                     <Issues categorization={currentCategorization} key={currentProject.label + showing}
                             issues={issues} projectData={currentProject}/> : ''}
-                {currentProject && categorization && issues && history && showing && showing === 5 ?
+                {currentProject && categorization && issues && history && showing && files && currentFiles && showing === 5 ?
                     <History categorization={currentCategorization} key={currentProject.label + showing}
-                             issues={issues} projectData={currentProject} history={history}/> : ''}
+                             issues={issues} projectData={currentProject} history={history}
+                             currentFiles={currentFiles}/> : ''}
             </div>
         );
     }
