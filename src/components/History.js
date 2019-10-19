@@ -12,13 +12,24 @@ class History extends Component {
         this.hideMinorDoughnut = this.hideMinorDoughnut.bind(this);
         this.hideMinorH = this.hideMinorH.bind(this);
         this.handleCategoryHistory = this.handleCategoryHistory.bind(this);
+        this.handleCategoryIssuesHistory = this.handleCategoryIssuesHistory.bind(this);
+        this.handleCategoryIssues = this.handleCategoryIssues.bind(this);
     }
 
     componentDidMount() {
         let rules = this.props.categorization.decisions.map(d => d.rules);
         rules = [].concat.apply([], rules).sort((a, b) => a.id - b.id);
-        let categories = [...new Set(rules.map(r => r.category))].map(r => ({value: r, label: r}));
-        this.setState({rules, categories, categoryH: categories[0]}, () => {
+        let categories = [{
+            'value': 'clear',
+            'label': 'All'
+        }].concat([...new Set(rules.map(r => r.category))].map(r => ({value: r, label: r})));
+        this.setState({
+            rules,
+            categories,
+            categoryH: categories[0],
+            categoryIH: categories[0],
+            categoryI: categories[0]
+        }, () => {
             this.renderHistory();
             this.renderIssues();
             this.renderIssuesHistory();
@@ -29,26 +40,39 @@ class History extends Component {
         this.setState({categoryH}, this.renderHistory);
     }
 
+    handleCategoryIssuesHistory(categoryIH) {
+        this.chartReference.chartInstance.config.data.datasets.forEach((d, i) => {
+            if (categoryIH.value !== "clear" && this.state.rules[i].category !== categoryIH.value)
+                d._meta["1"].hidden = true;
+            else if (categoryIH.value === "clear" || (categoryIH.value !== "clear" && this.state.rules[i].category === categoryIH.value))
+                d._meta["1"].hidden = (!this.state.showingMinor && this.state.rules[i].severity === "Minor");
+        });
+        this.chartReference.chartInstance.update();
+        this.setState({categoryIH});
+    }
+
+    handleCategoryIssues(categoryI) {
+        this.chartReferenceD.chartInstance.config.data.datasets[0]._meta["2"].data.forEach((d, i) => {
+            if (categoryI.value !== "clear" && this.state.rules[i].category !== categoryI.value)
+                d.hidden = true;
+            else if (categoryI.value === "clear" || (categoryI.value !== "clear" && this.state.rules[i].category === categoryI.value))
+                d.hidden = (!this.state.showingMinorD && this.state.rules[i].severity === "Minor");
+        });
+        this.chartReferenceD.chartInstance.update();
+        this.setState({categoryI});
+    }
+
+
     hideMinorH() {
         this.setState({showingMinorH: !this.state.showingMinorH}, this.renderHistory);
     }
 
     hideMinor() {
-        this.chartReference.chartInstance.config.data.datasets.forEach((d, i) => {
-            if (this.state.rules[i].severity === "Minor")
-                d._meta["1"].hidden = !d._meta["1"].hidden
-        });
-        this.chartReference.chartInstance.update();
-        this.setState({showingMinor: !this.state.showingMinor});
+        this.setState({showingMinor: !this.state.showingMinor}, () => this.handleCategoryIssuesHistory(this.state.categoryIH));
     }
 
     hideMinorDoughnut() {
-        this.chartReferenceD.chartInstance.config.data.datasets[0]._meta["2"].data.forEach((d, i) => {
-            if (this.state.rules[i].severity === "Minor")
-                d.hidden = !d.hidden
-        });
-        this.chartReferenceD.chartInstance.update();
-        this.setState({showingMinorD: !this.state.showingMinorD});
+        this.setState({showingMinorD: !this.state.showingMinorD}, () => this.handleCategoryIssues(this.state.categoryI));
     }
 
     renderHistory() {
@@ -79,7 +103,12 @@ class History extends Component {
         const locs = this.props.currentFiles.data.sort((a, b) => new Date(a.date) - new Date(b.date)).map(c => c.loc);
         const d = this.props.history[0].data.sort((a, b) => new Date(a.date) - new Date(b.date)).map((c, i) => ({
             x: Date.parse(c.date),
-            y: c.issues.reduce((a, b, i) => !this.state.showingMinorH && this.state.rules[i].severity === "Minor" ? a : a + b, 0) * 1000 / locs[i]
+            y: c.issues.reduce((a, b, i) => {
+                if (this.state.categoryH.value !== "clear" && this.state.categoryH.value !== this.state.rules[i].category
+                    || (!this.state.showingMinorH && this.state.rules[i].severity === "Minor"))
+                    return a;
+                return a + b;
+            }, 0) * 1000 / locs[i]
         })); //TODO history of current project.
         data.datasets.push({
             label: this.props.history[0].name,
@@ -199,10 +228,10 @@ class History extends Component {
     }
 
     render() {
-        const {data, options, issues, dataIssues, optionsIssues, rules, showingMinor, showingMinorD, showingMinorH, categoryH, categories} = this.state;
+        const {data, options, issues, dataIssues, optionsIssues, rules, showingMinor, showingMinorD, showingMinorH, categoryH, categories, categoryIH, categoryI} = this.state;
         return (
             <div className={"row"}>
-                {data && options && issues && dataIssues && optionsIssues && rules && categoryH && categories ?
+                {data && options && issues && dataIssues && optionsIssues && rules && categoryH && categories && categoryIH && categoryI ?
                     <Fragment>
                         <hr className="w-100"/>
                         <h5 className="ml-3">Categories</h5>
@@ -220,6 +249,15 @@ class History extends Component {
                         <h1 className="text-center col-md-12">Issues history for the project</h1>
                         <Line data={data} options={options}/>
                         <hr className="w-100"/>
+                        <h5 className="ml-3">Categories</h5>
+                        <div className="col-md-3">
+                            <Select
+                                value={categoryIH}
+                                onChange={this.handleCategoryIssuesHistory}
+                                options={categories}
+                                defaultValue={categories[0]}
+                            />
+                        </div>
                         <button type="button" className="btn btn-outline-warning"
                                 onClick={this.hideMinor}>{showingMinor ? "Hide minor issues" : "Show minor issues"}
                         </button>
@@ -227,6 +265,15 @@ class History extends Component {
                         <Line ref={(reference) => this.chartReference = reference} data={dataIssues}
                               options={optionsIssues}/>
                         <hr className="w-100"/>
+                        <h5 className="ml-3">Categories</h5>
+                        <div className="col-md-3">
+                            <Select
+                                value={categoryI}
+                                onChange={this.handleCategoryIssues}
+                                options={categories}
+                                defaultValue={categories[0]}
+                            />
+                        </div>
                         <button type="button" className="btn btn-outline-warning"
                                 onClick={this.hideMinorDoughnut}>{showingMinorD ? "Hide minor issues" : "Show minor issues"}
                         </button>
