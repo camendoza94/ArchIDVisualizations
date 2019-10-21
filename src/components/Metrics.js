@@ -14,11 +14,15 @@ class Metrics extends Component {
         this.state = {coefficients: [100, 70, 40, 40]};
         this.handleChange = this.handleChange.bind(this);
         this.handleSlider = this.handleSlider.bind(this);
+        this.hideMinor = this.hideMinor.bind(this);
     }
 
     componentDidMount() {
         this.max = 0;
         let unnestedData = [];
+        const categorization = this.props.categorization;
+        let rules = categorization.decisions.map(d => d.rules);
+        rules = [].concat.apply([], rules).sort((a, b) => a.id - b.id);
         const commits = this.props.currentFiles.data.sort((a, b) => new Date(a.date) - new Date(b.date));
         const files = commits[commits.length - 1].files;
         for (let layer of this.props.projectData.value.children) {
@@ -29,6 +33,7 @@ class Metrics extends Component {
                     path: file.path,
                     issuesDetail: file.issuesDetail.map(d => this.props.issues.find(i => i.id === d.id)),
                     issues_by100LOC: parseFloat(Number(file.issues.reduce((a, b) => a + b, 0) * 100 / files.find(f => file.name === f.name.split("/")[f.name.split("/").length - 1]).loc).toFixed(2)),
+                    majorIssues_by100LOC: parseFloat(Number(file.issues.reduce((a, b, i) => rules[i].severity !== "Minor" ? a + b : a, 0) * 100 / files.find(f => file.name === f.name.split("/")[f.name.split("/").length - 1]).loc).toFixed(2)),
                     mods: file.children ? file.children.map(a => a.rows).reduce((a, b) => a + b, 0) : 0,
                     inDeps: file.inDeps ? file.inDeps.length : 0,
                     outDeps: file.outDeps ? file.outDeps.length : 0,
@@ -37,17 +42,20 @@ class Metrics extends Component {
 
             }
         }
-        const categorization = this.props.categorization;
-        let rules = categorization.decisions.map(d => d.rules);
-        rules = [].concat.apply([], rules).sort((a, b) => a.id - b.id);
         const options = [{value: "name", label: "name"}, {value: "layer", label: "layer"}];
-        this.setState({options, currentKey: options[0], data: unnestedData, rules}, this.createSVG);
+        this.setState({options, currentKey: options[0], data: unnestedData, rules, showingMinor: true}, this.createSVG);
     }
 
     createSVG() {
         const height = 650;
         const width = 1000;
-        let columns = d3.keys(this.state.data[0]).filter(d => d !== this.state.currentKey.label && typeof (this.state.data[0][d]) === "number").slice(0, 4);
+        let columns = d3.keys(this.state.data[0]).filter(d => {
+            if (d === "majorIssues_by100LOC")
+                return !this.state.showingMinor;
+            if (!this.state.showingMinor && d === "issues_by100LOC")
+                return false;
+            return d !== this.state.currentKey.label && typeof (this.state.data[0][d]) === "number"
+        }).slice(0, 4);
 
         let adjustedData = [];
         this.state.data.forEach((d) => {
@@ -203,8 +211,12 @@ class Metrics extends Component {
         this.setState({coefficients: newCoefficients}, this.createSVG)
     }
 
+    hideMinor() {
+        this.setState({showingMinor: !this.state.showingMinor}, this.createSVG);
+    }
+
     render() {
-        const {currentKey, options, coefficients} = this.state;
+        const {currentKey, options, coefficients, showingMinor} = this.state;
         const style = {width: 500, margin: 10};
         return (
             <div>
@@ -272,6 +284,9 @@ class Metrics extends Component {
                             </div>
                             <p className="col-md-2">{coefficients[3]}</p>
                         </div>
+                        <button type="button" className="btn btn-outline-warning"
+                                onClick={this.hideMinor}>{showingMinor ? "Hide minor issues" : "Show minor issues"}
+                        </button>
                     </div> : ''}
                 <svg
                     ref={(svg) => {

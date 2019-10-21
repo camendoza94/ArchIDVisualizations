@@ -19,12 +19,16 @@ class Structure extends Component {
         this.isDisabled = this.isDisabled.bind(this);
         this.handleCheckboxes = this.handleCheckboxes.bind(this);
         this.checked = this.checked.bind(this);
+        this.hideMinor = this.hideMinor.bind(this);
     }
 
     componentDidMount() {
         let unnestedData = [];
         const commits = this.props.currentFiles.data.sort((a, b) => new Date(a.date) - new Date(b.date));
         const files = commits[commits.length - 1].files;
+        const categorization = this.props.categorization;
+        let rules = categorization.decisions.map(d => d.rules);
+        rules = [].concat.apply([], rules).sort((a, b) => a.id - b.id);
         for (let layer of this.props.projectData.value.children) {
             for (let file of layer.children) {
                 if (file.children) {
@@ -35,6 +39,7 @@ class Structure extends Component {
                             file: file.name,
                             package: parts[parts.length - 2],
                             module: file.module,
+                            majorIssues_by100LOC: parseFloat(Number(file.issues.reduce((a, b, i) => rules[i].severity !== "Minor" ? a + b : a, 0) * 100 / files.find(f => file.name === f.name.split("/")[f.name.split("/").length - 1]).loc).toFixed(2)),
                             issues_by100LOC: parseFloat(Number(file.issues.reduce((a, b) => a + b, 0) * 100 / files.find(f => file.name === f.name.split("/")[f.name.split("/").length - 1]).loc).toFixed(2)),
                             mods: author.rows,
                             name: author.name,
@@ -57,8 +62,9 @@ class Structure extends Component {
             options,
             currentKey: options[0],
             metrics,
-            currentMetrics: [0, 1],
-            data: unnestedData
+            currentMetrics: [3, 2],
+            data: unnestedData,
+            showingMinor: true,
         }, this.createSVG);
     }
 
@@ -71,6 +77,7 @@ class Structure extends Component {
             .rollup((leaves) => {
                 return {
                     "issues_by100LOC": d3.max(leaves, d => d.issues_by100LOC),
+                    "majorIssues_by100LOC": d3.max(leaves, d => d.majorIssues_by100LOC),
                     "mods": d3.sum(leaves, d => d.mods),
                     "authors": d3.max(leaves, d => d.authors),
                     "inDeps": leaves[0].inDeps,
@@ -80,15 +87,19 @@ class Structure extends Component {
             })
             .entries(this.state.data);
         this.max = 0;
+        let metric1 = !this.state.showingMinor && this.state.metrics[this.state.currentMetrics[0]] === "issues_by100LOC" ? "majorIssues_by100LOC" : this.state.metrics[this.state.currentMetrics[0]];
+        let metric2 = !this.state.showingMinor && this.state.metrics[this.state.currentMetrics[1]] === "issues_by100LOC" ? "majorIssues_by100LOC" : this.state.metrics[this.state.currentMetrics[1]];
         nestedData = nestedData.map(nested => ({
             name: nested.key,
             children: nested.values.map(o => {
-                this.max = o.value[this.state.metrics[this.state.currentMetrics[1]]] > this.max ? o.value[this.state.metrics[this.state.currentMetrics[1]]] : this.max;
+                this.max = o.value[metric2] > this.max ? o.value[metric2] : this.max;
+                let value = o.value[metric1] + 0.1;
                 return {
                     name: o.key,
-                    value: o.value[this.state.metrics[this.state.currentMetrics[0]]] + 0.1,
+                    value,
                     mods: o.value.mods,
                     issues_by100LOC: o.value.issues_by100LOC,
+                    majorIssues_by100LOC: o.value.majorIssues_by100LOC,
                     authors: o.value.authors,
                     inDeps: o.value.inDeps,
                     outDeps: o.value.outDeps,
@@ -120,7 +131,7 @@ class Structure extends Component {
             .selectAll("circle")
             .data(root.descendants().slice(1))
             .join("circle")
-            .attr("fill", d => !d.depth ? "#6e6e6e" : this.color(d.data[this.state.metrics[this.state.currentMetrics[1]]]))
+            .attr("fill", d => !d.depth ? "#6e6e6e" : this.color(d.data[metric2]))
             .attr("fill-opacity", d => d.value === 0 ? 0 : 0.25)
             .attr("display", d => d.value === 0 ? "none" : "inline")
             .attr("stroke", d => d.value === 0 ? null : "#1F77B4")
@@ -156,9 +167,9 @@ class Structure extends Component {
             .style("font-weight", d => d.depth === 1 ? "bold" : null)
             .text(d => d.data.name);
 
-        let first = `0 - ${Math.ceil(this.max / 3)} ${this.state.metrics[this.state.currentMetrics[1]]}`;
-        let second = `${Math.ceil(this.max / 3 + 1)} - ${Math.floor(this.max * 2 / 3)} ${this.state.metrics[this.state.currentMetrics[1]]}`;
-        let third = ` ${Math.floor(this.max * 2 / 3 + 1)} - ${this.max} ${this.state.metrics[this.state.currentMetrics[1]]}`;
+        let first = `0 - ${Math.ceil(this.max / 3)} ${metric2}`;
+        let second = `${Math.ceil(this.max / 3 + 1)} - ${Math.floor(this.max * 2 / 3)} ${metric2}`;
+        let third = ` ${Math.floor(this.max * 2 / 3 + 1)} - ${this.max} ${metric2}`;
 
         const legend = svg.append("g")
             .attr("font-family", "sans-serif")
@@ -218,8 +229,7 @@ class Structure extends Component {
                         return d1.data.name === name
                     }
                 )
-            })
-                .attr("fill", "purple");
+            }).attr("fill", "purple");
 
             node.filter(function (d1) {
                 return d.data.outDeps.find(i => {
@@ -227,8 +237,7 @@ class Structure extends Component {
                         return d1.data.name === name
                     }
                 )
-            })
-                .attr("fill", "blue");
+            }).attr("fill", "blue");
 
             node.filter(function (d1) {
                 return !(d.data.outDeps.find(i => {
@@ -240,8 +249,7 @@ class Structure extends Component {
                         return d1.data.name === name
                     }
                 ) || d1 === d)
-            })
-                .attr("fill", "white");
+            }).attr("fill", "white");
         }
 
         function zoomTo(v) {
@@ -306,8 +314,12 @@ class Structure extends Component {
         this.setState({currentMetrics}, this.createSVG)
     }
 
+    hideMinor() {
+        this.setState({showingMinor: !this.state.showingMinor}, this.createSVG);
+    }
+
     render() {
-        const {currentKey, options, metrics, currentMetrics} = this.state;
+        const {currentKey, options, metrics, currentMetrics, showingMinor} = this.state;
         return (
             <div>
                 {options ?
@@ -347,8 +359,12 @@ class Structure extends Component {
                 {currentMetrics && currentMetrics.length === 2 ?
                     <p>{`Circle size is proportional to number of ${metrics[currentMetrics[0]]} on a given file`}<br/>
                         {`Color corresponds to number of ${metrics[currentMetrics[1]]} on a given file`}</p> : ""}
-                <button type="button" className="btn btn-outline-warning" onClick={this.resetDeps}>Reset dependencies
+                <button type="button" className="btn btn-outline-secondary" onClick={this.resetDeps}>Reset dependencies
                 </button>
+                {currentMetrics && currentMetrics.length === 2 && currentMetrics.includes(2) &&
+                <button type="button" className="btn btn-outline-warning"
+                        onClick={this.hideMinor}>{showingMinor ? "Hide minor issues" : "Show minor issues"}
+                </button>}
                 <svg width={700} height={700}
                      ref={(svg) => {
                          this.svg = svg;
