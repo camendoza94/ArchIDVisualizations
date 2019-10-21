@@ -104,7 +104,7 @@ class History extends Component {
         const d = this.props.history[0].data.sort((a, b) => new Date(a.date) - new Date(b.date)).map((c, i) => ({
             x: Date.parse(c.date),
             y: c.issues.reduce((a, b, i) => {
-                if (this.state.categoryH.value !== "clear" && this.state.categoryH.value !== this.state.rules[i].category
+                if ((this.state.categoryH.value !== "clear" && this.state.categoryH.value !== this.state.rules[i].category)
                     || (!this.state.showingMinorH && this.state.rules[i].severity === "Minor"))
                     return a;
                 return a + b;
