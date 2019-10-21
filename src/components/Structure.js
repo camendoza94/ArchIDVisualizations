@@ -35,7 +35,7 @@ class Structure extends Component {
                             file: file.name,
                             package: parts[parts.length - 2],
                             module: file.module,
-                            issues: parseFloat(Number(file.issues.reduce((a, b) => a + b, 0) * 100 / files.find(f => file.name === f.name.split("/")[f.name.split("/").length - 1]).loc).toFixed(2)),
+                            issues_by100LOC: parseFloat(Number(file.issues.reduce((a, b) => a + b, 0) * 100 / files.find(f => file.name === f.name.split("/")[f.name.split("/").length - 1]).loc).toFixed(2)),
                             mods: author.rows,
                             name: author.name,
                             inDeps: file.inDeps,
@@ -52,7 +52,7 @@ class Structure extends Component {
             {value: "layer", label: "layer"},
             {value: "module", label: "module"}
         ];
-        const metrics = ["mods", "authors", "issues", "dependencies"];
+        const metrics = ["mods", "authors", "issues_by100LOC", "dependencies"];
         this.setState({
             options,
             currentKey: options[0],
@@ -70,7 +70,7 @@ class Structure extends Component {
             .key(d => d.file)
             .rollup((leaves) => {
                 return {
-                    "issues": d3.max(leaves, d => d.issues),
+                    "issues_by100LOC": d3.max(leaves, d => d.issues_by100LOC),
                     "mods": d3.sum(leaves, d => d.mods),
                     "authors": d3.max(leaves, d => d.authors),
                     "inDeps": leaves[0].inDeps,
@@ -88,7 +88,7 @@ class Structure extends Component {
                     name: o.key,
                     value: o.value[this.state.metrics[this.state.currentMetrics[0]]] + 0.1,
                     mods: o.value.mods,
-                    issues: o.value.issues,
+                    issues_by100LOC: o.value.issues_by100LOC,
                     authors: o.value.authors,
                     inDeps: o.value.inDeps,
                     outDeps: o.value.outDeps,

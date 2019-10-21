@@ -28,7 +28,7 @@ class Metrics extends Component {
                     layer: layer.name,
                     path: file.path,
                     issuesDetail: file.issuesDetail.map(d => this.props.issues.find(i => i.id === d.id)),
-                    issues: parseFloat(Number(file.issues.reduce((a, b) => a + b, 0) * 100 / files.find(f => file.name === f.name.split("/")[f.name.split("/").length - 1]).loc).toFixed(2)),
+                    issues_by100LOC: parseFloat(Number(file.issues.reduce((a, b) => a + b, 0) * 100 / files.find(f => file.name === f.name.split("/")[f.name.split("/").length - 1]).loc).toFixed(2)),
                     mods: file.children ? file.children.map(a => a.rows).reduce((a, b) => a + b, 0) : 0,
                     inDeps: file.inDeps ? file.inDeps.length : 0,
                     outDeps: file.outDeps ? file.outDeps.length : 0,
@@ -225,7 +225,7 @@ class Metrics extends Component {
                             <h4 className="col-md-2">Weights</h4>
                         </div>
                         <div className="row">
-                            <p className="col-md-2">Issues:</p>
+                            <p className="col-md-2">Issues/100LOC:</p>
                             <div className="col-md-6">
                                 <SliderWithTooltip
                                     style={style}
