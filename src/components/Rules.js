@@ -36,6 +36,7 @@ class Rules extends Component {
                         <th scope="col">Quality Attribute</th>
                         <th scope="col">Issues Total</th>
                         <th scope="col"/>
+                        <th scope="col"/>
                     </tr>
                     </thead>
                     <tbody>
@@ -47,13 +48,17 @@ class Rules extends Component {
                                     <td>{category.title}</td>
                                     <td>{category.qa}</td>
                                     <td>{this.getIssues(category.rules)}</td>
-                                    <td><button className="btn btn-link">View Detail</button></td>
+                                    <td/>
+                                    <td>
+                                        <button className="btn btn-link">View Detail</button>
+                                    </td>
                                 </tr>
                                 <tr className="collapse detail" id={"collapse" + i}>
                                     <th scope="col">#</th>
                                     <th scope="col">Design Decision</th>
                                     <th scope="col">Rule Name</th>
                                     <th scope="col">Issues</th>
+                                    <th scope="col">Severity</th>
                                     <th scope="col">Category</th>
                                 </tr>
                                 {category.rules.map((rule, j) => {
@@ -64,6 +69,7 @@ class Rules extends Component {
                                             <td>{category.title}</td>
                                             <td>{rule.title}</td>
                                             <td>{this.getIssues(rule.id)}</td>
+                                            <td className={rule.severity === "Minor" ? "text-warning" : "text-danger"}>{rule.severity}</td>
                                             <td>{rule.category}</td>
                                         </tr>)
                                 })}
