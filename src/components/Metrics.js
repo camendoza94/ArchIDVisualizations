@@ -15,6 +15,7 @@ class Metrics extends Component {
         this.handleChange = this.handleChange.bind(this);
         this.handleSlider = this.handleSlider.bind(this);
         this.hideMinor = this.hideMinor.bind(this);
+        this.handleCategory = this.handleCategory.bind(this);
     }
 
     componentDidMount() {
@@ -23,6 +24,10 @@ class Metrics extends Component {
         const categorization = this.props.categorization;
         let rules = categorization.decisions.map(d => d.rules);
         rules = [].concat.apply([], rules).sort((a, b) => a.id - b.id);
+        let categories = [{
+            'value': 'clear',
+            'label': 'All'
+        }].concat([...new Set(rules.map(r => r.category))].map(r => ({value: r, label: r})));
         const commits = this.props.currentFiles.data.sort((a, b) => new Date(a.date) - new Date(b.date));
         const files = commits[commits.length - 1].files;
         for (let layer of this.props.projectData.value.children) {
@@ -34,6 +39,10 @@ class Metrics extends Component {
                     issuesDetail: file.issuesDetail.map(d => this.props.issues.find(i => i.id === d.id)),
                     issues_by100LOC: parseFloat(Number(file.issues.reduce((a, b) => a + b, 0) * 100 / files.find(f => file.name === f.name.split("/")[f.name.split("/").length - 1]).loc).toFixed(2)),
                     majorIssues_by100LOC: parseFloat(Number(file.issues.reduce((a, b, i) => rules[i].severity !== "Minor" ? a + b : a, 0) * 100 / files.find(f => file.name === f.name.split("/")[f.name.split("/").length - 1]).loc).toFixed(2)),
+                    bugs_by100LOC: parseFloat(Number(file.issues.reduce((a, b, i) => rules[i].category !== "Bug" ? a + b : a, 0) * 100 / files.find(f => file.name === f.name.split("/")[f.name.split("/").length - 1]).loc).toFixed(2)),
+                    ATDItems_by100LOC: parseFloat(Number(file.issues.reduce((a, b, i) => rules[i].category !== "Architectural" ? a + b : a, 0) * 100 / files.find(f => file.name === f.name.split("/")[f.name.split("/").length - 1]).loc).toFixed(2)),
+                    majorBugs_by100LOC: parseFloat(Number(file.issues.reduce((a, b, i) => rules[i].category !== "Bug" && rules[i].severity !== "Minor" ? a + b : a, 0) * 100 / files.find(f => file.name === f.name.split("/")[f.name.split("/").length - 1]).loc).toFixed(2)),
+                    majorATDItems_by100LOC: parseFloat(Number(file.issues.reduce((a, b, i) => rules[i].category !== "Architectural" && rules[i].severity !== "Minor" ? a + b : a, 0) * 100 / files.find(f => file.name === f.name.split("/")[f.name.split("/").length - 1]).loc).toFixed(2)),
                     mods: file.children ? file.children.map(a => a.rows).reduce((a, b) => a + b, 0) : 0,
                     inDeps: file.inDeps ? file.inDeps.length : 0,
                     outDeps: file.outDeps ? file.outDeps.length : 0,
@@ -43,7 +52,19 @@ class Metrics extends Component {
             }
         }
         const options = [{value: "name", label: "name"}, {value: "layer", label: "layer"}];
-        this.setState({options, currentKey: options[0], data: unnestedData, rules, showingMinor: true}, this.createSVG);
+        this.setState({
+            options,
+            currentKey: options[0],
+            data: unnestedData,
+            rules,
+            showingMinor: true,
+            categories,
+            category: categories[0]
+        }, this.createSVG);
+    }
+
+    handleCategory(category) {
+        this.setState({category}, this.createSVG);
     }
 
     createSVG() {
@@ -51,9 +72,17 @@ class Metrics extends Component {
         const width = 1000;
         let columns = d3.keys(this.state.data[0]).filter(d => {
             if (d === "majorIssues_by100LOC")
-                return !this.state.showingMinor;
-            if (!this.state.showingMinor && d === "issues_by100LOC")
-                return false;
+                return this.state.category.value === "clear" && !this.state.showingMinor;
+            if (d === "bugs_by100LOC")
+                return this.state.category.value === "Bug" && this.state.showingMinor;
+            if (d === "ATDItems_by100LOC")
+                return this.state.category.value === "Architectural" && this.state.showingMinor;
+            if (d === "majorBugs_by100LOC")
+                return this.state.category.value === "Bug" && !this.state.showingMinor;
+            if (d === "majorATDItems_by100LOC")
+                return this.state.category.value === "Architectural" && !this.state.showingMinor;
+            if (d === "issues_by100LOC")
+                return this.state.category.value === "clear" && this.state.showingMinor;
             return d !== this.state.currentKey.label && typeof (this.state.data[0][d]) === "number"
         }).slice(0, 4);
 
@@ -216,7 +245,7 @@ class Metrics extends Component {
     }
 
     render() {
-        const {currentKey, options, coefficients, showingMinor} = this.state;
+        const {currentKey, options, coefficients, showingMinor, categories, category} = this.state;
         const style = {width: 500, margin: 10};
         return (
             <div>
@@ -284,9 +313,21 @@ class Metrics extends Component {
                             </div>
                             <p className="col-md-2">{coefficients[3]}</p>
                         </div>
-                        <button type="button" className="btn btn-outline-warning"
-                                onClick={this.hideMinor}>{showingMinor ? "Hide minor issues" : "Show minor issues"}
-                        </button>
+                        <div className="row">
+                            <hr className="w-100"/>
+                            <h5 className="ml-3">Categories</h5>
+                            <div className="col-md-3">
+                                <Select
+                                    value={category}
+                                    onChange={this.handleCategory}
+                                    options={categories}
+                                    defaultValue={categories[0]}
+                                />
+                            </div>
+                            <button type="button" className="btn btn-outline-warning"
+                                    onClick={this.hideMinor}>{showingMinor ? "Hide minor issues" : "Show minor issues"}
+                            </button>
+                        </div>
                     </div> : ''}
                 <svg
                     ref={(svg) => {
