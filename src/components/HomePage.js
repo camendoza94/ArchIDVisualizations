@@ -115,7 +115,7 @@ class HomePage extends Component {
                            issues={issues} projectData={currentProject}/> : ''}
                 {currentProject && categorization && issues && history && showing && files && showing === 4 ?
                     <Issues categorization={currentCategorization} key={currentProject.label + showing}
-                            issues={issues} projectData={currentProject}/> : ''}
+                            issues={issues} projectData={currentProject} currentFiles={currentFiles}/> : ''}
                 {currentProject && categorization && issues && history && showing && files && currentFiles && showing === 5 ?
                     <History categorization={currentCategorization} key={currentProject.label + showing}
                              issues={issues} projectData={currentProject} history={history}
