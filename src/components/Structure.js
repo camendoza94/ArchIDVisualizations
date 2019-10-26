@@ -20,6 +20,7 @@ class Structure extends Component {
         this.handleCheckboxes = this.handleCheckboxes.bind(this);
         this.checked = this.checked.bind(this);
         this.hideMinor = this.hideMinor.bind(this);
+        this.handleAuthors = this.handleAuthors.bind(this);
     }
 
     componentDidMount() {
@@ -52,6 +53,13 @@ class Structure extends Component {
                 }
             }
         }
+        const authors = [{
+            'value': 'clear',
+            'label': 'All'
+        }].concat([...new Set(unnestedData.map(f => f.name.charAt(0).toUpperCase() + f.name.slice(1)))].map(a => ({
+            value: a,
+            label: a
+        })));
         const options = [
             {value: "package", label: "package"},
             {value: "layer", label: "layer"},
@@ -60,6 +68,8 @@ class Structure extends Component {
         const metrics = ["mods", "authors", "issues_by100LOC", "dependencies"];
         this.setState({
             options,
+            authors,
+            author: authors[0],
             currentKey: options[0],
             metrics,
             currentMetrics: [3, 2],
@@ -76,6 +86,7 @@ class Structure extends Component {
             .key(d => d.file)
             .rollup((leaves) => {
                 return {
+                    "authorsDetail": leaves.map(f => f.name),
                     "issues_by100LOC": d3.max(leaves, d => d.issues_by100LOC),
                     "majorIssues_by100LOC": d3.max(leaves, d => d.majorIssues_by100LOC),
                     "mods": d3.sum(leaves, d => d.mods),
@@ -97,6 +108,7 @@ class Structure extends Component {
                 return {
                     name: o.key,
                     value,
+                    authorsDetail: o.value.authorsDetail,
                     mods: o.value.mods,
                     issues_by100LOC: o.value.issues_by100LOC,
                     majorIssues_by100LOC: o.value.majorIssues_by100LOC,
@@ -197,6 +209,36 @@ class Structure extends Component {
             .attr("dy", "0.32em")
             .text(d => d);
 
+        if (this.state.author.value !== "clear") {
+            legend.selectAll("*").remove();
+            const legend2 = svg.append("g")
+                .attr("font-family", "sans-serif")
+                .attr("font-size", 10)
+                .attr("text-anchor", "end")
+                .selectAll("g")
+                .data(["Sole author", "Co-author"])
+                .join("g")
+                .attr("transform", function (d, i) {
+                    return "translate(-50," + (-350 + (i * 20)) + ")";
+                });
+            legend2.append("rect")
+                .attr("class", "legend")
+                .attr("x", iwidth - 19)
+                .attr("width", 19)
+                .attr("height", 19)
+                .attr("fill", (d, i) => i === 0 ? "red" : "yellow");
+            legend2.append("text")
+                .attr("x", iwidth - 24)
+                .attr("y", 9.5)
+                .attr("dy", "0.32em")
+                .text(d => d);
+
+            node.filter(d => d.depth === 2 && d.data.authorsDetail.length === 1 && d.data.authorsDetail.find(a => a === this.state.author.value)).attr("fill", "red");
+            node.filter(d => d.depth === 2 && d.data.authorsDetail.length !== 1 && d.data.authorsDetail.find(a => a === this.state.author.value)).attr("fill", "yellow");
+            node.filter(d => d.depth === 2 && !d.data.authorsDetail.find(a => a === this.state.author.value)).attr("fill", "white");
+
+        }
+
         zoomTo([root.x, root.y, root.r * 2]);
 
         function showDependencies(d) {
@@ -292,6 +334,10 @@ class Structure extends Component {
         this.setState({currentKey}, this.createSVG)
     }
 
+    handleAuthors(author) {
+        this.setState({author}, this.createSVG)
+    }
+
     resetDeps() {
         this.setState({showing: null}, this.createSVG)
     }
@@ -319,7 +365,7 @@ class Structure extends Component {
     }
 
     render() {
-        const {currentKey, options, metrics, currentMetrics, showingMinor} = this.state;
+        const {currentKey, options, metrics, currentMetrics, showingMinor, authors, author} = this.state;
         return (
             <div>
                 {options ?
@@ -359,12 +405,25 @@ class Structure extends Component {
                 {currentMetrics && currentMetrics.length === 2 ?
                     <p>{`Circle size is proportional to number of ${metrics[currentMetrics[0]]} on a given file`}<br/>
                         {`Color corresponds to number of ${metrics[currentMetrics[1]]} on a given file`}</p> : ""}
-                <button type="button" className="btn btn-outline-secondary" onClick={this.resetDeps}>Reset dependencies
-                </button>
-                {currentMetrics && currentMetrics.length === 2 && currentMetrics.includes(2) &&
-                <button type="button" className="btn btn-outline-warning"
-                        onClick={this.hideMinor}>{showingMinor ? "Hide minor issues" : "Show minor issues"}
-                </button>}
+                {authors && <div className="row mb-3">
+                    <hr className="w-100"/>
+                    <h5 className="ml-3">Authors</h5>
+                    <div className="col-md-3">
+                        <Select
+                            value={author}
+                            onChange={this.handleAuthors}
+                            options={authors}
+                            defaultValue={authors[0]}
+                        />
+                    </div>
+                    <button type="button" className="btn btn-outline-secondary" onClick={this.resetDeps}>Reset
+                        dependencies
+                    </button>
+                    {currentMetrics && currentMetrics.length === 2 && currentMetrics.includes(2) &&
+                    <button type="button" className="btn btn-outline-warning"
+                            onClick={this.hideMinor}>{showingMinor ? "Hide minor issues" : "Show minor issues"}
+                    </button>}
+                </div>}
                 <svg width={700} height={700}
                      ref={(svg) => {
                          this.svg = svg;

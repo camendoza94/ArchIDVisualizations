@@ -261,7 +261,7 @@ class History extends Component {
                         <button type="button" className="btn btn-outline-warning"
                                 onClick={this.hideMinor}>{showingMinor ? "Hide minor issues" : "Show minor issues"}
                         </button>
-                        <h1 className="text-center col-md-12">Most common violations throughout the semester</h1>
+                        <h1 className="text-center col-md-12">Most common violations through time</h1>
                         <Line ref={(reference) => this.chartReference = reference} data={dataIssues}
                               options={optionsIssues}/>
                         <hr className="w-100"/>
