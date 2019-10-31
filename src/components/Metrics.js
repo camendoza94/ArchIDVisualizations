@@ -41,10 +41,10 @@ class Metrics extends Component {
                     issuesDetail: file.issuesDetail.map(d => this.props.issues.find(i => i.id === d.id)),
                     issues_by100LOC: parseFloat(Number(file.issues.reduce((a, b) => a + b, 0) * 100 / loc).toFixed(2)),
                     majorIssues_by100LOC: parseFloat(Number(file.issues.reduce((a, b, i) => rules[i].severity !== "Minor" ? a + b : a, 0) * 100 / loc).toFixed(2)),
-                    bugs_by100LOC: parseFloat(Number(file.issues.reduce((a, b, i) => rules[i].category !== "Bug" ? a + b : a, 0) * 100 / loc).toFixed(2)),
-                    ATDItems_by100LOC: parseFloat(Number(file.issues.reduce((a, b, i) => rules[i].category !== "Architectural" ? a + b : a, 0) * 100 / loc).toFixed(2)),
-                    majorBugs_by100LOC: parseFloat(Number(file.issues.reduce((a, b, i) => rules[i].category !== "Bug" && rules[i].severity !== "Minor" ? a + b : a, 0) * 100 / loc).toFixed(2)),
-                    majorATDItems_by100LOC: parseFloat(Number(file.issues.reduce((a, b, i) => rules[i].category !== "Architectural" && rules[i].severity !== "Minor" ? a + b : a, 0) * 100 / loc).toFixed(2)),
+                    bugs_by100LOC: parseFloat(Number(file.issues.reduce((a, b, i) => rules[i].category === "Bug" ? a + b : a, 0) * 100 / loc).toFixed(2)),
+                    ATDItems_by100LOC: parseFloat(Number(file.issues.reduce((a, b, i) => (rules[i].category === "Architectural" || rules[i].category === "ATD Item") ? a + b : a, 0) * 100 / loc).toFixed(2)),
+                    majorBugs_by100LOC: parseFloat(Number(file.issues.reduce((a, b, i) => rules[i].category === "Bug" && rules[i].severity !== "Minor" ? a + b : a, 0) * 100 / loc).toFixed(2)),
+                    majorATDItems_by100LOC: parseFloat(Number(file.issues.reduce((a, b, i) => (rules[i].category === "Architectural" || rules[i].category === "ATD Item") && rules[i].severity !== "Minor" ? a + b : a, 0) * 100 / loc).toFixed(2)),
                     mods: file.children ? file.children.map(a => a.rows).reduce((a, b) => a + b, 0) : 0,
                     inDeps: file.inDeps ? file.inDeps.length : 0,
                     outDeps: file.outDeps ? file.outDeps.length : 0,
@@ -78,11 +78,11 @@ class Metrics extends Component {
             if (d === "bugs_by100LOC")
                 return this.state.category.value === "Bug" && this.state.showingMinor;
             if (d === "ATDItems_by100LOC")
-                return this.state.category.value === "Architectural" && this.state.showingMinor;
+                return this.state.category.value === "Architectural" || this.state.category.value === "ATD Item" && this.state.showingMinor;
             if (d === "majorBugs_by100LOC")
                 return this.state.category.value === "Bug" && !this.state.showingMinor;
             if (d === "majorATDItems_by100LOC")
-                return this.state.category.value === "Architectural" && !this.state.showingMinor;
+                return this.state.category.value === "Architectural" || this.state.category.value === "ATD Item" && !this.state.showingMinor;
             if (d === "issues_by100LOC")
                 return this.state.category.value === "clear" && this.state.showingMinor;
             return d !== this.state.currentKey.label && typeof (this.state.data[0][d]) === "number"

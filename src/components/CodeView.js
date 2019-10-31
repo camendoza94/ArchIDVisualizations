@@ -18,14 +18,14 @@ class CodeView extends Component {
         if (url.includes("azure"))
             getFromAzure(url, path).then(contents => this.setState({contents}, this.highlight));
         else
-            getFromGithub(url, path).then(contents => this.setState({contents}, this.highlight));
+            getFromGithub(url, path).then(data => this.setState({contents: atob(data.content)}, this.highlight))
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
         document.querySelectorAll(".warning").forEach((n, i) => {
             let newNode = document.createElement("span");
             newNode.className = "tooltiptext";
-            newNode.innerHTML =  this.props.location.state.rules.find(r => r.id === this.props.location.state.issuesDetail[i].rule).title;
+            newNode.innerHTML = this.props.location.state.rules.find(r => r.id === this.props.location.state.issuesDetail[i].rule).title;
             for (let j = 0; i + j < this.state.highlight.length; j++) {
                 let currentLine = this.state.highlight[j + i];
                 if (currentLine === this.state.highlight[j + i + 1]) {
@@ -42,7 +42,6 @@ class CodeView extends Component {
         let lines = [];
         let start = 0;
         let line = 0;
-        console.log(this.state.contents);
         this.props.location.state.issuesDetail.forEach(i => {
             let re = new RegExp(`(private|public) \\S* ${i.description}`, "g");
             if (i.description === "Class")
