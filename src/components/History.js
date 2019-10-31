@@ -101,7 +101,7 @@ class History extends Component {
             }
         };
         const locs = this.props.currentFiles.data.sort((a, b) => new Date(a.date) - new Date(b.date)).map(c => c.loc);
-        const d = this.props.history[0].data.sort((a, b) => new Date(a.date) - new Date(b.date)).map((c, i) => ({
+        const d = this.props.currentHistory.data.sort((a, b) => new Date(a.date) - new Date(b.date)).map((c, i) => ({
             x: Date.parse(c.date),
             y: c.issues.reduce((a, b, i) => {
                 if ((this.state.categoryH.value !== "clear" && this.state.categoryH.value !== this.state.rules[i].category)
@@ -109,9 +109,9 @@ class History extends Component {
                     return a;
                 return a + b;
             }, 0) * 1000 / locs[i]
-        })); //TODO history of current project.
+        }));
         data.datasets.push({
-            label: this.props.history[0].name,
+            label: this.props.currentHistory.name,
             fill: false,
             lineTension: 0,
             backgroundColor: "rgb(204,41,41)",
@@ -138,7 +138,7 @@ class History extends Component {
     }
 
     renderIssues() {
-        const sortedData = this.props.history[0].data.sort((a, b) => new Date(a.date) - new Date(b.date));
+        const sortedData = this.props.currentHistory.data.sort((a, b) => new Date(a.date) - new Date(b.date));
         const issues = sortedData[sortedData.length - 1].issues;
         const names = this.state.rules.map(r => r.title);
         const backgroundColors = d3.schemeSet1.concat(d3.schemeSet2);
@@ -191,7 +191,7 @@ class History extends Component {
         let rules = this.props.categorization.decisions.map(d => d.rules);
         rules = [].concat.apply([], rules).sort((a, b) => a.id - b.id).map(r => r.title);
         const backgroundColors = d3.schemeSet1.concat(d3.schemeSet2);
-        const d = this.props.history[0].data.sort((a, b) => new Date(a.date) - new Date(b.date));
+        const d = this.props.currentHistory.data.sort((a, b) => new Date(a.date) - new Date(b.date));
         rules.forEach((name, i) => {
             let color = backgroundColors[i];
             data.datasets.push({

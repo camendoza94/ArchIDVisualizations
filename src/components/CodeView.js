@@ -1,5 +1,5 @@
 import React, {Component, Fragment} from 'react';
-import {getFromAzure} from "../api";
+import {getFromAzure, getFromGithub} from "../api";
 import SyntaxHighlighter from 'react-syntax-highlighter';
 import {darcula} from 'react-syntax-highlighter/dist/esm/styles/hljs';
 
@@ -17,6 +17,8 @@ class CodeView extends Component {
         path = path.substring(2);
         if (url.includes("azure"))
             getFromAzure(url, path).then(contents => this.setState({contents}, this.highlight));
+        else
+            getFromGithub(url, path).then(contents => this.setState({contents}, this.highlight));
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
@@ -40,6 +42,7 @@ class CodeView extends Component {
         let lines = [];
         let start = 0;
         let line = 0;
+        console.log(this.state.contents);
         this.props.location.state.issuesDetail.forEach(i => {
             let re = new RegExp(`(private|public) \\S* ${i.description}`, "g");
             if (i.description === "Class")

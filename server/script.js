@@ -8,7 +8,8 @@ let currentData = {};
 const addSocialAndLocs = async () => {
     let projectData = data.find(project => project.name === require('path').basename(process.cwd())).data.sort((a, b) => new Date(a.date) - new Date(b.date));
     currentData = projectData[projectData.length - 1];
-    const loc = execSync(`cloc cpe-seguridad-api --by-file-by-lang`).toString();
+    const commitId = currentData.commitId;
+    const loc = execSync(`cloc ${commitId} --by-file-by-lang`).toString();
     const eData = JSON.parse(fs.readFileSync('./inspector.json', 'utf8').trim());
     const projectLocJava = loc.substring(loc.indexOf("Java "));
     const projectLocLine = projectLocJava.substring(0, projectLocJava.indexOf("\n"));

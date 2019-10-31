@@ -58,9 +58,11 @@ export function getFromGithub(url, path) {
     const parts = url.split("/");
     const owner = parts[parts.length - 2];
     const repo = parts[parts.length - 1];
-    clientWithAuth.repos.getContents({
+    return clientWithAuth.repos.getContents({
         owner,
         repo,
         path
-    }).then(response => console.log(response)) //TODO return response
+    }).then(response => {
+        return response.data;
+    });
 }

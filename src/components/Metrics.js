@@ -32,17 +32,19 @@ class Metrics extends Component {
         const files = commits[commits.length - 1].files;
         for (let layer of this.props.projectData.value.children) {
             for (let file of layer.children) {
+                let f = files.find(f => file.name === f.name.split("/")[f.name.split("/").length - 1]);
+                let loc = (f && f.loc) || 1;
                 this.max = file.size > this.max ? file.size : this.max;
                 unnestedData.push({
                     layer: layer.name,
                     path: file.path,
                     issuesDetail: file.issuesDetail.map(d => this.props.issues.find(i => i.id === d.id)),
-                    issues_by100LOC: parseFloat(Number(file.issues.reduce((a, b) => a + b, 0) * 100 / files.find(f => file.name === f.name.split("/")[f.name.split("/").length - 1]).loc).toFixed(2)),
-                    majorIssues_by100LOC: parseFloat(Number(file.issues.reduce((a, b, i) => rules[i].severity !== "Minor" ? a + b : a, 0) * 100 / files.find(f => file.name === f.name.split("/")[f.name.split("/").length - 1]).loc).toFixed(2)),
-                    bugs_by100LOC: parseFloat(Number(file.issues.reduce((a, b, i) => rules[i].category !== "Bug" ? a + b : a, 0) * 100 / files.find(f => file.name === f.name.split("/")[f.name.split("/").length - 1]).loc).toFixed(2)),
-                    ATDItems_by100LOC: parseFloat(Number(file.issues.reduce((a, b, i) => rules[i].category !== "Architectural" ? a + b : a, 0) * 100 / files.find(f => file.name === f.name.split("/")[f.name.split("/").length - 1]).loc).toFixed(2)),
-                    majorBugs_by100LOC: parseFloat(Number(file.issues.reduce((a, b, i) => rules[i].category !== "Bug" && rules[i].severity !== "Minor" ? a + b : a, 0) * 100 / files.find(f => file.name === f.name.split("/")[f.name.split("/").length - 1]).loc).toFixed(2)),
-                    majorATDItems_by100LOC: parseFloat(Number(file.issues.reduce((a, b, i) => rules[i].category !== "Architectural" && rules[i].severity !== "Minor" ? a + b : a, 0) * 100 / files.find(f => file.name === f.name.split("/")[f.name.split("/").length - 1]).loc).toFixed(2)),
+                    issues_by100LOC: parseFloat(Number(file.issues.reduce((a, b) => a + b, 0) * 100 / loc).toFixed(2)),
+                    majorIssues_by100LOC: parseFloat(Number(file.issues.reduce((a, b, i) => rules[i].severity !== "Minor" ? a + b : a, 0) * 100 / loc).toFixed(2)),
+                    bugs_by100LOC: parseFloat(Number(file.issues.reduce((a, b, i) => rules[i].category !== "Bug" ? a + b : a, 0) * 100 / loc).toFixed(2)),
+                    ATDItems_by100LOC: parseFloat(Number(file.issues.reduce((a, b, i) => rules[i].category !== "Architectural" ? a + b : a, 0) * 100 / loc).toFixed(2)),
+                    majorBugs_by100LOC: parseFloat(Number(file.issues.reduce((a, b, i) => rules[i].category !== "Bug" && rules[i].severity !== "Minor" ? a + b : a, 0) * 100 / loc).toFixed(2)),
+                    majorATDItems_by100LOC: parseFloat(Number(file.issues.reduce((a, b, i) => rules[i].category !== "Architectural" && rules[i].severity !== "Minor" ? a + b : a, 0) * 100 / loc).toFixed(2)),
                     mods: file.children ? file.children.map(a => a.rows).reduce((a, b) => a + b, 0) : 0,
                     inDeps: file.inDeps ? file.inDeps.length : 0,
                     outDeps: file.outDeps ? file.outDeps.length : 0,

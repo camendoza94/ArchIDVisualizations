@@ -19,7 +19,7 @@ class HomePage extends Component {
 
     componentDidMount() {
         getProjects().then(projects => {
-            projects = projects.filter(p => p.name === "DemoProyectoJava");
+            projects.sort((a,b) => (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0));
             let options = projects.map(project => {
                     return {value: project, label: project.name}
                 }
@@ -30,6 +30,7 @@ class HomePage extends Component {
 
     getCats() {
         getCategorization().then(projects => {
+            projects.sort((a,b) => (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0));
             this.setState({
                 categorization: projects,
                 currentCategorization: projects.find(c => c.name === this.state.currentProject.label) || projects[0]
@@ -47,27 +48,30 @@ class HomePage extends Component {
 
     getHistory() {
         getHistory().then(history => {
-            history = history.filter(p => p.name === "DemoProyectoJava");
+            history.sort((a,b) => (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0));
             this.setState({
-                history
+                history,
+                currentHistory: history[0]
             }, this.getFiles)
         })
     }
 
     getFiles() {
         getFiles().then(files => {
-            files = files.filter(p => p.name === "DemoProyectoJava");
+            files.sort((a,b) => (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0));
             this.setState({files, currentFiles: files[0]})
         })
     }
 
     handleChange(currentProject) {
         const currentCategorization = this.state.categorization.find(c => c.name === currentProject.label) || this.state.categorization[0];
-        const currentFiles = this.state.files.find(c => c.name === currentProject.label) || this.state.categorization[0];
+        const currentFiles = this.state.files.find(c => c.name === currentProject.label) || this.state.files[0];
+        const currentHistory = this.state.history.find(c => c.name === currentProject.label) || this.state.history[0];
         this.setState({
             currentProject: currentProject,
             currentCategorization,
-            currentFiles
+            currentFiles,
+            currentHistory
         })
     }
 
@@ -76,7 +80,7 @@ class HomePage extends Component {
     }
 
     render() {
-        const {currentProject, options, categorization, currentCategorization, issues, showing, history, files, currentFiles} = this.state;
+        const {currentProject, options, categorization, currentCategorization, issues, showing, history, files, currentFiles, currentHistory} = this.state;
         return (
             <div className="container">
                 <h1>ArchID</h1>
@@ -92,7 +96,7 @@ class HomePage extends Component {
                     <button type="button" className="btn btn-outline-info" onClick={() => this.setViz(5)}>History
                     </button>
                 </div>
-                {options && categorization && issues && showing && history ?
+                {options && categorization && issues && showing && history && currentHistory && files ?
                     <div className="row">
                         <h4 className="col-md-2">Project</h4>
                         <div className="col-md-6">
@@ -116,9 +120,9 @@ class HomePage extends Component {
                 {currentProject && categorization && issues && history && showing && files && showing === 4 ?
                     <Issues categorization={currentCategorization} key={currentProject.label + showing}
                             issues={issues} projectData={currentProject} currentFiles={currentFiles}/> : ''}
-                {currentProject && categorization && issues && history && showing && files && currentFiles && showing === 5 ?
+                {currentProject && categorization && issues && history && showing && files && currentFiles && showing === 5  && currentHistory ?
                     <History categorization={currentCategorization} key={currentProject.label + showing}
-                             issues={issues} projectData={currentProject} history={history}
+                             issues={issues} projectData={currentProject} currentHistory={currentHistory}
                              currentFiles={currentFiles}/> : ''}
             </div>
         );
