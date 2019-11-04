@@ -48,6 +48,7 @@ class Metrics extends Component {
                     mods: file.children ? file.children.map(a => a.rows).reduce((a, b) => a + b, 0) : 0,
                     inDeps: file.inDeps ? file.inDeps.length : 0,
                     outDeps: file.outDeps ? file.outDeps.length : 0,
+                    loc,
                     name: file.name
                 })
 
@@ -93,6 +94,7 @@ class Metrics extends Component {
             const ret = {};
             ret[this.state.currentKey.label] = d[this.state.currentKey.label];
             ret._total = 0;
+            ret.loc = d.loc;
             columns.forEach((col) => {
                 ret[col] = (d[col] || 0);
                 ret._total += ret[col];
@@ -100,14 +102,19 @@ class Metrics extends Component {
             let existing = adjustedData.find(c => c[this.state.currentKey.label] === ret[this.state.currentKey.label]);
             if (existing) {
                 columns.forEach(col => {
-                    existing[col] += ret[col];
+                    if (col.endsWith("_by100LOC")) {
+                        let newIssues = ret[col] * ret.loc / 100;
+                        let oldIssues = existing[col] * existing.loc / 100;
+                        existing[col] = (newIssues + oldIssues) / (existing.loc + ret.loc)
+                    } else
+                        existing[col] += ret[col];
                     existing._total += ret[col];
                 });
+                existing.loc += ret.loc;
             } else {
                 adjustedData.push(ret);
             }
         });
-
         let scales = columns.map((col, i) =>
             d3.scaleLinear()
                 .domain([0, d3.max(adjustedData, e => e[col])])
