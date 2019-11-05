@@ -95,7 +95,7 @@ class History extends Component {
                     type: 'time',
                     distribution: 'linear',
                     time: {
-                        unit: 'month'
+                        unit: 'week'
                     }
                 }]
             }
