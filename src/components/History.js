@@ -43,16 +43,16 @@ class History extends Component {
     handleCategoryIssuesHistory(categoryIH) {
         this.chartReference.chartInstance.config.data.datasets.forEach((d, i) => {
             if (categoryIH.value !== "clear" && this.state.rules[i].category !== categoryIH.value)
-                d._meta["1"].hidden = true;
+                this.chartReference.chartInstance.getDatasetMeta(i).hidden = true;
             else if (categoryIH.value === "clear" || (categoryIH.value !== "clear" && this.state.rules[i].category === categoryIH.value))
-                d._meta["1"].hidden = (!this.state.showingMinor && this.state.rules[i].severity === "Minor");
+                this.chartReference.chartInstance.getDatasetMeta(i).hidden = (!this.state.showingMinor && this.state.rules[i].severity === "Minor");
         });
         this.chartReference.chartInstance.update();
         this.setState({categoryIH});
     }
 
     handleCategoryIssues(categoryI) {
-        this.chartReferenceD.chartInstance.config.data.datasets[0]._meta["2"].data.forEach((d, i) => {
+        this.chartReferenceD.chartInstance.getDatasetMeta(0).data.forEach((d, i) => {
             if (categoryI.value !== "clear" && this.state.rules[i].category !== categoryI.value)
                 d.hidden = true;
             else if (categoryI.value === "clear" || (categoryI.value !== "clear" && this.state.rules[i].category === categoryI.value))
@@ -141,7 +141,7 @@ class History extends Component {
         const sortedData = this.props.currentHistory.data.sort((a, b) => new Date(a.date) - new Date(b.date));
         const issues = sortedData[sortedData.length - 1].issues;
         const names = this.state.rules.map(r => r.title);
-        const backgroundColors = d3.schemeSet1.concat(d3.schemeSet2);
+        const backgroundColors = d3.schemeSet1.concat(d3.schemeSet2).concat(d3.schemeSet3);
         let stats = {
             labels: names,
             datasets: [{
@@ -190,7 +190,7 @@ class History extends Component {
         };
         let rules = this.props.categorization.decisions.map(d => d.rules);
         rules = [].concat.apply([], rules).sort((a, b) => a.id - b.id).map(r => r.title);
-        const backgroundColors = d3.schemeSet1.concat(d3.schemeSet2);
+        const backgroundColors = d3.schemeSet1.concat(d3.schemeSet2).concat(d3.schemeSet3);
         const d = this.props.currentHistory.data.sort((a, b) => new Date(a.date) - new Date(b.date));
         rules.forEach((name, i) => {
             let color = backgroundColors[i];
