@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import {Link} from "react-router-dom";
+import IssueDetail from "./IssueDetail";
 
 class Issues extends Component {
 
@@ -89,22 +90,7 @@ class Issues extends Component {
                             <div id={"collapse" + i} className="collapse" aria-labelledby={"heading" + i}
                                  data-parent="#accordion">
                                 {file.issuesDetail.map((issue, index) => {
-                                    return <div key={"issue" + issue.rule + "file" + i + "index" + index}
-                                                className="card-body">
-                                        <div className="card">
-                                            <div className="card-body">
-                                                <h5 className={rules[issue.rule - 1].severity === "Minor" ? "card-title text-warning" : "card-title text-danger"}>{rules[issue.rule - 1].title}<span
-                                                    className="small ml-2 text-body">{issue.description === "Class" ? issue.description : issue.description + "()"}</span>
-                                                </h5>
-                                                <h6 className="card-subtitle mb-2 text-muted">
-                                                    <i className="material-icons">bug_report</i>
-                                                    {rules[issue.rule - 1].category}
-                                                    <i className="material-icons">warning</i>
-                                                    {rules[issue.rule - 1].severity}
-                                                </h6>
-                                            </div>
-                                        </div>
-                                    </div>
+                                    return <IssueDetail issue={issue} index={index} fileIndex={i} rules={rules}/>
                                 })}
                             </div>
                         </div>

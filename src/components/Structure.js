@@ -1,6 +1,7 @@
 import React, {Component, Fragment} from 'react';
 import * as d3 from "d3";
 import Select from "react-select";
+import IssueDetail from "./IssueDetail";
 
 class Structure extends Component {
 
@@ -40,6 +41,7 @@ class Structure extends Component {
                             file: file.name,
                             package: parts[parts.length - 2],
                             module: file.module,
+                            issuesDetail: file.issuesDetail.map(d => this.props.issues.find(i => i.id === d.id)),
                             majorIssues_by100LOC: parseFloat(Number(file.issues.reduce((a, b, i) => rules[i].severity !== "Minor" ? a + b : a, 0) * 100 / files.find(f => file.name === f.name.split("/")[f.name.split("/").length - 1]).loc).toFixed(2)),
                             issues_by100LOC: parseFloat(Number(file.issues.reduce((a, b) => a + b, 0) * 100 / files.find(f => file.name === f.name.split("/")[f.name.split("/").length - 1]).loc).toFixed(2)),
                             mods: author.rows,
@@ -69,6 +71,7 @@ class Structure extends Component {
         this.setState({
             options,
             authors,
+            rules,
             author: authors[0],
             currentKey: options[0],
             metrics,
@@ -93,7 +96,8 @@ class Structure extends Component {
                     "authors": d3.max(leaves, d => d.authors),
                     "inDeps": leaves[0].inDeps,
                     "outDeps": leaves[0].outDeps,
-                    "dependencies": leaves[0].dependencies
+                    "dependencies": leaves[0].dependencies,
+                    "issuesDetail": leaves[0].issuesDetail
                 }
             })
             .entries(this.state.data);
@@ -115,7 +119,8 @@ class Structure extends Component {
                     authors: o.value.authors,
                     inDeps: o.value.inDeps,
                     outDeps: o.value.outDeps,
-                    dependencies: o.value.dependencies
+                    dependencies: o.value.dependencies,
+                    issuesDetail: o.value.issuesDetail
 
                 }
             })
@@ -365,7 +370,7 @@ class Structure extends Component {
     }
 
     render() {
-        const {currentKey, options, metrics, currentMetrics, showingMinor, authors, author} = this.state;
+        const {currentKey, options, metrics, currentMetrics, showingMinor, authors, author, showing, rules} = this.state;
         return (
             <div>
                 {options ?
@@ -424,11 +429,22 @@ class Structure extends Component {
                             onClick={this.hideMinor}>{showingMinor ? "Hide minor issues" : "Show minor issues"}
                     </button>}
                 </div>}
-                <svg width={700} height={700}
-                     ref={(svg) => {
-                         this.svg = svg;
-                     }}>
-                </svg>
+                <div className="row">
+                    <div className="col-md-7 col-sm-12">
+                        <svg width={700} height={700}
+                             ref={(svg) => {
+                                 this.svg = svg;
+                             }}>
+                        </svg>
+                    </div>
+                    <div className="col-md-4 col-sm-12 ml-5">
+                        {showing ? <h3>Issues in file: {showing.data.name}</h3> : ""}
+                        {showing && showing.data.issuesDetail && showing.data.issuesDetail.map((issue, index) => {
+                            return <IssueDetail issue={issue} index={index} fileIndex={1} rules={rules}/>
+                        })}
+                        {showing && showing.data.issuesDetail.length === 0 && <p>No issues on this file</p>}
+                    </div>
+                </div>
             </div>
         )
     }
