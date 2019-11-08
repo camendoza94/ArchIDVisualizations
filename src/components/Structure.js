@@ -2,6 +2,7 @@ import React, {Component, Fragment} from 'react';
 import * as d3 from "d3";
 import Select from "react-select";
 import IssueDetail from "./IssueDetail";
+import {Link} from "react-router-dom";
 
 class Structure extends Component {
 
@@ -39,6 +40,7 @@ class Structure extends Component {
                         unnestedData.push({
                             layer: layer.name,
                             file: file.name,
+                            path: file.path,
                             package: parts[parts.length - 2],
                             module: file.module,
                             issuesDetail: file.issuesDetail.map(d => this.props.issues.find(i => i.id === d.id)),
@@ -97,7 +99,8 @@ class Structure extends Component {
                     "inDeps": leaves[0].inDeps,
                     "outDeps": leaves[0].outDeps,
                     "dependencies": leaves[0].dependencies,
-                    "issuesDetail": leaves[0].issuesDetail
+                    "issuesDetail": leaves[0].issuesDetail,
+                    "path": leaves[0].path
                 }
             })
             .entries(this.state.data);
@@ -120,7 +123,8 @@ class Structure extends Component {
                     inDeps: o.value.inDeps,
                     outDeps: o.value.outDeps,
                     dependencies: o.value.dependencies,
-                    issuesDetail: o.value.issuesDetail
+                    issuesDetail: o.value.issuesDetail,
+                    path: o.value.path
 
                 }
             })
@@ -438,7 +442,20 @@ class Structure extends Component {
                         </svg>
                     </div>
                     <div className="col-md-4 col-sm-12 ml-5">
-                        {showing ? <h3>Issues in file: {showing.data.name}</h3> : ""}
+                        {showing ? <div>
+                            <h3>Issues in file: {showing.data.name}</h3>
+                            <Link className="mt-2 col-md-2" to={{
+                                pathname: `/repo/${this.props.projectData.label}/file/${showing.data.name}`,
+                                state: {
+                                    path: showing.data.path,
+                                    issuesDetail: showing.data.issuesDetail,
+                                    rules,
+                                    repo: this.props.projectData.value.repo
+                                }
+                            }}>
+                                <i className="material-icons">file_copy</i> Go to source
+                            </Link>
+                        </div> : ""}
                         {showing && showing.data.issuesDetail && showing.data.issuesDetail.map((issue, index) => {
                             return <IssueDetail issue={issue} index={index} fileIndex={1} rules={rules}/>
                         })}
