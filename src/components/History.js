@@ -14,6 +14,7 @@ class History extends Component {
         this.handleCategoryHistory = this.handleCategoryHistory.bind(this);
         this.handleCategoryIssuesHistory = this.handleCategoryIssuesHistory.bind(this);
         this.handleCategoryIssues = this.handleCategoryIssues.bind(this);
+        this.handleModuleIssuesHistory = this.handleModuleIssuesHistory.bind(this);
     }
 
     componentDidMount() {
@@ -23,9 +24,15 @@ class History extends Component {
             'value': 'clear',
             'label': 'All'
         }].concat([...new Set(rules.map(r => r.category))].map(r => ({value: r, label: r})));
+        let modules = [{
+            'value': 'clear',
+            'label': 'All'
+        }].concat([...new Set(rules.map(r => r.module))].map(r => ({value: r, label: r})));
         this.setState({
             rules,
             categories,
+            modules,
+            module: modules[0],
             categoryH: categories[0],
             categoryIH: categories[0],
             categoryI: categories[0]
@@ -49,6 +56,17 @@ class History extends Component {
         });
         this.chartReference.chartInstance.update();
         this.setState({categoryIH});
+    }
+
+    handleModuleIssuesHistory(module) {
+        this.chartReference.chartInstance.config.data.datasets.forEach((d, i) => {
+            if (module.value !== "clear" && this.state.rules[i].module !== module.value)
+                this.chartReference.chartInstance.getDatasetMeta(i).hidden = true;
+            else if (module.value === "clear" || (module.value !== "clear" && this.state.rules[i].module === module.value))
+                this.chartReference.chartInstance.getDatasetMeta(i).hidden = (!this.state.showingMinor && this.state.rules[i].severity === "Minor") || (this.state.categoryIH.value !== "clear" && this.state.rules[i].category !== this.state.categoryIH.value);
+        });
+        this.chartReference.chartInstance.update();
+        this.setState({module});
     }
 
     handleCategoryIssues(categoryI) {
@@ -228,7 +246,7 @@ class History extends Component {
     }
 
     render() {
-        const {data, options, issues, dataIssues, optionsIssues, rules, showingMinor, showingMinorD, showingMinorH, categoryH, categories, categoryIH, categoryI} = this.state;
+        const {data, options, issues, dataIssues, optionsIssues, rules, showingMinor, showingMinorD, showingMinorH, categoryH, categories, categoryIH, categoryI, modules, module} = this.state;
         return (
             <div className={"row"}>
                 {data && options && issues && dataIssues && optionsIssues && rules && categoryH && categories && categoryIH && categoryI ?
@@ -256,6 +274,15 @@ class History extends Component {
                                 onChange={this.handleCategoryIssuesHistory}
                                 options={categories}
                                 defaultValue={categories[0]}
+                            />
+                        </div>
+                        <h5 className="ml-4">Modules</h5>
+                        <div className="col-md-3">
+                            <Select
+                                value={module}
+                                onChange={this.handleModuleIssuesHistory}
+                                options={modules}
+                                defaultValue={modules[0]}
                             />
                         </div>
                         <button type="button" className="btn btn-outline-warning"
