@@ -67,7 +67,7 @@ class Rules extends Component {
                                         <tr key={"d" + i + j} className="collapse detail" id={"collapse" + i}>
                                             <th scope="row">{(i + 1) + "." + (j + 1)}</th>
                                             <td>{category.title}</td>
-                                            <td>{rule.title}</td>
+                                            <td><button className="btn btn-link text-left" onClick={() => this.props.goToIssues(rule.title)}>{rule.title}</button></td>
                                             <td>{this.getIssues(rule.id)}</td>
                                             <td className={rule.severity === "Minor" ? "text-warning" : "text-danger"}>{rule.severity}</td>
                                             <td>{rule.category}</td>

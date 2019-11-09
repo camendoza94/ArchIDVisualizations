@@ -1,18 +1,24 @@
 import React, {Component} from 'react';
 import {Link} from "react-router-dom";
 import IssueDetail from "./IssueDetail";
+import Select from "react-select";
 
 class Issues extends Component {
 
     constructor(props) {
         super(props);
-        this.state = {};
+        this.state = {currentRule: this.props.currentRule};
+        this.handleCategoryIssues = this.handleCategoryIssues.bind(this);
     }
 
     componentDidMount() {
         const categorization = this.props.categorization;
         let rules = categorization.decisions.map(d => d.rules);
         rules = [].concat.apply([], rules).sort((a, b) => a.id - b.id);
+        let rulesOptions = [{
+            'value': 'clear',
+            'label': 'All'
+        }].concat([...new Set(rules.map(r => r.title))].map(r => ({value: r, label: r})));
         let unnestedData = [];
         for (let layer of this.props.projectData.value.children) {
             for (let file of layer.children) {
@@ -39,11 +45,24 @@ class Issues extends Component {
         let majorIssues = parseFloat(Number(unnestedData.map(f => f.issuesMajor).reduce((a, b) => a + b, 0) * 1000 / loc).toFixed(2));
         let totalIssues = parseFloat(Number(unnestedData.map(f => f.issuesTotal).reduce((a, b) => a + b, 0) * 1000 / loc).toFixed(2));
         let minorIssues = parseFloat(Number(unnestedData.map(f => f.issuesMinor).reduce((a, b) => a + b, 0) * 1000 / loc).toFixed(2));
-        this.setState({rules, data: unnestedData, majorIssues, totalIssues, minorIssues, loc});
+        this.setState({
+            rules,
+            data: unnestedData,
+            majorIssues,
+            totalIssues,
+            minorIssues,
+            loc,
+            rulesOptions,
+            currentRule: this.state.currentRule || rulesOptions[0]
+        });
+    }
+
+    handleCategoryIssues(currentRule) {
+        this.setState({currentRule});
     }
 
     render() {
-        const {rules, data, majorIssues, minorIssues, totalIssues} = this.state;
+        const {rules, data, majorIssues, minorIssues, totalIssues, currentRule, rulesOptions} = this.state;
         return (
             <>
                 <div className="card bg-light mb-3 mt-3" style={{maxWidth: "18rem"}}>
@@ -55,8 +74,24 @@ class Issues extends Component {
                         <p className="card-text text-warning">{minorIssues} Minor Issues/1K LOC</p>
                     </div>
                 </div>
+                <div className="row mb-3">
+                    <h5 className="ml-3">Rules filter:</h5>
+                    {rulesOptions && currentRule &&
+                    <div className="col-md-7">
+                        <Select
+                            value={currentRule}
+                            onChange={this.handleCategoryIssues}
+                            options={rulesOptions}
+                            defaultValue={rulesOptions[0]}
+                        />
+                    </div>}
+                </div>
                 <div className="accordion" id="accordion">
-                    {data && rules && data.filter(file => file.issuesTotal > 0).map((file, i) => {
+                    {data && rules && currentRule && data.filter(file => {
+                        if (currentRule.value !== "clear")
+                            return file.issuesTotal > 0 && file.issuesDetail.find(i => rules[i.rule - 1].title === currentRule.value);
+                        return file.issuesTotal > 0
+                    }).map((file, i) => {
                         return <div className="card" key={"file" + i}>
                             <div className="card-header" id={"heading" + i} data-toggle="collapse"
                                  data-target={"#collapse" + i}
@@ -90,7 +125,8 @@ class Issues extends Component {
                             <div id={"collapse" + i} className="collapse" aria-labelledby={"heading" + i}
                                  data-parent="#accordion">
                                 {file.issuesDetail.map((issue, index) => {
-                                    return <IssueDetail issue={issue} index={index} fileIndex={i} rules={rules}/>
+                                    return <IssueDetail key={"file" + i + "issues" + index} issue={issue} index={index}
+                                                        fileIndex={i} rules={rules}/>
                                 })}
                             </div>
                         </div>

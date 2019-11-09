@@ -15,11 +15,12 @@ class HomePage extends Component {
         this.state = {};
         this.handleChange = this.handleChange.bind(this);
         this.setViz = this.setViz.bind(this);
+        this.goToIssues = this.goToIssues.bind(this);
     }
 
     componentDidMount() {
         getProjects().then(projects => {
-            projects.sort((a,b) => (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0));
+            projects.sort((a, b) => (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0));
             let options = projects.map(project => {
                     return {value: project, label: project.name}
                 }
@@ -30,7 +31,7 @@ class HomePage extends Component {
 
     getCats() {
         getCategorization().then(projects => {
-            projects.sort((a,b) => (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0));
+            projects.sort((a, b) => (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0));
             this.setState({
                 categorization: projects,
                 currentCategorization: projects.find(c => c.name === this.state.currentProject.label) || projects[0]
@@ -48,7 +49,7 @@ class HomePage extends Component {
 
     getHistory() {
         getHistory().then(history => {
-            history.sort((a,b) => (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0));
+            history.sort((a, b) => (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0));
             this.setState({
                 history,
                 currentHistory: history[0]
@@ -58,7 +59,7 @@ class HomePage extends Component {
 
     getFiles() {
         getFiles().then(files => {
-            files.sort((a,b) => (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0));
+            files.sort((a, b) => (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0));
             this.setState({files, currentFiles: files[0]})
         })
     }
@@ -79,8 +80,12 @@ class HomePage extends Component {
         this.setState({showing: i})
     }
 
+    goToIssues(rule) {
+        this.setState({showing: 4, currentRule: {value: rule, label: rule}})
+    }
+
     render() {
-        const {currentProject, options, categorization, currentCategorization, issues, showing, history, files, currentFiles, currentHistory} = this.state;
+        const {currentProject, options, categorization, currentCategorization, issues, showing, history, files, currentFiles, currentHistory, currentRule} = this.state;
         return (
             <div className="container">
                 <h1>ArchID</h1>
@@ -116,11 +121,12 @@ class HomePage extends Component {
                                issues={issues} projectData={currentProject} currentFiles={currentFiles}/> : ''}
                 {currentProject && categorization && issues && history && showing && files && showing === 3 ?
                     <Rules categorization={currentCategorization} key={currentProject.label + showing}
-                           issues={issues} projectData={currentProject}/> : ''}
+                           issues={issues} projectData={currentProject} goToIssues={this.goToIssues}/> : ''}
                 {currentProject && categorization && issues && history && showing && files && showing === 4 ?
                     <Issues categorization={currentCategorization} key={currentProject.label + showing}
-                            issues={issues} projectData={currentProject} currentFiles={currentFiles}/> : ''}
-                {currentProject && categorization && issues && history && showing && files && currentFiles && showing === 5  && currentHistory ?
+                            issues={issues} projectData={currentProject} currentFiles={currentFiles}
+                            currentRule={currentRule}/> : ''}
+                {currentProject && categorization && issues && history && showing && files && currentFiles && showing === 5 && currentHistory ?
                     <History categorization={currentCategorization} key={currentProject.label + showing}
                              issues={issues} projectData={currentProject} currentHistory={currentHistory}
                              currentFiles={currentFiles}/> : ''}
