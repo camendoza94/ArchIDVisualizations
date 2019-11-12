@@ -27,7 +27,7 @@ class History extends Component {
         let modules = [{
             'value': 'clear',
             'label': 'All'
-        }].concat([...new Set(rules.map(r => r.module))].map(r => ({value: r, label: r})));
+        }].concat([...new Set(rules.map(r => r.element))].map(r => ({value: r, label: r})));
         this.setState({
             rules,
             categories,
@@ -52,7 +52,7 @@ class History extends Component {
             if (categoryIH.value !== "clear" && this.state.rules[i].category !== categoryIH.value)
                 this.chartReference.chartInstance.getDatasetMeta(i).hidden = true;
             else if (categoryIH.value === "clear" || (categoryIH.value !== "clear" && this.state.rules[i].category === categoryIH.value))
-                this.chartReference.chartInstance.getDatasetMeta(i).hidden = (!this.state.showingMinor && this.state.rules[i].severity === "Minor");
+                this.chartReference.chartInstance.getDatasetMeta(i).hidden = (!this.state.showingMinor && this.state.rules[i].severity === "Minor") || (this.state.module.value !== "clear" && this.state.rules[i].element !== this.state.module.value);
         });
         this.chartReference.chartInstance.update();
         this.setState({categoryIH});
@@ -60,9 +60,9 @@ class History extends Component {
 
     handleModuleIssuesHistory(module) {
         this.chartReference.chartInstance.config.data.datasets.forEach((d, i) => {
-            if (module.value !== "clear" && this.state.rules[i].module !== module.value)
+            if (module.value !== "clear" && this.state.rules[i].element !== module.value)
                 this.chartReference.chartInstance.getDatasetMeta(i).hidden = true;
-            else if (module.value === "clear" || (module.value !== "clear" && this.state.rules[i].module === module.value))
+            else if (module.value === "clear" || (module.value !== "clear" && this.state.rules[i].element === module.value))
                 this.chartReference.chartInstance.getDatasetMeta(i).hidden = (!this.state.showingMinor && this.state.rules[i].severity === "Minor") || (this.state.categoryIH.value !== "clear" && this.state.rules[i].category !== this.state.categoryIH.value);
         });
         this.chartReference.chartInstance.update();
