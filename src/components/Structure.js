@@ -18,9 +18,8 @@ class Structure extends Component {
                 .sort((a, b) => b.rows - a.rows || b.value - a.value));
         this.handleChange = this.handleChange.bind(this);
         this.resetDeps = this.resetDeps.bind(this);
-        this.isDisabled = this.isDisabled.bind(this);
-        this.handleCheckboxes = this.handleCheckboxes.bind(this);
-        this.checked = this.checked.bind(this);
+        this.handleMetric1 = this.handleMetric1.bind(this);
+        this.handleMetric2 = this.handleMetric2.bind(this);
         this.hideMinor = this.hideMinor.bind(this);
         this.handleAuthors = this.handleAuthors.bind(this);
     }
@@ -69,7 +68,7 @@ class Structure extends Component {
             {value: "layer", label: "layer"},
             {value: "module", label: "module"}
         ];
-        const metrics = ["mods", "authors", "issues_by100LOC", "dependencies"];
+        const metrics = ["mods", "authors", "issues_by100LOC", "dependencies"].map(m => ({value: m, label: m}));
         this.setState({
             options,
             authors,
@@ -77,14 +76,15 @@ class Structure extends Component {
             author: authors[0],
             currentKey: options[0],
             metrics,
-            currentMetrics: [3, 2],
+            currentMetric1: metrics[3],
+            currentMetric2: metrics[2],
             data: unnestedData,
             showingMinor: true,
         }, this.createSVG);
     }
 
     createSVG() {
-        if (this.state.currentMetrics.length !== 2)
+        if (!this.state.currentMetric1 || !this.state.currentMetric2)
             return;
         let nestedData = d3.nest()
             .key(d => d[this.state.currentKey.label])
@@ -105,8 +105,8 @@ class Structure extends Component {
             })
             .entries(this.state.data);
         this.max = 0;
-        let metric1 = !this.state.showingMinor && this.state.metrics[this.state.currentMetrics[0]] === "issues_by100LOC" ? "majorIssues_by100LOC" : this.state.metrics[this.state.currentMetrics[0]];
-        let metric2 = !this.state.showingMinor && this.state.metrics[this.state.currentMetrics[1]] === "issues_by100LOC" ? "majorIssues_by100LOC" : this.state.metrics[this.state.currentMetrics[1]];
+        let metric1 = !this.state.showingMinor && this.state.currentMetric1.value === "issues_by100LOC" ? "majorIssues_by100LOC" : this.state.currentMetric1.value;
+        let metric2 = !this.state.showingMinor && this.state.currentMetric2.value === "issues_by100LOC" ? "majorIssues_by100LOC" : this.state.currentMetric2.value;
         nestedData = nestedData.map(nested => ({
             name: nested.key,
             children: nested.values.map(o => {
@@ -351,30 +351,21 @@ class Structure extends Component {
         this.setState({showing: null}, this.createSVG)
     }
 
-    isDisabled(index) {
-        return this.state.currentMetrics.length > 1 && this.state.currentMetrics.indexOf(index) === -1
+    handleMetric1(index) {
+        this.setState({currentMetric1: index}, this.createSVG)
     }
 
-    checked(index) {
-        return this.state.currentMetrics.indexOf(index) !== -1
+    handleMetric2(index) {
+        this.setState({currentMetric2: index}, this.createSVG)
     }
 
-    handleCheckboxes(event, index) {
-        let currentMetrics = this.state.currentMetrics;
-        const i = currentMetrics.indexOf(index);
-        if (i === -1 && currentMetrics.length < 2)
-            currentMetrics.push(index);
-        else
-            currentMetrics.splice(i, 1);
-        this.setState({currentMetrics}, this.createSVG)
-    }
 
     hideMinor() {
         this.setState({showingMinor: !this.state.showingMinor}, this.createSVG);
     }
 
     render() {
-        const {currentKey, options, metrics, currentMetrics, showingMinor, authors, author, showing, rules} = this.state;
+        const {currentKey, options, metrics, showingMinor, authors, author, showing, rules, currentMetric1, currentMetric2} = this.state;
         return (
             <div>
                 {options ?
@@ -389,31 +380,34 @@ class Structure extends Component {
                             />
                         </div>
                     </div> : ""}
-                {metrics && currentMetrics ?
+                {metrics && currentMetric1 && currentMetric2 ?
                     <Fragment>
                         <div className="row">
-                            <h4 className="col-md-2">Metrics</h4>
-                            {metrics.map((m, i) => {
-                                return (
-                                    <div key={"metric" + i} className="col-md-2">
-                                        <div className="form-check form-check-inline">
-                                            <input className="form-check-input" type="checkbox"
-                                                   id={"inlineCheckbox" + i}
-                                                   value={"option" + i}
-                                                   disabled={this.isDisabled(i)}
-                                                   checked={this.checked(i)}
-                                                   onChange={e => this.handleCheckboxes(e, i)}/>
-                                            <label className="form-check-label"
-                                                   htmlFor={"inlineCheckbox" + i}>{m}</label>
-                                        </div>
-                                    </div>
-                                )
-                            })}
+                            <h4 className="col-md-3">Metric (circle size)</h4>
+                            <div className="col-md-6">
+                                <Select
+                                    value={currentMetric1}
+                                    onChange={this.handleMetric1}
+                                    options={metrics}
+                                    defaultValue={metrics[3]}
+                                />
+                            </div>
+                        </div>
+                        <div className="row">
+                            <h4 className="col-md-3">Metric (circle color)</h4>
+                            <div className="col-md-6">
+                                <Select
+                                    value={currentMetric2}
+                                    onChange={this.handleMetric2}
+                                    options={metrics}
+                                    defaultValue={metrics[2]}
+                                />
+                            </div>
                         </div>
                     </Fragment> : ""}
-                {currentMetrics && currentMetrics.length === 2 ?
-                    <p>{`Circle size is proportional to number of ${metrics[currentMetrics[0]]} on a given file`}<br/>
-                        {`Color corresponds to number of ${metrics[currentMetrics[1]]} on a given file`}</p> : ""}
+                {currentMetric1 && currentMetric2 ?
+                    <p>{`Circle size is proportional to number of ${currentMetric1.value} on a given file`}<br/>
+                        {`Color corresponds to number of ${currentMetric2.value} on a given file`}</p> : ""}
                 {authors && <div className="row mb-3">
                     <hr className="w-100"/>
                     <h5 className="ml-3">Authors</h5>
@@ -428,7 +422,7 @@ class Structure extends Component {
                     <button type="button" className="btn btn-outline-secondary" onClick={this.resetDeps}>Reset
                         dependencies
                     </button>
-                    {currentMetrics && currentMetrics.length === 2 && currentMetrics.includes(2) &&
+                    {currentMetric1 && currentMetric2 && (currentMetric1.value === "issues_by100LOC" || currentMetric2.value === "issues_by100LOC") &&
                     <button type="button" className="btn btn-outline-warning"
                             onClick={this.hideMinor}>{showingMinor ? "Hide minor issues" : "Show minor issues"}
                     </button>}
