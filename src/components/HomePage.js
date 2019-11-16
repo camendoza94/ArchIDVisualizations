@@ -103,7 +103,7 @@ class HomePage extends Component {
                 </div>
                 {options && categorization && issues && showing && history && currentHistory && files ?
                     <div className="row">
-                        <h4 className="col-md-2">Project</h4>
+                        <h4 className="col-md-3">Project</h4>
                         <div className="col-md-6">
                             <Select
                                 value={currentProject}

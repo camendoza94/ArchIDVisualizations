@@ -79,11 +79,11 @@ class Metrics extends Component {
             if (d === "bugs_by100LOC")
                 return this.state.category.value === "Bug" && this.state.showingMinor;
             if (d === "ATDItems_by100LOC")
-                return this.state.category.value === "Architectural" || this.state.category.value === "ATD Item" && this.state.showingMinor;
+                return (this.state.category.value === "Architectural" || this.state.category.value === "ATD Item") && this.state.showingMinor;
             if (d === "majorBugs_by100LOC")
                 return this.state.category.value === "Bug" && !this.state.showingMinor;
             if (d === "majorATDItems_by100LOC")
-                return this.state.category.value === "Architectural" || this.state.category.value === "ATD Item" && !this.state.showingMinor;
+                return (this.state.category.value === "Architectural" || this.state.category.value === "ATD Item") && !this.state.showingMinor;
             if (d === "issues_by100LOC")
                 return this.state.category.value === "clear" && this.state.showingMinor;
             return d !== this.state.currentKey.label && typeof (this.state.data[0][d]) === "number"
@@ -222,7 +222,7 @@ class Metrics extends Component {
             .data(columns)
             .join("g")
             .attr("transform", function (d, i) {
-                return "translate(-50," + (400 + (i * 20)) + ")";
+                return "translate(-50," + i * 20 + ")";
             });
 
         legend.append("rect")
@@ -261,7 +261,7 @@ class Metrics extends Component {
                 {options ?
                     <div>
                         <div className="row">
-                            <h4 className="col-md-2">Key</h4>
+                            <h4 className="col-md-3">Key</h4>
                             <div className="col-md-6">
                                 <Select
                                     value={currentKey}
@@ -272,10 +272,10 @@ class Metrics extends Component {
                             </div>
                         </div>
                         <div className="row">
-                            <h4 className="col-md-2">Weights</h4>
+                            <h4 className="col-md-3">Metrics' Weights</h4>
                         </div>
                         <div className="row">
-                            <p className="col-md-2">Issues/100LOC:</p>
+                            <p className="col-md-3">Issues/100LOC:</p>
                             <div className="col-md-6">
                                 <SliderWithTooltip
                                     style={style}
@@ -287,7 +287,7 @@ class Metrics extends Component {
                             <p className="col-md-2">{coefficients[0]}</p>
                         </div>
                         <div className="row">
-                            <p className="col-md-2">Modifications:</p>
+                            <p className="col-md-3">Modifications:</p>
                             <div className="col-md-6">
                                 <SliderWithTooltip
                                     style={style}
@@ -299,7 +299,7 @@ class Metrics extends Component {
                             <p className="col-md-2">{coefficients[1]}</p>
                         </div>
                         <div className="row">
-                            <p className="col-md-2">Dependencies In:</p>
+                            <p className="col-md-3">Dependencies In:</p>
                             <div className="col-md-6">
                                 <SliderWithTooltip
                                     style={style}
@@ -311,7 +311,7 @@ class Metrics extends Component {
                             <p className="col-md-2">{coefficients[2]}</p>
                         </div>
                         <div className="row">
-                            <p className="col-md-2">Dependencies Out:</p>
+                            <p className="col-md-3">Dependencies Out:</p>
                             <div className="col-md-6">
                                 <SliderWithTooltip
                                     style={style}

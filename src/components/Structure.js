@@ -379,7 +379,7 @@ class Structure extends Component {
             <div>
                 {options ?
                     <div className="row">
-                        <h4 className="col-md-2">Key</h4>
+                        <h4 className="col-md-3">Structural Element</h4>
                         <div className="col-md-6">
                             <Select
                                 value={currentKey}

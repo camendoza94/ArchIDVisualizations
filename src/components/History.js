@@ -276,7 +276,7 @@ class History extends Component {
                                 defaultValue={categories[0]}
                             />
                         </div>
-                        <h5 className="ml-4">Modules</h5>
+                        <h5 className="ml-4">Structural Element</h5>
                         <div className="col-md-3">
                             <Select
                                 value={module}
