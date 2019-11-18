@@ -24,6 +24,14 @@ rect.legend {
     stroke: #fff;
 }
 
+[data-toggle="collapse"] .material-icons:before {
+    content: "expand_less";
+}
+
+[data-toggle="collapse"].collapsed .material-icons:before {
+    content: "expand_more";
+}
+
 th {
     font-size: 14px;
     font-weight: semibold;

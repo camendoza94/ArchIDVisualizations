@@ -108,7 +108,7 @@ class History extends Component {
                 xAxes: [{
                     scaleLabel: {
                         display: true,
-                        labelString: 'Time'
+                        labelString: 'Commit dates'
                     },
                     type: 'time',
                     distribution: 'linear',
@@ -121,12 +121,12 @@ class History extends Component {
         const locs = this.props.currentFiles.data.sort((a, b) => new Date(a.date) - new Date(b.date)).map(c => c.loc);
         const d = this.props.currentHistory.data.sort((a, b) => new Date(a.date) - new Date(b.date)).map((c, i) => ({
             x: Date.parse(c.date),
-            y: c.issues.reduce((a, b, i) => {
+            y: parseFloat(Number(c.issues.reduce((a, b, i) => {
                 if ((this.state.categoryH.value !== "clear" && this.state.categoryH.value !== this.state.rules[i].category)
                     || (!this.state.showingMinorH && this.state.rules[i].severity === "Minor"))
                     return a;
                 return a + b;
-            }, 0) * 1000 / locs[i]
+            }, 0) * 1000 / locs[i]).toFixed(3))
         }));
         data.datasets.push({
             label: this.props.currentHistory.name,
@@ -196,7 +196,7 @@ class History extends Component {
                 xAxes: [{
                     scaleLabel: {
                         display: true,
-                        labelString: 'Time'
+                        labelString: 'Commit dates'
                     },
                     type: 'time',
                     distribution: 'linear',

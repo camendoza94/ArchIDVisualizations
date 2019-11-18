@@ -93,13 +93,14 @@ class Issues extends Component {
                         return file.issuesTotal > 0
                     }).map((file, i) => {
                         return <div className="card" key={"file" + i}>
-                            <div className="card-header" id={"heading" + i} data-toggle="collapse"
+                            <div className="card-header collapsed" id={"heading" + i} data-toggle="collapse"
                                  data-target={"#collapse" + i}
                                  aria-expanded="true" aria-controls={"#collapse" + i}>
                                 <div className="row">
                                     <h2 className="mb-0 col-md-8">
                                         <button className="btn font-weight-bold" type="button">
                                             {file.name}
+                                            <i className="material-icons"/>
                                         </button>
                                     </h2>
                                     {file.issuesMinor ? <span className="small mt-2 col-md-1 text-warning">

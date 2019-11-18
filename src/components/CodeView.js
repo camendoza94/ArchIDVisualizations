@@ -43,7 +43,7 @@ class CodeView extends Component {
         let start = 0;
         let line = 0;
         this.props.location.state.issuesDetail.forEach(i => {
-            let re = new RegExp(`(private|public) \\S* ${i.description}`, "g");
+            let re = new RegExp(`(private|public) \\S* ${i.description}`, "gi");
             if (i.description === "Class")
                 start = this.state.contents.indexOf("public");
             else

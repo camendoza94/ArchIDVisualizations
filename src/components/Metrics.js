@@ -183,7 +183,7 @@ class Metrics extends Component {
             .attr("height", y.bandwidth())
             .append("title").text((d, i, j) => {
             const key = j[i].parentNode.parentNode.getAttribute("data-index");
-            return columns[key] + ": " + adjustedData.find(c => c[this.state.currentKey.label] === adjustedDataFinal[i][this.state.currentKey.label])[columns[key]];
+            return columns[key] + ": " + parseFloat(Number(adjustedData.find(c => c[this.state.currentKey.label] === adjustedDataFinal[i][this.state.currentKey.label])[columns[key]]).toFixed(3));
         });
 
         g.append("g")
