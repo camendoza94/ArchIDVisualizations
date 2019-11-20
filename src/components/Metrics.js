@@ -189,7 +189,7 @@ class Metrics extends Component {
         g.append("g")
             .attr("class", "axis")
             .call(d3.axisLeft(y).ticks(null, "s"))
-            .call(axis => axis.selectAll("text").style("font-size", `${iheight / 70}pt`))
+            .call(axis => axis.selectAll("text").style("font-size", `${iheight / 90}pt`))
             .append("text")
             .attr("x", 2)
             .attr("y", iheight)
@@ -229,14 +229,28 @@ class Metrics extends Component {
             .attr("x", iwidth - 19)
             .attr("width", 19)
             .attr("height", 19)
-            .attr("fill", z);
+            .attr("fill", z)
+            .style("cursor", "pointer")
+            .on("click", (d, i) => {
+                this.filter(i)
+            });
 
         legend.append("text")
             .attr("x", iwidth - 24)
             .attr("y", 9.5)
             .attr("dy", "0.32em")
-            .text(d => d);
+            .text(d => d)
+            .style("cursor", "pointer")
+            .on("click", (d, i) => {
+                this.filter(i)
+            });
         return svg.node();
+    }
+
+    filter(d) {
+        let newCoefficients = this.state.coefficients;
+        newCoefficients.forEach((v, i) => newCoefficients[i] = i === d ? 100 : 0);
+        this.setState({coefficients: newCoefficients}, this.createSVG)
     }
 
     handleChange(currentKey) {
@@ -281,6 +295,7 @@ class Metrics extends Component {
                                     style={style}
                                     max={100}
                                     defaultValue={100}
+                                    value={coefficients[0]}
                                     onChange={(e) => this.handleSlider(e, 0)}
                                 />
                             </div>
@@ -293,6 +308,7 @@ class Metrics extends Component {
                                     style={style}
                                     max={100}
                                     defaultValue={70}
+                                    value={coefficients[1]}
                                     onChange={(e) => this.handleSlider(e, 1)}
                                 />
                             </div>
@@ -305,6 +321,7 @@ class Metrics extends Component {
                                     style={style}
                                     max={100}
                                     defaultValue={40}
+                                    value={coefficients[2]}
                                     onChange={(e) => this.handleSlider(e, 2)}
                                 />
                             </div>
@@ -317,6 +334,7 @@ class Metrics extends Component {
                                     style={style}
                                     max={100}
                                     defaultValue={40}
+                                    value={coefficients[3]}
                                     onChange={(e) => this.handleSlider(e, 3)}
                                 />
                             </div>

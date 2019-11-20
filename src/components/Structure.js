@@ -218,9 +218,11 @@ class Structure extends Component {
             .attr("dy", "0.32em")
             .text(d => d);
 
+        let legend2;
+
         if (this.state.author.value !== "clear") {
             legend.selectAll("*").remove();
-            const legend2 = svg.append("g")
+            legend2 = svg.append("g")
                 .attr("font-family", "sans-serif")
                 .attr("font-size", 10)
                 .attr("text-anchor", "end")
@@ -252,7 +254,8 @@ class Structure extends Component {
 
         function showDependencies(d) {
             legend.selectAll("*").remove();
-            const legend2 = svg.append("g")
+            legend2 && legend2.selectAll("*").remove();
+            legend2 = svg.append("g")
                 .attr("font-family", "sans-serif")
                 .attr("font-size", 10)
                 .attr("text-anchor", "end")
@@ -344,7 +347,7 @@ class Structure extends Component {
     }
 
     handleAuthors(author) {
-        this.setState({author}, this.createSVG)
+        this.setState({author, showing: null}, this.createSVG)
     }
 
     resetDeps() {

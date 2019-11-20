@@ -66,7 +66,7 @@ class CodeView extends Component {
                         wrapLines={true}
                         showLineNumbers={true}
                         lineProps={lineNumber => {
-                            let style = {display: "block"};
+                            let style = {};
                             let className = "";
                             if (highlight.includes(lineNumber)) {
                                 style.backgroundColor = '#330901';
