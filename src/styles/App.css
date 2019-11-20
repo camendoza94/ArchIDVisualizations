@@ -24,11 +24,11 @@ rect.legend {
     stroke: #fff;
 }
 
-[data-toggle="collapse"] .material-icons:before {
+[data-toggle="collapse"] .material-icons.expand:before {
     content: "expand_less";
 }
 
-[data-toggle="collapse"].collapsed .material-icons:before {
+[data-toggle="collapse"].collapsed .material-icons.expand:before {
     content: "expand_more";
 }
 

@@ -100,7 +100,7 @@ class Issues extends Component {
                                     <h2 className="mb-0 col-md-8">
                                         <button className="btn font-weight-bold" type="button">
                                             {file.name}
-                                            <i className="material-icons"/>
+                                            <i className="material-icons expand" aria-hidden="true"/>
                                         </button>
                                     </h2>
                                     {file.issuesMinor ? <span className="small mt-2 col-md-1 text-warning">

@@ -157,14 +157,18 @@ class History extends Component {
 
     renderIssues() {
         const sortedData = this.props.currentHistory.data.sort((a, b) => new Date(a.date) - new Date(b.date));
-        const issues = sortedData[sortedData.length - 1].issues;
         const names = this.state.rules.map(r => r.title);
-        const backgroundColors = d3.schemeSet1.concat(d3.schemeSet2).concat(d3.schemeSet3);
+        const backgroundColors = d3.schemeSet1.concat(d3.schemeSet2).concat(d3.schemeSet3).slice(0, names.length - 1);
+        const issues = sortedData[sortedData.length - 1].issues.map((i, index) => ({
+            issues: i,
+            name: names[index],
+            color: backgroundColors[index]
+        })).sort((a, b) => b.issues - a.issues);
         let stats = {
-            labels: names,
+            labels: issues.map(i => i.name),
             datasets: [{
-                data: issues,
-                backgroundColor: backgroundColors
+                data: issues.map(i => i.issues),
+                backgroundColor: issues.map(i => i.color)
             }]
         };
         this.setState({
