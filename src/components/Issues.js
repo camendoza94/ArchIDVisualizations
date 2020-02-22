@@ -126,7 +126,7 @@ class Issues extends Component {
                             <div id={"collapse" + i} className="collapse" aria-labelledby={"heading" + i}
                                  data-parent="#accordion">
                                 {file.issuesDetail.map((issue, index) => {
-                                    return <IssueDetail key={"file" + i + "issues" + index} issue={issue} index={index}
+                                    return issue && <IssueDetail key={"file" + i + "issues" + index} issue={issue} index={index}
                                                         fileIndex={i} rules={rules}/>
                                 })}
                             </div>

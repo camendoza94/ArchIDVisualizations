@@ -189,7 +189,7 @@ class Metrics extends Component {
         g.append("g")
             .attr("class", "axis")
             .call(d3.axisLeft(y).ticks(null, "s"))
-            .call(axis => axis.selectAll("text").style("font-size", `${iheight / 90}pt`))
+            .call(axis => axis.selectAll("text").style("font-size", `${iheight / 70}pt`))
             .append("text")
             .attr("x", 2)
             .attr("y", iheight)
