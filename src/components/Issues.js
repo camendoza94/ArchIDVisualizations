@@ -89,7 +89,7 @@ class Issues extends Component {
                 <div className="accordion" id="accordion">
                     {data && rules && currentRule && data.filter(file => {
                         if (currentRule.value !== "clear")
-                            return file.issuesTotal > 0 && file.issuesDetail.find(i => rules[i.rule - 1].title === currentRule.value);
+                            return file.issuesTotal > 0 && file.issuesDetail.find(i => i && rules[i.rule - 1].title === currentRule.value);
                         return file.issuesTotal > 0
                     }).map((file, i) => {
                         return <div className="card" key={"file" + i}>
